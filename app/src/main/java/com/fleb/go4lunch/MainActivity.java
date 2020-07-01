@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
-    private Toast mToast;
 
     Button buttonLogin;
 
@@ -42,11 +41,12 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
+            Toast lToast;
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                mToast = Toast.makeText(this,getString(R.string.connection_succeed),Toast.LENGTH_SHORT);
-                mToast.show();
+                lToast = Toast.makeText(this,getString(R.string.connection_succeed),Toast.LENGTH_SHORT);
+                lToast.show();
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
                 // ...
 
                 if (response == null) {
-                    mToast = Toast.makeText(this,getString(R.string.error_authentication_canceled),Toast.LENGTH_SHORT);
-                    mToast.show();
+                    lToast = Toast.makeText(this,getString(R.string.error_authentication_canceled),Toast.LENGTH_SHORT);
+                    lToast.show();
                 } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    mToast = Toast.makeText(this,getString(R.string.error_no_internet),Toast.LENGTH_SHORT);
-                    mToast.show();
+                    lToast = Toast.makeText(this,getString(R.string.error_no_internet),Toast.LENGTH_SHORT);
+                    lToast.show();
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    mToast = Toast.makeText(this,getString(R.string.error_unknown_error),Toast.LENGTH_SHORT);
-                    mToast.show();
+                    lToast = Toast.makeText(this,getString(R.string.error_unknown_error),Toast.LENGTH_SHORT);
+                    lToast.show();
                 }
             }
         }
