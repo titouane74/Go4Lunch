@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
     <string name="login">Login</string>
+
     <!-- FACEBOOK PROPOSE -->
-    <string name="facebook_application_id">1448626875331443</string>
-    <string name="facebook_login_protocol_scheme">fb1448626875331443</string>
+    <string name="facebook_application_id" translatable="false">1448626875331443</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb1448626875331443</string>
+
+    <!-- TWITTER PROPOSE -->
+    <string name="twitter_consumer_key" translatable="false">WjxmprSC1ll5Kfj6YPjxedcqp</string>
+    <string name="twitter_consumer_secret" translatable="false">akLFSAaAtQjWxcYRmaoLxtBFfz4ALynu12vRmbjQNHdUEEQhRH</string>
 
     <!-- MAIN ACTIVITY -->
     <string name="error_not_connected">Vous devez vous connecter !</string>

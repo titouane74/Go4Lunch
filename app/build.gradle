@@ -39,7 +39,8 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
 
     //Twitter
-    //implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+    implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+    implementation 'com.twitter.sdk.android:twitter:3.0.0'
 
     testImplementation 'junit:junit:4.13'
 
