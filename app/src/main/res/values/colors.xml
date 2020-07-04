@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#C41C00</color>
     <color name="colorPrimaryLight">#FF8A50</color>
     <color name="colorAccent">#FF9900</color>
+    <color name="colorError">#FF5252</color>
 
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextUnavailable">#909090</color>

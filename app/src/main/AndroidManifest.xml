@@ -14,13 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Go4LunchTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- PROFILE ACTIVITY -->
+        <activity android:name=".authentification.ProfileActivity"
+            android:parentActivityName=".main.MainActivity"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

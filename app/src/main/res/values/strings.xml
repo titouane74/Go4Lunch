@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
-    <string name="login">Login</string>
+    <!-- DEVELOPMENT STATUS -->
+    <string name="to_do">En cours de développement</string>
+
 
     <!-- FACEBOOK PROPOSE -->
     <string name="facebook_application_id" translatable="false">1448626875331443</string>
@@ -18,7 +20,17 @@
     <string name="connection_succeed">Authentification réussie !</string>
     <string name="button_login_text_logged">Afficher le profil</string>
     <string name="button_login_text_not_logged">Connexion</string>
+    <string name="user_connected">Utilisateur connecté</string>
+    <string name="button_signout">Déconnexion</string>
 
-
+    <!-- PROFILE ACTIVITY -->
+    <string name="text_input_username">Nom d\'utilisateur</string>
+    <string name="text_view_email">Adresse email :</string>
+    <string name="button_update_account">Mettre à jour le nom d\'utilisateur</string>
+    <string name="button_delete_account">Supprimer mon compte</string>
+    <string name="button_sign_out_account">Déconnexion</string>
+    <string name="info_no_email_found">Auncune adresse email</string>
+    <string name="info_no_username_found">Aucun nom d\'utilisateur</string>
+    <string name="image_user">Image utilisateur</string>
 
 </resources>
