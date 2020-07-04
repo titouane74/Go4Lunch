@@ -1,13 +1,10 @@
 package com.fleb.go4lunch.main;
 //TODO implement the javadoc
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.firebase.ui.auth.AuthUI;
 
@@ -20,15 +17,11 @@ import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
 import com.fleb.go4lunch.utils.DisplayMessages;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity {
     private static final int RC_SIGN_IN = 123;
-    private Toast mToast;
 
     @Override
     public int getFragmentLayout() {return R.layout.activity_main;}
@@ -42,22 +35,17 @@ public class MainActivity extends BaseActivity {
         Button lSignOut;
         lSignOut = findViewById(R.id.button_signout);
         lSignOut.setOnClickListener(this);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         //TODO : test if user is logged : yes open map ; no open startSignInActivity ()
-        //Bug = value is true even if there's no user in Firebase
-        DisplayMessages.displayShortMessage(this,this.isCurrentUserLogged().toString());
-/*
-        mToast = Toast.makeText(this,this.isCurrentUserLogged().toString(),Toast.LENGTH_SHORT);
-        mToast.show();
-*/
+        //DisplayMessages.displayShortMessage(this,this.isCurrentUserLogged().toString());
         if (this.isCurrentUserLogged()) {
-            this.startSignInActivity();
+            DisplayMessages.displayShortMessage(this, getString(R.string.user_connected));
         } else {
-            DisplayMessages.displayShortMessage(this,getString(R.string.user_connected));
-/*
-            mToast = Toast.makeText(this,getString(R.string.user_connected),Toast.LENGTH_SHORT);
-            mToast.show();
-*/
+            this.startSignInActivity();
         }
     }
 
@@ -112,13 +100,7 @@ public class MainActivity extends BaseActivity {
     protected void signOutFromFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
-//                .addOnSuccessListener(this, this.closeApplication(this));
-                .addOnCompleteListener(task -> {
-                    // user is now signed out
-                    //finish();
-                    startSignInActivity();
-                });
-//        FirebaseAuth.getInstance().signOut();
+                .addOnCompleteListener(task -> finish());
     }
 
     @Override
@@ -128,7 +110,4 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private OnSuccessListener<Void> closeApplication(Context pContext){
-        return aVoid -> finish();
-    }
 }
