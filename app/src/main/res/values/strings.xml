@@ -33,4 +33,15 @@
     <string name="info_no_username_found">Aucun nom d\'utilisateur</string>
     <string name="image_user">Image utilisateur</string>
 
+    <!--DRAWER-->
+    <string name="menu_home">Accueil</string>
+    <string name="menu_logout">Déconnexion</string>
+    <string name="menu_settings">Paramètres</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

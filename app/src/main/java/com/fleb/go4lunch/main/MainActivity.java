@@ -2,9 +2,15 @@ package com.fleb.go4lunch.main;
 //TODO implement the javadoc
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.firebase.ui.auth.AuthUI;
 
@@ -17,11 +23,13 @@ import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
 import com.fleb.go4lunch.utils.DisplayMessages;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity {
     private static final int RC_SIGN_IN = 123;
+    private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     public int getFragmentLayout() {return R.layout.activity_main;}
@@ -29,12 +37,25 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.configureToolbar();
         setContentView(R.layout.activity_main);
+/*
         //TODO after : to put in the menu instead of the button call
         Button lSignOut;
         lSignOut = findViewById(R.id.button_signout);
         lSignOut.setOnClickListener(this);
+*/
+        //Navigation for the Drawer
+        DrawerLayout drawer = findViewById(R.id.main_activity_drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_logout, R.id.nav_settings)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
     }
 
     @Override
@@ -47,6 +68,12 @@ public class MainActivity extends BaseActivity {
         } else {
             this.startSignInActivity();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.signOutFromFirebase();
     }
 
     @Override
@@ -100,7 +127,10 @@ public class MainActivity extends BaseActivity {
     protected void signOutFromFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
-                .addOnCompleteListener(task -> finish());
+                .addOnCompleteListener(task -> {
+                    finish();
+                    this.startSignInActivity();
+                });
     }
 
     @Override
@@ -110,4 +140,17 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
 }

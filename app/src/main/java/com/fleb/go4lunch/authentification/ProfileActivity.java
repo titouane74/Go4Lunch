@@ -32,7 +32,6 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        this.configureToolbar();
 
         Button btnUpdate;
         Button btnSignOut;

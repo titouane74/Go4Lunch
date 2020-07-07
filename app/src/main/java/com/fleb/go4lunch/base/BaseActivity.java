@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fleb.go4lunch.R;
@@ -18,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
  * Created by Florence LE BOURNOT on 03/07/2020
  */
 public abstract class BaseActivity  extends AppCompatActivity implements View.OnClickListener{
+
+
     //Life cycle
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -25,14 +26,9 @@ public abstract class BaseActivity  extends AppCompatActivity implements View.On
         this.setContentView(this.getFragmentLayout());
     }
 
+
     public abstract int getFragmentLayout();
 
-    //UI
-    protected void configureToolbar(){
-        ActionBar ab = getSupportActionBar();
-        assert ab != null;
-        ab.setDisplayHomeAsUpEnabled(true);
-    }
 
     //Errors handler
     protected OnFailureListener onFailureListener(){
