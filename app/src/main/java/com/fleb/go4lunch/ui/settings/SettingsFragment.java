@@ -26,8 +26,8 @@ public class SettingsFragment extends Fragment {
         mSettingsViewModel =
                 ViewModelProviders.of(this).get(SettingsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        mSettingsViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
+        final TextView textView = root.findViewById(R.id.text_settings);
+        mSettingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 }

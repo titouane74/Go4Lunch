@@ -2,6 +2,7 @@ package com.fleb.go4lunch.main;
 //TODO implement the javadoc
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -22,14 +23,17 @@ import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
+import com.fleb.go4lunch.ui.home.HomeFragment;
 import com.fleb.go4lunch.utils.DisplayMessages;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements HomeFragment.OnListenerLogout {
     private static final int RC_SIGN_IN = 123;
     private AppBarConfiguration mAppBarConfiguration;
+
+    private static final String TAG_MAIN = "MainActivity";
 
     @Override
     public int getFragmentLayout() {return R.layout.activity_main;}
@@ -38,12 +42,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
-        //TODO after : to put in the menu instead of the button call
-        Button lSignOut;
-        lSignOut = findViewById(R.id.button_signout);
-        lSignOut.setOnClickListener(this);
-*/
+
         //Navigation for the Drawer
         DrawerLayout drawer = findViewById(R.id.main_activity_drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -63,17 +62,12 @@ public class MainActivity extends BaseActivity {
         super.onStart();
         //TODO : test if user is logged : yes open map ; no open startSignInActivity ()
         //DisplayMessages.displayShortMessage(this,this.isCurrentUserLogged().toString());
+        //noinspection StatementWithEmptyBody
         if (this.isCurrentUserLogged()) {
-            DisplayMessages.displayShortMessage(this, getString(R.string.user_connected));
+//            DisplayMessages.displayShortMessage(this, getString(R.string.user_connected));
         } else {
             this.startSignInActivity();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.signOutFromFirebase();
     }
 
     @Override
@@ -105,7 +99,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    //TODO Attention BuildConfig.DEBUG
     protected void startSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance()
@@ -114,10 +107,11 @@ public class MainActivity extends BaseActivity {
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
                                         new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                        new AuthUI.IdpConfig.FacebookBuilder().build(),
-                                        new AuthUI.IdpConfig.TwitterBuilder().build()
+                                        new AuthUI.IdpConfig.FacebookBuilder().build()
+                                        //,
+                                        //new AuthUI.IdpConfig.TwitterBuilder().build()
                                 ))
-                        .setIsSmartLockEnabled(!BuildConfig.DEBUG, true)
+                        .setIsSmartLockEnabled(false, true)
                         .setLogo(R.drawable.ic_go4lunch_logo)
                         .build(),
                 RC_SIGN_IN);
@@ -127,18 +121,11 @@ public class MainActivity extends BaseActivity {
     protected void signOutFromFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
-                .addOnCompleteListener(task -> {
-                    finish();
-                    this.startSignInActivity();
-                });
+                .addOnCompleteListener(task -> this.startSignInActivity());
     }
 
     @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.button_signout) {
-            this.signOutFromFirebase();
-        }
-    }
+    public void onClick(View v) { }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,4 +140,8 @@ public class MainActivity extends BaseActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    @Override
+    public void onButtonLogoutClickLogout() { this.signOutFromFirebase(); }
+
 }

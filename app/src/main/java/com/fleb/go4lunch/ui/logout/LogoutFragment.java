@@ -27,8 +27,8 @@ public class LogoutFragment extends Fragment {
         mLogoutViewModel =
                 ViewModelProviders.of(this).get(LogoutViewModel.class);
         View root = inflater.inflate(R.layout.fragment_logout, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        mLogoutViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
+        final TextView textView = root.findViewById(R.id.text_logout);
+        mLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 }

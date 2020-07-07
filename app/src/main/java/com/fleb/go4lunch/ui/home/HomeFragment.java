@@ -1,4 +1,5 @@
 package com.fleb.go4lunch.ui.home;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,12 @@ import com.fleb.go4lunch.R;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    Button mBtnLogout;
+    private OnListenerLogout mCallback;
+
+    public interface OnListenerLogout {
+        void onButtonLogoutClickLogout();
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,7 +44,20 @@ public class HomeFragment extends Fragment {
             }
         });
 */
+
+        mBtnLogout = root.findViewById(R.id.button_signout);
+        mBtnLogout.setOnClickListener(v -> mCallback.onButtonLogoutClickLogout());
+
         return root;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (HomeFragment.OnListenerLogout) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement onButtonLogoutClickLogout");
+        }
+    }
 }
