@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -42,6 +43,8 @@ public class MainActivity extends BaseActivity implements HomeFragment.OnListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         //Navigation for the Drawer
         DrawerLayout drawer = findViewById(R.id.main_activity_drawer_layout);
