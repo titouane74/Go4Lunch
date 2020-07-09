@@ -24,9 +24,9 @@
     <string name="image_user">User image</string>
 
     <!--DRAWER-->
-    <string name="menu_home">Your lunch</string>
-    <string name="menu_logout">Logout</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_home">YOUR LUNCH</string>
+    <string name="menu_logout">LOGOUT</string>
+    <string name="menu_settings">SETTINGS</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>

@@ -34,9 +34,9 @@
     <string name="image_user">Image utilisateur</string>
 
     <!--DRAWER-->
-    <string name="menu_home">Votre déjeuner</string>
-    <string name="menu_logout">Déconnexion</string>
-    <string name="menu_settings">Paramètres</string>
+    <string name="menu_home">VOTRE DEJEUNER</string>
+    <string name="menu_logout">DECONNEXION</string>
+    <string name="menu_settings">PARAMETRES</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
