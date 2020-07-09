@@ -2,7 +2,6 @@ package com.fleb.go4lunch.main;
 //TODO implement the javadoc
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -21,11 +20,9 @@ import java.util.Objects;
 
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
 import com.fleb.go4lunch.ui.home.HomeFragment;
-import com.fleb.go4lunch.utils.DisplayMessages;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,7 +49,7 @@ public class MainActivity extends BaseActivity implements HomeFragment.OnListene
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_logout, R.id.nav_settings)
+                R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

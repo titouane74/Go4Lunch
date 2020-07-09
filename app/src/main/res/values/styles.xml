@@ -35,6 +35,6 @@
 
     <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
 </resources>

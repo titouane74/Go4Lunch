@@ -34,7 +34,7 @@
     <string name="image_user">Image utilisateur</string>
 
     <!--DRAWER-->
-    <string name="menu_home">Accueil</string>
+    <string name="menu_home">Votre déjeuner</string>
     <string name="menu_logout">Déconnexion</string>
     <string name="menu_settings">Paramètres</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
