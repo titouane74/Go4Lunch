@@ -3,11 +3,14 @@ package com.fleb.go4lunch.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -22,12 +25,15 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
-import com.fleb.go4lunch.ui.lunch.LunchFragment;
+import com.fleb.go4lunch.ui.map.MapFragment;
+import com.fleb.go4lunch.ui.viewlist.ViewListFragment;
+import com.fleb.go4lunch.ui.workmates.WorkmatesFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends BaseActivity implements LunchFragment.OnListenerLogout {
+public class MainActivity extends BaseActivity implements MapFragment.OnListenerLogout {
     private static final int RC_SIGN_IN = 123;
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -55,7 +61,35 @@ public class MainActivity extends BaseActivity implements LunchFragment.OnListen
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        //Bottom navigation
+        BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
+        lBottomNav.setOnNavigationItemSelectedListener(navListener);
+
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+        new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
+                switch (item.getItemId()) {
+                    case R.id.nav_map:
+                        selectedFragment = new MapFragment();
+                        break;
+                    case R.id.nav_view_list:
+                        selectedFragment = new ViewListFragment();
+                        break;
+                    case R.id.nav_workmates:
+                        selectedFragment = new WorkmatesFragment();
+                        break;
+                }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,selectedFragment).commit();
+
+                return true;
+            }
+        };
 
     @Override
     protected void onStart() {
