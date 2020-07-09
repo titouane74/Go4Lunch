@@ -44,4 +44,10 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!--BOTTOM MENU-->
+    <string name="menu_map">Carte</string>
+    <string name="menu_view_list">Liste</string>
+    <string name="menu_workmates">Collègues</string>
+
+
 </resources>

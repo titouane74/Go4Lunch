@@ -34,4 +34,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!--BOTTOM MENU-->
+    <string name="menu_map">Map View</string>
+    <string name="menu_view_list">List View</string>
+    <string name="menu_workmates">Workmates</string>
 </resources>
