@@ -1,15 +1,15 @@
-package com.fleb.go4lunch.ui.home;
+package com.fleb.go4lunch.ui.lunch;
 
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class LunchViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public LunchViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is home fragment");
     }

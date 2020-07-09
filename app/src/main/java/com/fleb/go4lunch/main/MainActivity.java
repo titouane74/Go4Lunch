@@ -22,12 +22,12 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
-import com.fleb.go4lunch.ui.home.HomeFragment;
+import com.fleb.go4lunch.ui.lunch.LunchFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends BaseActivity implements HomeFragment.OnListenerLogout {
+public class MainActivity extends BaseActivity implements LunchFragment.OnListenerLogout {
     private static final int RC_SIGN_IN = 123;
     private AppBarConfiguration mAppBarConfiguration;
 
