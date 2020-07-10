@@ -63,6 +63,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         configureAndShowFirstFragment();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(mNavigationView, mNavController);
 
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
@@ -80,21 +82,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-/*
-        switch (item.getItemId()) {
-            case R.id.nav_lunch:
-                mSelectedFragment = new LunchFragment();
-                break;
-            case R.id.nav_settings:
-                mSelectedFragment = new SettingsFragment();
-                break;
-            case R.id.nav_logout:
-                mSelectedFragment = new MapFragment();
-                signOutFromFirebase();
-                break;
-        }
-        replaceFragment(mSelectedFragment);
-*/
         executeSelectedItem(item);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -217,8 +204,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .setDrawerLayout(mDrawerLayout)
                 .build();
 
-        NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(mNavigationView, mNavController);
     }
 
     /**
