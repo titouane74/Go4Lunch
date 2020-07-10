@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,7 +27,9 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
+import com.fleb.go4lunch.ui.lunch.LunchFragment;
 import com.fleb.go4lunch.ui.map.MapFragment;
+import com.fleb.go4lunch.ui.settings.SettingsFragment;
 import com.fleb.go4lunch.ui.viewlist.ViewListFragment;
 import com.fleb.go4lunch.ui.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends BaseActivity implements MapFragment.OnListenerLogout {
     private static final int RC_SIGN_IN = 123;
     private AppBarConfiguration mAppBarConfiguration;
+    private Fragment mSelectedFragment;
 
     private static final String TAG_MAIN = "MainActivity";
 
@@ -48,6 +53,9 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mSelectedFragment = null;
+        configureAndShowFragment();
 
         //Navigation for the Drawer
         DrawerLayout drawer = findViewById(R.id.main_activity_drawer_layout);
@@ -62,30 +70,54 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        navigationView.setNavigationItemSelectedListener(navDrawerListener);
+
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
         lBottomNav.setOnNavigationItemSelectedListener(navListener);
 
     }
+    private NavigationView.OnNavigationItemSelectedListener navDrawerListener =
+        new NavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.nav_lunch:
+                    mSelectedFragment = new LunchFragment();
+                    break;
+                case R.id.nav_settings:
+                    mSelectedFragment = new SettingsFragment();
+                    break;
+                case R.id.nav_logout:
+                    mSelectedFragment = new MapFragment();
+                    signOutFromFirebase();
+                    break;
+            }
+            replaceFragment(mSelectedFragment);
+            //getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mSelectedFragment).commit();
+            return true;
+        }
+    };
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
+                //Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.nav_map:
-                        selectedFragment = new MapFragment();
+                        mSelectedFragment = new MapFragment();
                         break;
                     case R.id.nav_view_list:
-                        selectedFragment = new ViewListFragment();
+                        mSelectedFragment = new ViewListFragment();
                         break;
                     case R.id.nav_workmates:
-                        selectedFragment = new WorkmatesFragment();
+                        mSelectedFragment = new WorkmatesFragment();
                         break;
                 }
+                replaceFragment(mSelectedFragment);
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,selectedFragment).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,mSelectedFragment).commit();
 
                 return true;
             }
@@ -151,7 +183,6 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
                 RC_SIGN_IN);
     }
 
-    //TODO : temporarily code for connection test
     protected void signOutFromFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
@@ -178,4 +209,29 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
     @Override
     public void onButtonLogoutClickLogout() { this.signOutFromFirebase(); }
 
+
+    /**
+     * Initialization and dispay of the map fragment
+     */
+    private void configureAndShowFragment() {
+        mSelectedFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.nav_map);
+        if (mSelectedFragment == null) {
+            mSelectedFragment = new MapFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.nav_host_fragment, mSelectedFragment)
+                    .commit();
+        }
+    }
+
+    /**
+     * Fragment replace method
+     * @param pFragment : fragment : fragment to display
+     */
+    private void replaceFragment(final Fragment pFragment) {
+        final FragmentManager lFragmentManager = getSupportFragmentManager();
+        final FragmentTransaction lFragmentTransaction = lFragmentManager.beginTransaction();
+//        lFragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+        lFragmentTransaction.replace(R.id.nav_host_fragment, pFragment);
+        lFragmentTransaction.commit();
+    }
 }
