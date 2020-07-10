@@ -5,9 +5,14 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home_24"
+            android:title="@string/menu_home"
+            android:visible="false" />
+        <item
             android:id="@+id/nav_lunch"
             android:icon="@drawable/ic_menu_lunch_24"
-            android:title="@string/menu_home" />
+            android:title="@string/menu_lunch" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_settings_24"
@@ -16,6 +21,17 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_logout_24"
             android:title="@string/menu_logout" />
-
+        <item
+            android:id="@+id/nav_map"
+            android:title="@string/menu_map"
+            android:visible="false"/>
+        <item
+            android:id="@+id/nav_view_list"
+            android:title="@string/menu_view_list"
+            android:visible="false"/>
+        <item
+            android:id="@+id/nav_workmates"
+            android:title="@string/menu_workmates"
+            android:visible="false"/>
     </group>
 </menu>

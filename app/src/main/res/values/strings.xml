@@ -34,7 +34,8 @@
     <string name="image_user">Image utilisateur</string>
 
     <!--DRAWER-->
-    <string name="menu_home">VOTRE DEJEUNER</string>
+    <string name="menu_home">J\'AI FAIM!</string>
+    <string name="menu_lunch">VOTRE DEJEUNER</string>
     <string name="menu_logout">DECONNEXION</string>
     <string name="menu_settings">PARAMETRES</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

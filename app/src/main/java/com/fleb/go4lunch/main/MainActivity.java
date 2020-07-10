@@ -28,6 +28,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
+import com.fleb.go4lunch.ui.home.HomeFragment;
 import com.fleb.go4lunch.ui.lunch.LunchFragment;
 import com.fleb.go4lunch.ui.map.MapFragment;
 import com.fleb.go4lunch.ui.settings.SettingsFragment;
@@ -44,8 +45,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private Fragment mSelectedFragment;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private NavController mNavController;
     private static final String TAG_MAIN = "MainActivity";
+    private NavController mNavController;
 
     @Override
     public int getFragmentLayout() {return R.layout.activity_main;}
@@ -65,30 +66,45 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
+        //Quand drawer et bottomnav sont identiques
+        //NavigationUI.setupWithNavController(lBottomNav,mNavController);
         lBottomNav.setOnNavigationItemSelectedListener(navListener);
 
+    }
+
+    /**
+     * Called when an item in the navigation menu is selected.
+     *
+     * @param item The selected item
+     * @return true to display the item as the selected item
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+/*
+        switch (item.getItemId()) {
+            case R.id.nav_lunch:
+                mSelectedFragment = new LunchFragment();
+                break;
+            case R.id.nav_settings:
+                mSelectedFragment = new SettingsFragment();
+                break;
+            case R.id.nav_logout:
+                mSelectedFragment = new MapFragment();
+                signOutFromFirebase();
+                break;
+        }
+        replaceFragment(mSelectedFragment);
+*/
+        executeSelectedItem(item);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //Fragment selectedFragment = null;
-                switch (item.getItemId()) {
-                    case R.id.nav_map:
-                        mSelectedFragment = new MapFragment();
-                        break;
-                    case R.id.nav_view_list:
-                        mSelectedFragment = new ViewListFragment();
-                        break;
-                    case R.id.nav_workmates:
-                        mSelectedFragment = new WorkmatesFragment();
-                        break;
-                }
-                replaceFragment(mSelectedFragment);
-
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment,mSelectedFragment).commit();
-
+                executeSelectedItem(item);
                 return true;
             }
         };
@@ -181,8 +197,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+        mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(mNavController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 
@@ -197,7 +213,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings)
+        R.id.nav_home,R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map, R.id.nav_view_list, R.id.nav_workmates)
                 .setDrawerLayout(mDrawerLayout)
                 .build();
 
@@ -230,15 +246,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         lFragmentTransaction.commit();
     }
 
-    /**
-     * Called when an item in the navigation menu is selected.
-     *
-     * @param item The selected item
-     * @return true to display the item as the selected item
-     */
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+    private void executeSelectedItem (MenuItem pMenuItem) {
+        switch (pMenuItem.getItemId()) {
+            case R.id.nav_map:
+                mSelectedFragment = new MapFragment();
+                break;
+            case R.id.nav_view_list:
+                mSelectedFragment = new ViewListFragment();
+                break;
+            case R.id.nav_workmates:
+                mSelectedFragment = new WorkmatesFragment();
+                break;
+            case R.id.nav_home:
+                mSelectedFragment = new HomeFragment();
+                break;
             case R.id.nav_lunch:
                 mSelectedFragment = new LunchFragment();
                 break;
@@ -251,7 +272,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
         }
         replaceFragment(mSelectedFragment);
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

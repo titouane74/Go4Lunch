@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- DEVELOPMENT STATUS -->
     <string name="to_do">In development</string>
 
@@ -24,7 +24,8 @@
     <string name="image_user">User image</string>
 
     <!--DRAWER-->
-    <string name="menu_home">YOUR LUNCH</string>
+    <string name="menu_home">I\'M HUNGRY!</string>
+    <string name="menu_lunch">YOUR LUNCH</string>
     <string name="menu_logout">LOGOUT</string>
     <string name="menu_settings">SETTINGS</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

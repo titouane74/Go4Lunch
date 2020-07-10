@@ -1,17 +1,17 @@
-package com.fleb.go4lunch.ui.lunch;
+package com.fleb.go4lunch.ui.home;
 
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class LunchViewModel extends ViewModel {
+public class HomeViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public LunchViewModel() {
+    public HomeViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Lunch");
+        mText.setValue("HOME SWEET HOME");
     }
 
     public LiveData<String> getText() {
