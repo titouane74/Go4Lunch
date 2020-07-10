@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -37,11 +38,13 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends BaseActivity implements MapFragment.OnListenerLogout {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int RC_SIGN_IN = 123;
     private AppBarConfiguration mAppBarConfiguration;
     private Fragment mSelectedFragment;
-
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+    private NavController mNavController;
     private static final String TAG_MAIN = "MainActivity";
 
     @Override
@@ -51,53 +54,20 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        configureToolBar();
+        configureDrawerLayoutNavigationView();
 
         mSelectedFragment = null;
-        configureAndShowFragment();
+        configureAndShowFirstFragment();
 
-        //Navigation for the Drawer
-        DrawerLayout drawer = findViewById(R.id.main_activity_drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-
-        navigationView.setNavigationItemSelectedListener(navDrawerListener);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
         lBottomNav.setOnNavigationItemSelectedListener(navListener);
 
     }
-    private NavigationView.OnNavigationItemSelectedListener navDrawerListener =
-        new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.nav_lunch:
-                    mSelectedFragment = new LunchFragment();
-                    break;
-                case R.id.nav_settings:
-                    mSelectedFragment = new SettingsFragment();
-                    break;
-                case R.id.nav_logout:
-                    mSelectedFragment = new MapFragment();
-                    signOutFromFirebase();
-                    break;
-            }
-            replaceFragment(mSelectedFragment);
-            //getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, mSelectedFragment).commit();
-            return true;
-        }
-    };
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -122,6 +92,16 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
                 return true;
             }
         };
+
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -206,14 +186,29 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
                 || super.onSupportNavigateUp();
     }
 
-    @Override
-    public void onButtonLogoutClickLogout() { this.signOutFromFirebase(); }
+    private void configureToolBar()  {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
 
+    private void configureDrawerLayoutNavigationView(){
+        mDrawerLayout = findViewById(R.id.main_activity_drawer_layout);
+        mNavigationView = findViewById(R.id.nav_view);
+        mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings)
+                .setDrawerLayout(mDrawerLayout)
+                .build();
+
+        NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(mNavigationView, mNavController);
+    }
 
     /**
      * Initialization and dispay of the map fragment
      */
-    private void configureAndShowFragment() {
+    private void configureAndShowFirstFragment() {
         mSelectedFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.nav_map);
         if (mSelectedFragment == null) {
             mSelectedFragment = new MapFragment();
@@ -233,5 +228,30 @@ public class MainActivity extends BaseActivity implements MapFragment.OnListener
 //        lFragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         lFragmentTransaction.replace(R.id.nav_host_fragment, pFragment);
         lFragmentTransaction.commit();
+    }
+
+    /**
+     * Called when an item in the navigation menu is selected.
+     *
+     * @param item The selected item
+     * @return true to display the item as the selected item
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_lunch:
+                mSelectedFragment = new LunchFragment();
+                break;
+            case R.id.nav_settings:
+                mSelectedFragment = new SettingsFragment();
+                break;
+            case R.id.nav_logout:
+                mSelectedFragment = new MapFragment();
+                signOutFromFirebase();
+                break;
+        }
+        replaceFragment(mSelectedFragment);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
