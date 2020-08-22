@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_home_24"
-            android:title="@string/menu_home"
+            android:title="@string/menu_hungry"
             android:visible="false" />
         <item
             android:id="@+id/nav_lunch"

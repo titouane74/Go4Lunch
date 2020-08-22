@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.main;
 //TODO implement the javadoc
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,14 +40,15 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final int RC_SIGN_IN = 123;
+public class MainActivity extends BaseActivity {
+//    private static final int RC_SIGN_IN = 123;
     private AppBarConfiguration mAppBarConfiguration;
     private Fragment mSelectedFragment;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private static final String TAG_MAIN = "MainActivity";
     private NavController mNavController;
+
 
     @Override
     public int getFragmentLayout() {return R.layout.activity_main;}
@@ -60,41 +62,41 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         configureDrawerLayoutNavigationView();
 
         mSelectedFragment = null;
-        configureAndShowFirstFragment();
 
-        mNavigationView.setNavigationItemSelectedListener(this);
         NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+        //Contient un navigationitemselectedlistener
         NavigationUI.setupWithNavController(mNavigationView, mNavController);
+
+        //Ligne ancienne méthode en conflit avec nouvelle méthode
+        //mNavigationView.setNavigationItemSelectedListener(this);
+
 
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
         //Quand drawer et bottomnav sont identiques
-        //NavigationUI.setupWithNavController(lBottomNav,mNavController);
-        lBottomNav.setOnNavigationItemSelectedListener(navListener);
+        NavigationUI.setupWithNavController(lBottomNav,mNavController);
+        //lBottomNav.setOnNavigationItemSelectedListener(navListener);
 
     }
 
-    /**
-     * Called when an item in the navigation menu is selected.
-     *
-     * @param item The selected item
-     * @return true to display the item as the selected item
-     */
+
+/*
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         executeSelectedItem(item);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+*/
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+/*    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 executeSelectedItem(item);
                 return true;
             }
-        };
+        };*/
 
 
     @Override
@@ -106,7 +108,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    @Override
+/*    @Override
     protected void onStart() {
         super.onStart();
         //TODO : test if user is logged : yes open map ; no open startSignInActivity ()
@@ -117,8 +119,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else {
             this.startSignInActivity();
         }
-    }
-
+    }*/
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -147,8 +149,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
     }
+*/
 
-    protected void startSignInActivity() {
+/*    protected void startSignInActivity() {
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -164,9 +167,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                         .setLogo(R.drawable.ic_go4lunch_logo)
                         .build(),
                 RC_SIGN_IN);
-    }
+    }*/
 
-    protected void signOutFromFirebase(){
+    public void signOutFromFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(task -> this.startSignInActivity());
@@ -206,56 +209,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    /**
-     * Initialization and dispay of the map fragment
-     */
-    private void configureAndShowFirstFragment() {
-        mSelectedFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.nav_map);
-        if (mSelectedFragment == null) {
-            mSelectedFragment = new MapFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.nav_host_fragment, mSelectedFragment)
-                    .commit();
-        }
-    }
-
-    /**
-     * Fragment replace method
-     * @param pFragment : fragment : fragment to display
-     */
-    private void replaceFragment(final Fragment pFragment) {
-        final FragmentManager lFragmentManager = getSupportFragmentManager();
-        final FragmentTransaction lFragmentTransaction = lFragmentManager.beginTransaction();
-//        lFragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
-        lFragmentTransaction.replace(R.id.nav_host_fragment, pFragment);
-        lFragmentTransaction.commit();
-    }
-
-    private void executeSelectedItem (MenuItem pMenuItem) {
-        switch (pMenuItem.getItemId()) {
-            case R.id.nav_map:
-                mSelectedFragment = new MapFragment();
-                break;
-            case R.id.nav_view_list:
-                mSelectedFragment = new ViewListFragment();
-                break;
-            case R.id.nav_workmates:
-                mSelectedFragment = new WorkmatesFragment();
-                break;
-            case R.id.nav_home:
-                mSelectedFragment = new HomeFragment();
-                break;
-            case R.id.nav_lunch:
-                mSelectedFragment = new LunchFragment();
-                break;
-            case R.id.nav_settings:
-                mSelectedFragment = new SettingsFragment();
-                break;
-            case R.id.nav_logout:
-                mSelectedFragment = new MapFragment();
-                signOutFromFirebase();
-                break;
-        }
-        replaceFragment(mSelectedFragment);
-    }
 }

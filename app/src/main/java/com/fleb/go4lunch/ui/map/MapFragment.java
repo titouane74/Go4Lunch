@@ -11,7 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.firebase.ui.auth.AuthUI;
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.main.MainActivity;
+import com.fleb.go4lunch.utils.DisplayMessages;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
@@ -19,6 +22,7 @@ import com.fleb.go4lunch.R;
 
 
 public class MapFragment extends Fragment {
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -33,5 +37,4 @@ public class MapFragment extends Fragment {
         });
         return root;
     }
-
 }

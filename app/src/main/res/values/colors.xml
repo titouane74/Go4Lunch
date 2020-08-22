@@ -8,6 +8,8 @@
 
     <color name="ic_launcher_background">#FF5722</color>
 
+    <color name="colorWhiteBackground">#FFFFFF</color>
+
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextUnavailable">#909090</color>
     <color name="colorTextRestaurantInformation">#909090</color>

@@ -37,4 +37,8 @@
 
     <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
+    <style name="SplashTheme" parent="Go4LunchTheme">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
 </resources>

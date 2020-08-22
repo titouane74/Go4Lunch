@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.firebase.ui.auth.AuthUI;
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.main.MainActivity;
+
+import java.util.Arrays;
 
 
 /**
@@ -20,7 +24,7 @@ import com.fleb.go4lunch.R;
  */
 public class LogoutFragment extends Fragment {
 
-    private LogoutViewModel mLogoutViewModel;
+/*    private LogoutViewModel mLogoutViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,5 +34,14 @@ public class LogoutFragment extends Fragment {
         final TextView textView = root.findViewById(R.id.text_logout);
         mLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
+    }*/
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MainActivity) this.getActivity()).signOutFromFirebase();
     }
+
+
 }
