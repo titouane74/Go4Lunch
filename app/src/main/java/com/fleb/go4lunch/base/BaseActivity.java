@@ -61,7 +61,7 @@ public abstract class BaseActivity  extends AppCompatActivity implements View.On
                                         new AuthUI.IdpConfig.TwitterBuilder().build()
                                 ))
                         .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.white_logo_go4lunch_text_en)
+                        .setLogo(R.drawable.ic_svg1_white_logo_go4lunch_text_en)
                         .build(),
                 RC_SIGN_IN);
     }
