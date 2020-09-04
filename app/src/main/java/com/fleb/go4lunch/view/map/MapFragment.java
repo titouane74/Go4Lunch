@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.ui.map;
+package com.fleb.go4lunch.view.map;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.firebase.ui.auth.AuthUI;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.main.MainActivity;
-import com.fleb.go4lunch.utils.DisplayMessages;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020

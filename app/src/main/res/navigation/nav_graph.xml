@@ -6,19 +6,13 @@
     app:startDestination="@+id/nav_map">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.fleb.go4lunch.ui.home.HomeFragment"
-        android:label="@string/menu_hungry"
-        tools:layout="@layout/fragment_home"
-        />
-    <fragment
         android:id="@+id/nav_settings"
-        android:name="com.fleb.go4lunch.ui.settings.SettingsFragment"
+        android:name="com.fleb.go4lunch.view.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/nav_lunch"
-        android:name="com.fleb.go4lunch.ui.lunch.LunchFragment"
+        android:name="com.fleb.go4lunch.view.lunch.LunchFragment"
         android:label="@string/menu_lunch"
         tools:layout="@layout/fragment_lunch" />
 
@@ -30,24 +24,23 @@
 -->
     <fragment
         android:id="@+id/nav_logout"
-        android:name="com.fleb.go4lunch.ui.logout.LogoutFragment"
+        android:name="com.fleb.go4lunch.view.logout.LogoutFragment"
         android:label="@string/menu_logout"
-        tools:layout="@layout/fragment_map" >
-    </fragment>
+        tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/nav_map"
-        android:name="com.fleb.go4lunch.ui.map.MapFragment"
+        android:name="com.fleb.go4lunch.view.map.MapFragment"
         android:label="@string/menu_hungry"
         tools:layout="@layout/fragment_map"/>
     <fragment
         android:id="@+id/nav_view_list"
-        android:name="com.fleb.go4lunch.ui.viewlist.ViewListFragment"
+        android:name="com.fleb.go4lunch.view.viewlist.ViewListFragment"
         android:label="@string/menu_hungry"
         tools:layout="@layout/fragment_view_list"/>
     <fragment
         android:id="@+id/nav_workmates"
-        android:name="com.fleb.go4lunch.ui.workmates.WorkmatesFragment"
+        android:name="com.fleb.go4lunch.view.workmates.WorkmatesFragment"
         android:label="Workmates Fragment"
         tools:layout="@layout/fragment_workmates"/>
 

@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.ui.workmates;
+package com.fleb.go4lunch.view.workmates;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

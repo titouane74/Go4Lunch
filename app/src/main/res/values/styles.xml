@@ -35,7 +35,11 @@
 
     <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
 
     <style name="SplashTheme" parent="Go4LunchTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>

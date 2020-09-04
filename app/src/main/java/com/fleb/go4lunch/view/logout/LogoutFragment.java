@@ -1,22 +1,11 @@
-package com.fleb.go4lunch.ui.logout;
+package com.fleb.go4lunch.view.logout;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.firebase.ui.auth.AuthUI;
-import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.main.MainActivity;
-
-import java.util.Arrays;
+import com.fleb.go4lunch.view.MainActivity;
 
 
 /**
@@ -40,8 +29,7 @@ public class LogoutFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity) this.getActivity()).signOutFromFirebase();
+        ((MainActivity) (this.getActivity())).signOutFromFirebase();
     }
-
 
 }

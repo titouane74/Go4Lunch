@@ -1,10 +1,9 @@
-package com.fleb.go4lunch.authentification;
+package com.fleb.go4lunch.view.authentification;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;

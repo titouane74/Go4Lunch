@@ -1,20 +1,13 @@
-package com.fleb.go4lunch.main;
+package com.fleb.go4lunch.view;
 //TODO implement the javadoc
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -22,23 +15,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.firebase.ui.auth.AuthUI;
 
-import java.util.Arrays;
-import java.util.Objects;
-
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
-import com.fleb.go4lunch.ui.home.HomeFragment;
-import com.fleb.go4lunch.ui.lunch.LunchFragment;
-import com.fleb.go4lunch.ui.map.MapFragment;
-import com.fleb.go4lunch.ui.settings.SettingsFragment;
-import com.fleb.go4lunch.ui.viewlist.ViewListFragment;
-import com.fleb.go4lunch.ui.workmates.WorkmatesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity {
 //    private static final int RC_SIGN_IN = 123;
@@ -67,37 +47,12 @@ public class MainActivity extends BaseActivity {
         //Contient un navigationitemselectedlistener
         NavigationUI.setupWithNavController(mNavigationView, mNavController);
 
-        //Ligne ancienne méthode en conflit avec nouvelle méthode
-        //mNavigationView.setNavigationItemSelectedListener(this);
-
-
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
-        //Quand drawer et bottomnav sont identiques
+        //When drawer and bottomnav are identical
         NavigationUI.setupWithNavController(lBottomNav,mNavController);
-        //lBottomNav.setOnNavigationItemSelectedListener(navListener);
 
     }
-
-
-/*
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        executeSelectedItem(item);
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-*/
-
-/*    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-        new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                executeSelectedItem(item);
-                return true;
-            }
-        };*/
-
 
     @Override
     public void onBackPressed() {

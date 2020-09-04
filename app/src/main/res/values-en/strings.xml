@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources >
     <string name="app_name">Go4Lunch</string>
 
     <!-- DEVELOPMENT STATUS -->
@@ -35,10 +35,14 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
 
     <!--BOTTOM MENU-->
     <string name="menu_map">Map View</string>
     <string name="menu_view_list">List View</string>
     <string name="menu_workmates">Workmates</string>
+
+    <!--MAIN ACTIVITY-->
+    <string name="img_desc_logo">Logo</string>
+
 </resources>

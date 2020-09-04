@@ -1,17 +1,19 @@
-package com.fleb.go4lunch.ui.home;
-
+package com.fleb.go4lunch.view.logout;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+/**
+ * Created by Florence LE BOURNOT on 07/07/2020
+ */
+public class LogoutViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public LogoutViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("HOME SWEET HOME");
+        mText.setValue("This is logout fragment");
     }
 
     public LiveData<String> getText() {

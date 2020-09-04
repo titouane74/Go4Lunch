@@ -1,4 +1,5 @@
-package com.fleb.go4lunch.ui.home;
+package com.fleb.go4lunch.view.lunch;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +17,21 @@ import com.fleb.go4lunch.R;
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
  */
-
-
-public class HomeFragment extends Fragment {
+public class LunchFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel lHomeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        LunchViewModel lLunchViewModel = ViewModelProviders.of(this).get(LunchViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_lunch, container, false);
 
-/*        final TextView textView = root.findViewById(R.id.text_home);
-        lHomeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = root.findViewById(R.id.text_lunch);
+        lLunchViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });*/
+        });
+
         return root;
     }
-
 }

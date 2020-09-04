@@ -1,17 +1,19 @@
-package com.fleb.go4lunch.ui.lunch;
-
+package com.fleb.go4lunch.view.settings;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class LunchViewModel extends ViewModel {
+/**
+ * Created by Florence LE BOURNOT on 07/07/2020
+ */
+public class SettingsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public LunchViewModel() {
+    public SettingsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Lunch");
+        mText.setValue("This is settings fragment");
     }
 
     public LiveData<String> getText() {

@@ -1,17 +1,17 @@
-package com.fleb.go4lunch.ui.viewlist;
+package com.fleb.go4lunch.view.lunch;
 
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ViewListViewModel extends ViewModel {
+public class LunchViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ViewListViewModel() {
+    public LunchViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is view list fragment");
+        mText.setValue("Lunch");
     }
 
     public LiveData<String> getText() {

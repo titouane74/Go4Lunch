@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.main;
+package com.fleb.go4lunch.view;
 
 
 import android.content.Intent;
@@ -11,11 +11,9 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
-import com.fleb.go4lunch.utils.DisplayMessages;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class SplashActivity extends BaseActivity {
@@ -29,21 +27,8 @@ public class SplashActivity extends BaseActivity {
         } else {
             this.startSignInActivity();
         }
-
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //DisplayMessages.displayShortMessage(this,this.isCurrentUserLogged().toString());
-        //noinspection StatementWithEmptyBody
-/*
-        if (this.isCurrentUserLogged()) {
-        } else {
-            this.startSignInActivity();
-        }
-*/
-    }
     @Override
     public int getFragmentLayout() { return 0; }
 
