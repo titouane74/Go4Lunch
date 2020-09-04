@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#FF8A50</color>
     <color name="colorAccent">#FF9900</color>
     <color name="colorError">#FF5252</color>
+    <color name="colorProgressBar">#FFFFFF</color>
 
     <color name="ic_launcher_background">#FF5722</color>
 

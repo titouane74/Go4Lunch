@@ -45,4 +45,7 @@
     <!--MAIN ACTIVITY-->
     <string name="img_desc_logo">Logo</string>
 
+
+    <string name="nav_host_fragment">nav_host_fragment</string>
+    <string name="text_initializing">Initializing...</string>
 </resources>

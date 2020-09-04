@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.start;
+package com.fleb.go4lunch.view.home;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +15,12 @@ import com.fleb.go4lunch.R;
  */
 
 
-public class StartFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        StartViewModel lStartViewModel = ViewModelProviders.of(this).get(StartViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_start, container, false);
+        HomeViewModel lHomeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
 
 /*        final TextView textView = root.findViewById(R.id.text_home);
         lHomeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
