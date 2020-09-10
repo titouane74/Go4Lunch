@@ -26,6 +26,7 @@ public class ViewListFragment extends Fragment {
         ViewListViewModel lViewListViewModel = ViewModelProviders.of(this).get(ViewListViewModel.class);
         View root = inflater.inflate(R.layout.fragment_view_list, container, false);
 
+/*
         final TextView textView = root.findViewById(R.id.text_view_list);
         lViewListViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -33,6 +34,7 @@ public class ViewListFragment extends Fragment {
                 textView.setText(s);
             }
         });
+*/
         return root;
     }
 

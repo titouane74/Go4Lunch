@@ -11,6 +11,6 @@
         android:title="@string/menu_view_list" />
     <item
         android:id="@+id/nav_workmates"
-        android:icon="@drawable/ic_workmates_24"
+        android:icon="@drawable/ic_nav_workmates"
         android:title="@string/menu_workmates" />
 </menu>
