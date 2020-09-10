@@ -9,11 +9,12 @@
 
 
     <!-- List restaurant-->
-    <dimen name="text_size_item_title">15sp</dimen>
+    <dimen name="text_size_item_title">16sp</dimen>
     <dimen name="text_size_item_description">13sp</dimen>
     <dimen name="margin_end_item_title">16dp</dimen>
     <dimen name="margin_end_item_description">4dp</dimen>
-    <dimen name="margin_vertical_item">18dp</dimen>
+    <dimen name="margin_vertical_between_item">19dp</dimen>
+    <dimen name="margin_vertical_between_item_description">16dp</dimen>
 
     <!--Drawer-->
     <dimen name="horizontal_margin">16dp</dimen>

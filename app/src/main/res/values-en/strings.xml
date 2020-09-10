@@ -48,4 +48,6 @@
 
     <string name="nav_host_fragment">nav_host_fragment</string>
     <string name="text_initializing">Initializing...</string>
+
+    <string name="section_image_ratio">1:1</string>
 </resources>
