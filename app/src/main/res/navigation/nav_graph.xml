@@ -34,14 +34,14 @@
         android:label="@string/menu_hungry"
         tools:layout="@layout/fragment_map"/>
     <fragment
-        android:id="@+id/nav_view_list"
-        android:name="com.fleb.go4lunch.view.viewlist.ViewListFragment"
+        android:id="@+id/nav_restaurant_list"
+        android:name="com.fleb.go4lunch.view.restaurantlist.RestaurantListFragment"
         android:label="@string/menu_hungry"
-        tools:layout="@layout/fragment_view_list"/>
+        tools:layout="@layout/fragment_restaurant_list"/>
     <fragment
-        android:id="@+id/nav_workmates"
-        android:name="com.fleb.go4lunch.view.workmates.WorkmatesFragment"
-        android:label="Workmates Fragment"
-        tools:layout="@layout/fragment_workmates"/>
+        android:id="@+id/nav_workmate"
+        android:name="com.fleb.go4lunch.view.workmate.WorkmateListFragment"
+        android:label="@string/menu_available_workmates"
+        tools:layout="@layout/fragment_workmate_list"/>
 
 </navigation>

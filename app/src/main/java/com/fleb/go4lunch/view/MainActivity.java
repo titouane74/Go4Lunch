@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity {
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-        R.id.nav_home,R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map, R.id.nav_view_list, R.id.nav_workmates)
+        R.id.nav_home,R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map, R.id.nav_restaurant_list, R.id.nav_workmate)
                 .setDrawerLayout(mDrawerLayout)
                 .build();
 

@@ -38,6 +38,7 @@
     <string name="menu_lunch">VOTRE DEJEUNER</string>
     <string name="menu_logout">DECONNEXION</string>
     <string name="menu_settings">PARAMETRES</string>
+    <string name="menu_available_workmates">Collègues disponibles</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -47,14 +48,14 @@
 
     <!--BOTTOM MENU-->
     <string name="menu_map">Carte</string>
-    <string name="menu_view_list">Liste</string>
-    <string name="menu_workmates">Collègues</string>
+    <string name="menu_restaurant_list">Liste</string>
+    <string name="menu_workmate_list">Collègues</string>
 
     <!--MAIN ACTIVITY-->
     <string name="img_desc_logo">Logo</string>
 
     <string name="nav_host_fragment">nav_host_fragment</string>
-
+    <string name="text_initializing">Initialisation...</string>
 
     <string name="section_image_ratio">1:1</string>
 </resources>

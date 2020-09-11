@@ -16,6 +16,10 @@
     <dimen name="margin_vertical_between_item">19dp</dimen>
     <dimen name="margin_vertical_between_item_description">16dp</dimen>
 
+    <!-- List workmate-->
+    <dimen name="margin_start_item">24dp</dimen>
+
+
     <!--Drawer-->
     <dimen name="horizontal_margin">16dp</dimen>
     <dimen name="vertical_margin_small">8dp</dimen>
@@ -25,4 +29,5 @@
     <dimen name="nav_header_height">220dp</dimen>
     <dimen name="logo_size_height">104dp</dimen>
     <dimen name="logo_size_add_photo">72dp</dimen>
+
 </resources>

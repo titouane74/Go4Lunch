@@ -30,6 +30,7 @@
     <string name="menu_lunch">YOUR LUNCH</string>
     <string name="menu_logout">LOGOUT</string>
     <string name="menu_settings">SETTINGS</string>
+    <string name="menu_available_workmates">Available workmates</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -39,8 +40,8 @@
 
     <!--BOTTOM MENU-->
     <string name="menu_map">Map View</string>
-    <string name="menu_view_list">List View</string>
-    <string name="menu_workmates">Workmates</string>
+    <string name="menu_restaurant_list">List View</string>
+    <string name="menu_workmate_list">Workmates</string>
 
     <!--MAIN ACTIVITY-->
     <string name="img_desc_logo">Logo</string>

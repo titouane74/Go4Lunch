@@ -6,11 +6,11 @@
         android:icon="@drawable/ic_map_24"
         android:title="@string/menu_map" />
     <item
-        android:id="@+id/nav_view_list"
+        android:id="@+id/nav_restaurant_list"
         android:icon="@drawable/ic_view_list_24"
-        android:title="@string/menu_view_list" />
+        android:title="@string/menu_restaurant_list" />
     <item
-        android:id="@+id/nav_workmates"
-        android:icon="@drawable/ic_nav_workmates"
-        android:title="@string/menu_workmates" />
+        android:id="@+id/nav_workmate"
+        android:icon="@drawable/ic_nav_workmate"
+        android:title="@string/menu_workmate_list" />
 </menu>

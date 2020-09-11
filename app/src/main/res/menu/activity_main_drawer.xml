@@ -26,12 +26,12 @@
             android:title="@string/menu_map"
             android:visible="false"/>
         <item
-            android:id="@+id/nav_view_list"
-            android:title="@string/menu_view_list"
+            android:id="@+id/nav_restaurant_list"
+            android:title="@string/menu_restaurant_list"
             android:visible="false"/>
         <item
-            android:id="@+id/nav_workmates"
-            android:title="@string/menu_workmates"
+            android:id="@+id/nav_workmate"
+            android:title="@string/menu_workmate_list"
             android:visible="false"/>
     </group>
 </menu>
