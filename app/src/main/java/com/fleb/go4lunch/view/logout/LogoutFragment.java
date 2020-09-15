@@ -1,10 +1,17 @@
 package com.fleb.go4lunch.view.logout;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.view.MainActivity;
 
 
@@ -13,7 +20,7 @@ import com.fleb.go4lunch.view.MainActivity;
  */
 public class LogoutFragment extends Fragment {
 
-/*    private LogoutViewModel mLogoutViewModel;
+    private LogoutViewModel mLogoutViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -23,7 +30,7 @@ public class LogoutFragment extends Fragment {
         final TextView textView = root.findViewById(R.id.text_logout);
         mLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
-    }*/
+    }
 
 
     @Override

@@ -10,6 +10,7 @@
     <color name="ic_launcher_background">#FF5722</color>
 
     <color name="colorWhiteBackground">#FFFFFF</color>
+    <color name="colorDiviseur">#E5E6E7</color>
 
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextUnavailable">#909090</color>

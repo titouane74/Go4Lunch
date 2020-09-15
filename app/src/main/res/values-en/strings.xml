@@ -51,4 +51,10 @@
     <string name="text_initializing">Initializing...</string>
 
     <string name="section_image_ratio">1:1</string>
+
+    <!-- RESTAURANT DETAIL -->
+    <string name="btn_check">CHECK</string>
+    <string name="text_call">CALL</string>
+    <string name="text_like">LIKE</string>
+    <string name="text_website">WEBSITE</string>
 </resources>

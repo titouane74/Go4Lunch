@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/item_list_workmate_img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="@dimen/img_size_workmate_width_height"
+        android:layout_height="@dimen/img_size_workmate_width_height"
+        android:layout_marginStart="@dimen/vertical_margin"
+        android:layout_marginTop="@dimen/margin_vertical_between_item_description"
+        android:layout_marginBottom="@dimen/margin_vertical_between_item_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_start_item"
-        android:textStyle="bold"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/default_text_size_middle"
+        android:text="Workmate"
         app:layout_constraintBottom_toBottomOf="@+id/item_list_workmate_img"
         app:layout_constraintStart_toEndOf="@+id/item_list_workmate_img"
         app:layout_constraintTop_toTopOf="@+id/item_list_workmate_img" />
