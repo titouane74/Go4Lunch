@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view;
+package com.fleb.go4lunch.view.activities;
 //TODO implement the javadoc
 import android.os.Bundle;
 import android.view.Menu;

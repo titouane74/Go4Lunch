@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.restaurantlist;
+package com.fleb.go4lunch.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

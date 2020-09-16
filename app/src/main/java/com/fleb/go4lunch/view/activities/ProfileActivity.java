@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.authentification;
+package com.fleb.go4lunch.view.activities;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;

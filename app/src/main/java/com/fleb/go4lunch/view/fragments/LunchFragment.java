@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.lunch;
+package com.fleb.go4lunch.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.viewmodel.LunchViewModel;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020

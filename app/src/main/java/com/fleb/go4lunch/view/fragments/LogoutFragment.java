@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.logout;
+package com.fleb.go4lunch.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.view.MainActivity;
+import com.fleb.go4lunch.view.activities.MainActivity;
+import com.fleb.go4lunch.viewmodel.LogoutViewModel;
 
 
 /**
@@ -23,9 +24,9 @@ public class LogoutFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         LogoutViewModel lLogoutViewModel = ViewModelProviders.of(this).get(LogoutViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_map, container, false);
-        final TextView textView = root.findViewById(R.id.text_view_map);
-        lLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        View root = inflater.inflate(R.layout.fragment_maps, container, false);
+//        final TextView textView = root.findViewById(R.id.text_view_map);
+//        lLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

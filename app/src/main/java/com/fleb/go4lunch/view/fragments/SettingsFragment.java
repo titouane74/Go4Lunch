@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.settings;
+package com.fleb.go4lunch.view.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.viewmodel.SettingsViewModel;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020

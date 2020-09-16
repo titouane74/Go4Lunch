@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view;
+package com.fleb.go4lunch.view.activities;
 
 
 import android.content.Intent;
@@ -11,6 +11,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.base.BaseActivity;
+import com.fleb.go4lunch.view.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

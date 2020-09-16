@@ -1,19 +1,17 @@
-package com.fleb.go4lunch.view.logout;
+package com.fleb.go4lunch.viewmodel;
+
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-/**
- * Created by Florence LE BOURNOT on 07/07/2020
- */
-public class LogoutViewModel extends ViewModel {
+public class RestaurantListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public LogoutViewModel() {
+    public RestaurantListViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Déconnexion en cours");
+        mText.setValue("This is view list fragment");
     }
 
     public LiveData<String> getText() {

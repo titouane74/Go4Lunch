@@ -1,17 +1,17 @@
-package com.fleb.go4lunch.view.workmate;
+package com.fleb.go4lunch.viewmodel;
 
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class WorkmateListViewModel extends ViewModel {
+public class LunchViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public WorkmateListViewModel() {
+    public LunchViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is workmate fragment");
+        mText.setValue("Lunch");
     }
 
     public LiveData<String> getText() {

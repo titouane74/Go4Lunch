@@ -1,17 +1,19 @@
-package com.fleb.go4lunch.view.map;
-
+package com.fleb.go4lunch.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MapViewModel extends ViewModel {
+/**
+ * Created by Florence LE BOURNOT on 07/07/2020
+ */
+public class LogoutViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public MapViewModel() {
+    public LogoutViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is map fragment");
+        mText.setValue("Déconnexion en cours");
     }
 
     public LiveData<String> getText() {

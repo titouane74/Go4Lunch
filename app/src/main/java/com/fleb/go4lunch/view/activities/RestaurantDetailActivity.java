@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.view.restaurantdetail;
+package com.fleb.go4lunch.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
