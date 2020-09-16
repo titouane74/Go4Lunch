@@ -9,6 +9,15 @@
     <dimen name="default_text_size_mini">12sp</dimen>
     <dimen name="default_text_size_large">40sp</dimen>
 
+    <!--Drawer-->
+    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="vertical_margin_small">8dp</dimen>
+    <dimen name="vertical_margin">16dp</dimen>
+    <dimen name="vertical_margin_large">32dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">220dp</dimen>
+    <dimen name="logo_size_height">104dp</dimen>
+    <dimen name="logo_size_add_photo">72dp</dimen>
 
     <!-- List restaurant -->
     <dimen name="text_size_item_title">18sp</dimen>
@@ -28,15 +37,10 @@
     <dimen name="margin_start_item">24dp</dimen>
     <dimen name="img_size_workmate_width_height">80dp</dimen>
 
+    <!-- Pin mam -->
+    <dimen name="pin_width">10dp</dimen>
+    <dimen name="pin_height">12dp</dimen>
+    <dimen name="pin_top">-3dp</dimen>
 
-    <!--Drawer-->
-    <dimen name="horizontal_margin">16dp</dimen>
-    <dimen name="vertical_margin_small">8dp</dimen>
-    <dimen name="vertical_margin">16dp</dimen>
-    <dimen name="vertical_margin_large">32dp</dimen>
-    <dimen name="nav_header_vertical_spacing">8dp</dimen>
-    <dimen name="nav_header_height">220dp</dimen>
-    <dimen name="logo_size_height">104dp</dimen>
-    <dimen name="logo_size_add_photo">72dp</dimen>
 
 </resources>

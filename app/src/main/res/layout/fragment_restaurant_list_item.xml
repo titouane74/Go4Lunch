@@ -118,7 +118,7 @@
         android:id="@+id/img_restaurant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_baseline_restaurant_24"
+        android:background="@drawable/ic_restaurant_cutlery"
         android:contentDescription="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

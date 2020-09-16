@@ -20,15 +20,12 @@ import com.fleb.go4lunch.view.MainActivity;
  */
 public class LogoutFragment extends Fragment {
 
-    private LogoutViewModel mLogoutViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        mLogoutViewModel =
-                ViewModelProviders.of(this).get(LogoutViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_logout, container, false);
-        final TextView textView = root.findViewById(R.id.text_logout);
-        mLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        LogoutViewModel lLogoutViewModel = ViewModelProviders.of(this).get(LogoutViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_map, container, false);
+        final TextView textView = root.findViewById(R.id.text_view_map);
+        lLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

@@ -26,8 +26,9 @@
             <ImageView
                 android:layout_width="135dp"
                 android:layout_height="128dp"
-                android:background="@drawable/ic_go4lunch_logo"
-                android:contentDescription="@string/app_name"/>
+                android:background="@color/colorPrimary"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/ic_go4lunch_logo" />
 
             <!-- PROGRESS BAR -->
             <ProgressBar
@@ -42,7 +43,7 @@
                 android:id="@+id/profile_activity_imageview_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_anon_user_48dp"
+                app:srcCompat="@drawable/ic_profile_user"
                 android:contentDescription="@string/image_user"/>
 
         </LinearLayout>
@@ -100,7 +101,7 @@
             android:text="@string/button_update_account"
             android:textColor="#fff"
             android:textSize="@dimen/default_text_size"
-            android:background="@drawable/button_radius_primary_color"
+            android:background="@drawable/btn_radius_primary_color"
             style="?android:attr/borderlessButtonStyle"
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>
@@ -113,7 +114,7 @@
             android:text="@string/button_sign_out_account"
             android:textColor="#fff"
             android:textSize="@dimen/default_text_size"
-            android:background="@drawable/button_radius_accent_color"
+            android:background="@drawable/btn_radius_accent_color"
             style="?android:attr/borderlessButtonStyle"
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>
@@ -126,7 +127,7 @@
             android:text="@string/button_delete_account"
             android:textColor="#fff"
             android:textSize="@dimen/default_text_size"
-            android:background="@drawable/button_radius_error_color"
+            android:background="@drawable/btn_radius_error_color"
             style="?android:attr/borderlessButtonStyle"
             android:layout_margin="@dimen/default_margin"
             android:padding="@dimen/default_margin"/>

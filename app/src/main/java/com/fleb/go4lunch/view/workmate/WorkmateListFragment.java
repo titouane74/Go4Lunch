@@ -20,16 +20,8 @@ public class WorkmateListFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        WorkmateListViewModel lWorkmateListViewModel = ViewModelProviders.of(this).get(WorkmateListViewModel.class);
         View root = inflater.inflate(R.layout.fragment_workmate_list, container, false);
 
-/*
-        final TextView textView = root.findViewById(R.id.text_workmates);
-        lWorkmateViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) { textView.setText(s); }
-        });
-*/
         return root;
     }
 

@@ -13,7 +13,7 @@ public class LogoutViewModel extends ViewModel {
 
     public LogoutViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is logout fragment");
+        mText.setValue("Déconnexion en cours");
     }
 
     public LiveData<String> getText() {
