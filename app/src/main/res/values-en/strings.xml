@@ -12,7 +12,7 @@
     <string name="connection_succeed">Successful authentication !</string>
     <string name="button_login_text_logged">Display profil</string>
     <string name="button_login_text_not_logged">Connection</string>
-    <string name="user_connected"> connected</string>
+    <string name="user_connected">User connected</string>
     <string name="button_signout">Logout</string>
     <string name="img_desc_logo">Logo</string>
 

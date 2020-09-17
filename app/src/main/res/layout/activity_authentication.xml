@@ -130,7 +130,7 @@
                 android:layout_marginStart="@dimen/default_margin"
                 android:contentDescription="@string/desc_logo_facebook"
                 android:elevation="10dp"
-                android:src="@drawable/com_facebook_button_icon_white"
+                android:src="@drawable/com_facebook_button_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

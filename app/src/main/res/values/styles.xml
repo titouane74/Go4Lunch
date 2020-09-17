@@ -6,7 +6,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
     </style>
 
     <style name="Go4LunchTheme.NoActionBar">
@@ -14,10 +13,18 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LoginTheme.NoActionBar" parent="Go4LunchTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+
+    <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
+
+    <style name="StartTheme" parent="Go4LunchTheme">
+        <item name="android:windowBackground">@drawable/start_background</item>
+    </style>
+
 
     <style name="LoginTheme" parent="Go4LunchTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -34,17 +41,9 @@
         <item name="android:text">@string/sign_in_with_email</item>
         <item name="android:textSize">12sp</item>
     </style>
-
-    <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-
-    <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
-    </style>
-
-    <style name="SplashTheme" parent="Go4LunchTheme">
-        <item name="android:windowBackground">@drawable/splash_background</item>
+    <style name="LoginTheme.NoActionBar" parent="Go4LunchTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

@@ -29,23 +29,22 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <activity
-            android:name=".view.activities.SplashActivity"
-            android:theme="@style/SplashTheme">
 
-        </activity>
-        <activity
-            android:name=".view.activities.AuthenticationActivity"
-            android:theme="@style/LoginTheme">
+        <activity android:name=".view.activities.StartActivity"
+            android:theme="@style/StartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Activity_Main -->
+
+        <activity
+            android:name=".view.activities.AuthenticationActivity"
+            android:theme="@style/LoginTheme">
+        </activity> <!-- Activity_Main -->
         <activity android:name=".view.activities.MainActivity" />
-        <activity android:name=".view.activities.RestaurantDetailActivity" />
-        <!-- PROFILE ACTIVITY -->
+        <activity android:name=".view.activities.RestaurantDetailActivity" /> <!-- PROFILE ACTIVITY -->
         <activity
             android:name=".view.activities.ProfileActivity"
             android:parentActivityName=".view.activities.MainActivity" />

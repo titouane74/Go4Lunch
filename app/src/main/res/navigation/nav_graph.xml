@@ -37,5 +37,9 @@
         android:name="com.fleb.go4lunch.view.fragments.WorkmateListFragment"
         android:label="@string/menu_available_workmates"
         tools:layout="@layout/fragment_workmate_list"/>
+    <activity
+        android:id="@+id/nav_start"
+        android:name="com.fleb.go4lunch.view.activities.StartActivity"
+        tools:layout="@layout/activity_start" />
 
 </navigation>

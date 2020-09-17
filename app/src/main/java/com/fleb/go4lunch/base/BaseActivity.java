@@ -14,12 +14,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Arrays;
 
 /**
  * Created by Florence LE BOURNOT on 03/07/2020
  */
-public abstract class BaseActivity  extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity  extends AppCompatActivity{
     public static final int RC_SIGN_IN = 123;
 
     @Override
@@ -33,4 +32,5 @@ public abstract class BaseActivity  extends AppCompatActivity implements View.On
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
+
 }
