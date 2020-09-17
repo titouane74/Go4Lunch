@@ -19,6 +19,17 @@
     <dimen name="logo_size_height">104dp</dimen>
     <dimen name="logo_size_add_photo">72dp</dimen>
 
+    <!-- Authentification -->
+    <dimen name="auth_img_logo_height">0.36</dimen>
+    <dimen name="auth_horizontal_margin_large">30dp</dimen>
+    <dimen name="auth_text_logo_size">10sp</dimen>
+    <dimen name="auth_text_logo_size_go4lunch">70sp</dimen>
+    <dimen name="auth_btn_height">50dp</dimen>
+    <dimen name="auth_btn_logo_witdh">26dp</dimen>
+    <dimen name="auth_btn_vertical_margin">20dp</dimen>
+    <dimen name="auth_btn_text_align_padding">30dp</dimen>
+
+
     <!-- List restaurant -->
     <dimen name="text_size_item_title">18sp</dimen>
     <dimen name="text_size_item_description">13sp</dimen>

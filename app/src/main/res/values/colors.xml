@@ -20,4 +20,13 @@
     <color name="colorTextBlack">#000000</color>
 
     <color name="colorPinGreen">#69F0AE</color>
+
+
+    <!--AUTHENTICATION-->
+    <color name="color_btn_bckgrd_tint_email">@color/fui_bgEmail</color>
+    <color name="color_btn_bckgrd_tint_facebook">@color/com_facebook_button_background_color</color>
+    <color name="color_btn_bckgrd_tint_google">#FFFFFF</color>
+    <color name="color_btn_bckgrd_tint_twitter">@color/fui_bgTwitter</color>
+
+
 </resources>

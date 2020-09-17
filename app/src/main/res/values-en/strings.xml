@@ -14,6 +14,7 @@
     <string name="button_login_text_not_logged">Connection</string>
     <string name="user_connected">User connected</string>
     <string name="button_signout">Logout</string>
+    <string name="img_desc_logo">Logo</string>
 
     <!-- PROFILE ACTIVITY -->
     <string name="text_input_username">Username</string>
@@ -43,12 +44,20 @@
     <string name="menu_restaurant_list">List View</string>
     <string name="menu_workmate_list">Workmates</string>
 
-    <!--MAIN ACTIVITY-->
-    <string name="img_desc_logo">Logo</string>
-
+    <!--AUTHENTIFICATION ACTIVITY-->
+    <string name="logo_text_go4lunch">Go4Lunch</string>
+    <string name="logo_text">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="sign_in_with_email">Sign in with email</string>
+    <string name="desc_logo_facebook">Facebook</string>
+    <string name="desc_logo_google">Google</string>
+    <string name="desc_logo_email">Email</string>
+    <string name="desc_logo_twitter">Twitter</string>
 
     <string name="nav_host_fragment">nav_host_fragment</string>
-    <string name="text_initializing">Initializing...</string>
+    <string name="text_initializing">Initializing…</string>
 
     <string name="section_image_ratio">1:1</string>
 

@@ -28,7 +28,7 @@
                 android:layout_height="128dp"
                 android:background="@color/colorPrimary"
                 android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/ic_go4lunch_logo" />
+                app:srcCompat="@drawable/logo_go4lunch" />
 
             <!-- PROGRESS BAR -->
             <ProgressBar

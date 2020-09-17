@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/logo_size_height"
-            app:srcCompat="@drawable/ic_go4lunch_logo"
+            app:srcCompat="@drawable/logo_go4lunch"
             android:layout_gravity="bottom"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
