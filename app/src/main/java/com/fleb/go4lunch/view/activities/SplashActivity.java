@@ -26,7 +26,7 @@ public class SplashActivity extends BaseActivity {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         } else {
-            this.startSignInActivity();
+            //this.startSignInActivity();
         }
     }
 
@@ -36,6 +36,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onClick(View v) {    }
 
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -66,6 +67,7 @@ public class SplashActivity extends BaseActivity {
             }
         }
     }
+*/
 
 
 }

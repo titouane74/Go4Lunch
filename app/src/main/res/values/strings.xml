@@ -20,7 +20,7 @@
     <string name="connection_succeed">Authentification réussie !</string>
     <string name="button_login_text_logged">Afficher le profil</string>
     <string name="button_login_text_not_logged">Connexion</string>
-    <string name="user_connected">Utilisateur connecté</string>
+    <string name="user_connected"> connecté</string>
     <string name="button_signout">Déconnexion</string>
     <string name="img_desc_logo">Logo</string>
 

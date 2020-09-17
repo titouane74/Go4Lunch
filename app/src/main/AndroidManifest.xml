@@ -35,7 +35,7 @@
 
         </activity>
         <activity
-            android:name=".view.activities.Authentication"
+            android:name=".view.activities.AuthenticationActivity"
             android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

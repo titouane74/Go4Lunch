@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.view.activities;
 //TODO implement the javadoc
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private static final String TAG_MAIN = "MainActivity";
+    private static final String TAG_MAIN = "TAG_MAIN";
     private NavController mNavController;
 
     @Override
@@ -49,19 +49,20 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    /**
+     * Suppress the super.onBackPressed because we don't want that the user can press Back
+     */
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
     public void signOutFromFirebase(){
         AuthUI.getInstance()
                 .signOut(this)
-                .addOnCompleteListener(task -> this.startSignInActivity());
+                .addOnCompleteListener(task -> startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class)));
     }
 
     @Override

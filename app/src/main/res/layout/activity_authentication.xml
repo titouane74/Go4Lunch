@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/lunch_portrait"
     android:theme="@style/LoginTheme"
-    tools:context=".view.activities.Authentication">
+    tools:context=".view.activities.AuthenticationActivity">
 
     <ImageView
         android:id="@+id/auth_img_logo"
@@ -51,7 +51,7 @@
             android:layout_marginEnd="@dimen/auth_horizontal_margin_large">
 
             <Button
-                android:id="@+id/start_activity_button_email_login"
+                android:id="@+id/btn_start_login_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/LoginTheme.Button"
@@ -61,7 +61,7 @@
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
-                android:id="@+id/start_activity_email_logo"
+                android:id="@+id/btn_start_login_email_logo"
                 android:layout_width="@dimen/auth_btn_logo_witdh"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
@@ -82,7 +82,7 @@
             android:layout_marginEnd="@dimen/auth_horizontal_margin_large">
 
             <Button
-                android:id="@+id/start_activity_button_google_login"
+                android:id="@+id/btn_start_login_google"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/LoginTheme.Button"
@@ -93,7 +93,7 @@
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
-                android:id="@+id/start_activity_google_logo"
+                android:id="@+id/btn_start_login_google_logo"
                 android:layout_width="@dimen/auth_btn_logo_witdh"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
@@ -114,7 +114,7 @@
             android:layout_marginEnd="@dimen/auth_horizontal_margin_large">
 
             <Button
-                android:id="@+id/start_activity_button_facebook_login"
+                android:id="@+id/btn_start_login_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/LoginTheme.Button"
@@ -124,7 +124,7 @@
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
-                android:id="@+id/start_activity_facebook_logo"
+                android:id="@+id/btn_start_login_facebook_logo"
                 android:layout_width="@dimen/auth_btn_logo_witdh"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
@@ -146,7 +146,7 @@
             android:layout_marginBottom="@dimen/auth_btn_vertical_margin">
 
             <Button
-                android:id="@+id/start_activity_button_twitter_login"
+                android:id="@+id/btn_start_login_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/LoginTheme.Button"
@@ -156,7 +156,7 @@
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
-                android:id="@+id/start_activity_twitter_logo"
+                android:id="@+id/btn_start_login_twitter_logo"
                 android:layout_width="@dimen/auth_btn_logo_witdh"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"

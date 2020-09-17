@@ -27,36 +27,10 @@ public abstract class BaseActivity  extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState, persistentState);
         this.setContentView(this.getFragmentLayout());
     }
-
-
     public abstract int getFragmentLayout();
-
-
-    protected OnFailureListener onFailureListener(){
-        return e -> Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error), Toast.LENGTH_LONG).show();
-    }
-
 
     @Nullable
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
-
-    protected void startSignInActivity() {
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setTheme(R.style.LoginTheme)
-                        .setAvailableProviders(
-                                Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
-                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                        new AuthUI.IdpConfig.FacebookBuilder().build()
-                                        ,
-                                        new AuthUI.IdpConfig.TwitterBuilder().build()
-                                ))
-                        .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.logo_go4lunch_white_complete_en)
-                        .build(),
-                RC_SIGN_IN);
-    }
 }
