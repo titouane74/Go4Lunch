@@ -2,7 +2,6 @@ package com.fleb.go4lunch.view.activities;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -10,7 +9,6 @@ import androidx.annotation.Nullable;
 
 import com.firebase.ui.auth.AuthUI;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.base.BaseActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
@@ -25,7 +23,7 @@ public class ProfileActivity extends BaseActivity {
     private Toast mToast;
 
     @Override
-    public int getFragmentLayout() {return R.layout.activity_profile;}
+    public int getActivityLayout() {return R.layout.activity_profile;}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {

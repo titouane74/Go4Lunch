@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.base;
+package com.fleb.go4lunch.view.activities;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -24,9 +24,10 @@ public abstract class BaseActivity  extends AppCompatActivity{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        this.setContentView(this.getFragmentLayout());
+        this.setContentView(this.getActivityLayout());
     }
-    public abstract int getFragmentLayout();
+
+    public abstract int getActivityLayout();
 
     @Nullable
     protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }

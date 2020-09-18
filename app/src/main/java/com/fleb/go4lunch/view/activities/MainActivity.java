@@ -3,7 +3,6 @@ package com.fleb.go4lunch.view.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -16,7 +15,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.base.BaseActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -29,12 +27,12 @@ public class MainActivity extends BaseActivity {
     private NavController mNavController;
 
     @Override
-    public int getFragmentLayout() {return R.layout.activity_main;}
+    public int getActivityLayout() { return R.layout.activity_main; }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getFragmentLayout());
+        setContentView(getActivityLayout());
         configureToolBar();
         configureDrawerLayoutNavigationView();
 
@@ -45,7 +43,7 @@ public class MainActivity extends BaseActivity {
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
         //When drawer and bottomnav are identical
-        NavigationUI.setupWithNavController(lBottomNav,mNavController);
+        NavigationUI.setupWithNavController(lBottomNav, mNavController);
 
     }
 
@@ -59,7 +57,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public void signOutFromFirebase(){
+    public void signOutFromFirebase() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(task -> startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class)));
@@ -79,19 +77,20 @@ public class MainActivity extends BaseActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void configureToolBar()  {
+    private void configureToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
-    private void configureDrawerLayoutNavigationView(){
+    private void configureDrawerLayoutNavigationView() {
         mDrawerLayout = findViewById(R.id.main_activity_drawer_layout);
         mNavigationView = findViewById(R.id.nav_view);
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-        R.id.nav_home,R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map, R.id.nav_restaurant_list, R.id.nav_workmate)
+                R.id.nav_home, R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map, R.id.nav_restaurant_list, R.id.nav_workmate)
                 .setDrawerLayout(mDrawerLayout)
                 .build();
     }
+
 }

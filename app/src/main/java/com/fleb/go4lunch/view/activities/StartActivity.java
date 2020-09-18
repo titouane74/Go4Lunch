@@ -1,15 +1,10 @@
 package com.fleb.go4lunch.view.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.base.BaseActivity;
 
 public class StartActivity extends BaseActivity {
 
@@ -18,7 +13,7 @@ public class StartActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        setContentView(getActivityLayout());
 
         //TODO voir en mentorat si on met un délai
         /*
@@ -32,13 +27,15 @@ public class StartActivity extends BaseActivity {
     protected void openActivity() {
         if (isCurrentUserLogged()) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
             Log.d(TAG_START, "onStart: User connecté");
         } else {
             startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class));
+            finish();
             Log.d(TAG_START, "onStart: User null");
         }
     }
 
     @Override
-    public int getFragmentLayout() { return R.layout.activity_start; }
+    public int getActivityLayout() { return R.layout.activity_start; }
 }
