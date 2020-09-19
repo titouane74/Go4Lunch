@@ -12,7 +12,9 @@
     <string name="connection_succeed">Successful authentication !</string>
     <string name="button_login_text_logged">Display profil</string>
     <string name="button_login_text_not_logged">Connection</string>
+    <string name="msg_sign_in_to_continue">Please sign in to continue.</string>
     <string name="user_connected">User connected</string>
+    <string name="error_msg_email_user_exists">An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.</string>
     <string name="button_signout">Logout</string>
     <string name="img_desc_logo">Logo</string>
 

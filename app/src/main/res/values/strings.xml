@@ -20,7 +20,9 @@
     <string name="connection_succeed">Authentification réussie !</string>
     <string name="button_login_text_logged">Afficher le profil</string>
     <string name="button_login_text_not_logged">Connexion</string>
+    <string name="msg_sign_in_to_continue">Authentifiez-vous pour continuer.</string>
     <string name="user_connected">Utilisateur connecté</string>
+    <string name="error_msg_email_user_exists">Un compte existe déjà avec la même adresse e-mail mais des informations de connexion différentes. Connectez-vous à l\'aide d\'un fournisseur associé à cette adresse e-mail.</string>
     <string name="button_signout">Déconnexion</string>
     <string name="img_desc_logo">Logo</string>
 
