@@ -32,16 +32,16 @@
 
         <activity android:name=".view.activities.StartActivity"
             android:theme="@style/StartTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name=".view.activities.AuthenticationActivity"
             android:theme="@style/LoginTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity> <!-- Activity_Main -->
         <activity android:name=".view.activities.MainActivity" />
         <activity android:name=".view.activities.RestaurantDetailActivity" /> <!-- PROFILE ACTIVITY -->

@@ -91,6 +91,16 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = mFirebaseAuth.getCurrentUser();
+        if (mCurrentUser != null) {
+            updateUI(mCurrentUser);
+        }
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_start_login_email:
