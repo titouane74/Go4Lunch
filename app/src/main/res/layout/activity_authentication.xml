@@ -13,9 +13,9 @@
         android:id="@+id/auth_img_logo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="@dimen/auth_img_logo_height"
         android:layout_margin="@dimen/default_margin"
         android:contentDescription="@string/img_desc_logo"
+        app:layout_constraintHeight_percent="@dimen/auth_img_logo_height"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_go4lunch_white_title" />
 
@@ -27,6 +27,7 @@
         android:layout_marginEnd="@dimen/default_margin"
         android:gravity="center_horizontal"
         android:text="@string/logo_text"
+        android:textColor="@color/colorTextPrimary"
         android:textSize="@dimen/auth_text_logo_size"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="@+id/auth_img_logo"
@@ -39,8 +40,8 @@
         android:layout_margin="@dimen/default_margin"
         android:gravity="bottom"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/auth_text"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/auth_text">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_btn_email"
@@ -57,6 +58,7 @@
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/fui_bgEmail"
                 android:text="@string/sign_in_with_email"
+                android:textColor="@color/colorTextPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="RtlSymmetry"
                 tools:layout_editor_absoluteX="0dp" />
@@ -84,9 +86,9 @@
 
             <Button
                 android:id="@+id/btn_start_login_google"
+                style="@style/LoginTheme.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="@style/LoginTheme.Button"
                 android:backgroundTint="@color/fui_bgGoogle"
                 android:text="@string/sign_in_with_google"
                 android:textColor="@color/colorTextBlack"
@@ -116,11 +118,12 @@
 
             <Button
                 android:id="@+id/btn_start_login_facebook"
+                style="@style/LoginTheme.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="@style/LoginTheme.Button"
                 android:backgroundTint="@color/fui_bgFacebook"
                 android:text="@string/sign_in_with_facebook"
+                android:textColor="@color/colorTextPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="RtlSymmetry" />
 
@@ -148,11 +151,12 @@
 
             <Button
                 android:id="@+id/btn_start_login_twitter"
+                style="@style/LoginTheme.Button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="@style/LoginTheme.Button"
                 android:backgroundTint="@color/fui_bgTwitter"
                 android:text="@string/sign_in_with_twitter"
+                android:textColor="@color/colorTextPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="RtlSymmetry" />
 

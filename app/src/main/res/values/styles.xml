@@ -29,8 +29,10 @@
     <style name="LoginTheme" parent="Go4LunchTheme">
         <item name="colorPrimary">@color/colorTextPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/colorTextPrimary</item>
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="android:textColorHint">@color/colorTextPrimary</item>
         <item name="android:windowBackground">@drawable/lunch_portrait</item>
     </style>
 
