@@ -97,7 +97,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         if (mCurrentUser != null) {
             updateUI(mCurrentUser);
         }
-
     }
 
     @Override
