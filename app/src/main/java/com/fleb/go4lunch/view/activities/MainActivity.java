@@ -18,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
@@ -122,7 +123,7 @@ public class MainActivity extends BaseActivity {
             String lPhotoUrl;
 
             lPhotoUrl = Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString();
-            Glide.with(this).load(lPhotoUrl).into(lImgUser);
+            Glide.with(this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(lImgUser);
             lTxtName.setText(lName);
             lTxtEmail.setText(lEmail);
         }

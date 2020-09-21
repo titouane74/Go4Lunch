@@ -43,6 +43,7 @@
             android:contentDescription="@string/nav_header_desc"
             android:layout_marginTop="@dimen/vertical_margin_large"
             app:srcCompat="@mipmap/ic_round_add_photo"
+
         />
 
         <LinearLayout
@@ -67,7 +68,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_header_subtitle"
-                android:textColor="@color/colorTextPrimary"/>
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/default_text_size_mini"/>
 
         </LinearLayout>
     </LinearLayout>
