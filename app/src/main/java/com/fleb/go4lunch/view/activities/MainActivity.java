@@ -160,17 +160,7 @@ public class MainActivity extends BaseActivity {
 
         mFirestoreDB.collection(WORKMATE_COLLECTION)
                 .add(lWorkmate)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference pDocumentReference) {
-                        Log.d(TAG_FIRESTORE, "onSuccess: Document saved " + pDocumentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception pE) {
-                        Log.d(TAG_FIRESTORE, "onFailure: Document not saved", pE);
-                    }
-                });
+                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_FIRESTORE, "onSuccess: Document saved " + pDocumentReference.getId()))
+                .addOnFailureListener(pE -> Log.d(TAG_FIRESTORE, "onFailure: Document not saved", pE));
     }
 }

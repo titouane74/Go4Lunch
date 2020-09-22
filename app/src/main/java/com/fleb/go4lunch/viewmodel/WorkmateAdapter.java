@@ -23,12 +23,10 @@ import java.util.List;
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateHolder> {
 
     private List<Workmate> mWorkmateList;
-    private Context mContext;
 
     public void setWorkmateList(List<Workmate> pWorkmateList) {
         mWorkmateList = pWorkmateList;
     }
-
 
     @NonNull
     @Override
@@ -38,7 +36,6 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
         return new WorkmateHolder(lView);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull WorkmateHolder pWorkmateHolder, int position) {
         pWorkmateHolder.lTxtViewName.setText(mWorkmateList.get(position).getWorkmateName());
@@ -46,7 +43,6 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
                 .load(mWorkmateList.get(position).getWorkmatePhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(pWorkmateHolder.lImgViewWorkmate);
-
     }
 
     @Override
