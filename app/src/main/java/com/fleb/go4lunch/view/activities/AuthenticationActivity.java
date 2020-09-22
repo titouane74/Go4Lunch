@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -48,6 +47,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     public static final String TAG_AUTHENTICATION = "TAG_AUTHENTICATION";
     public static final int RC_SIGN_IN = 123;
     public static final int RC_SIGN_IN_GOOGLE = 456;
+
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
 
@@ -299,7 +299,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getEmail());
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getPhotoUrl());
 
-            //TODO Update user in database Firestore if not exist
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         } else {

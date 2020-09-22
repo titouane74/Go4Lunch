@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,11 +23,18 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends BaseActivity {
@@ -35,6 +43,17 @@ public class MainActivity extends BaseActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private static final String TAG_MAIN = "TAG_MAIN";
+
+    public static final String TAG_FIRESTORE = "TAG_FIRESTORE";
+    public static final String WORKMATE_EMAIL_KEY = "workmateEmail";
+    public static final String WORKMATE_NAME_KEY = "workmateName";
+    public static final String WORKMATE_PHOTO_URL_KEY = "workmatePhotoUrl";
+    public static final String WORKMATE_COLLECTION = "Workmate";
+
+    // Access a Cloud Firestore instance from your Activity
+    private FirebaseFirestore mFirestoreDB = FirebaseFirestore.getInstance();
+    private CollectionReference workmateRef = mFirestoreDB.collection(WORKMATE_COLLECTION);
+
     private NavController mNavController;
 
     private FirebaseAuth mFirebaseAuth;
@@ -65,6 +84,9 @@ public class MainActivity extends BaseActivity {
         //When drawer and bottomnav are identical
         NavigationUI.setupWithNavController(lBottomNav, mNavController);
 
+        //TODO Update user in database Firestore if not exist
+        //TODO Add test if user exist or not in Firebase
+        //saveWorkmate(mCurrentUser);
     }
 
     /**
@@ -130,4 +152,25 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
+        Map<String, Object> lWorkmate = new HashMap<>();
+        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
+        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
+        lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
+
+        mFirestoreDB.collection(WORKMATE_COLLECTION)
+                .add(lWorkmate)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference pDocumentReference) {
+                        Log.d(TAG_FIRESTORE, "onSuccess: Document saved " + pDocumentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception pE) {
+                        Log.d(TAG_FIRESTORE, "onFailure: Document not saved", pE);
+                    }
+                });
+    }
 }
