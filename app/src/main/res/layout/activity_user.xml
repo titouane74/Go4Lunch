@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@drawable/lunch_portrait"
+    android:orientation="vertical"
+    tools:context=".view.activities.UserActivity">
+
+    <!-- USER DATA CONTAINER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_large_margin"
+            android:gravity="center">
+
+            <!-- GO4LUNCH IMAGE -->
+            <ImageView
+                android:id="@+id/prof_user_img_logo"
+                android:layout_width="@dimen/prof_user_img_size"
+                android:layout_height="@dimen/prof_user_img_size"
+
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/logo_go4lunch_white_title" />
+
+            <!-- PROGRESS BAR -->
+            <ProgressBar
+                android:id="@+id/prof_user_progress_bar"
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:layout_margin="@dimen/default_large_margin"
+                android:visibility="invisible" />
+
+            <!-- PROFILE IMAGE -->
+            <ImageView
+                android:id="@+id/prof_user_img_user"
+                android:layout_width="@dimen/prof_user_img_size"
+                android:layout_height="@dimen/prof_user_img_size"
+                android:contentDescription="@string/image_user"
+                app:srcCompat="@drawable/ic_profile_user" />
+
+        </LinearLayout>
+
+
+        <!-- PROFILE USERNAME -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/prof_user_edit_text_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/text_input_username"
+            android:textSize="@dimen/default_text_size"
+            android:textColor="@color/colorTextPrimary"/>
+
+        <!-- PROFILE EMAIL CONTAINER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_view_email"
+                android:textSize="@dimen/default_text_size"
+                android:textColor="@color/colorTextUnavailable"/>
+
+            <!-- PROFILE EMAIL -->
+            <TextView
+                android:id="@+id/prof_user_txt_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/default_margin"
+                android:paddingEnd="@dimen/default_margin"
+                android:textSize="@dimen/default_text_size"
+                android:textColor="@color/colorTextUnavailable"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- BUTTONS CONTAINER -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1.2"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <!-- BUTTON UPDATE USERNAME -->
+        <Button
+            android:id="@+id/prof_user_btn_update"
+            style="@style/UserTheme.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_update_account"
+            />
+
+        <!-- BUTTON SIGN OUT -->
+        <Button
+            android:id="@+id/prof_user_btn_sign_out"
+            style="@style/UserTheme.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_sign_out_account" />
+
+        <!-- BUTTON DELETE ACCOUNT -->
+        <Button
+            android:id="@+id/prof_user_btn_delete"
+            style="@style/UserTheme.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_delete_account"/>
+
+    </LinearLayout>
+
+</LinearLayout>

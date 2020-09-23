@@ -20,7 +20,7 @@
 
     <!-- PROFILE ACTIVITY -->
     <string name="text_input_username">Username</string>
-    <string name="text_view_email">Email address :</string>
+    <string name="text_view_email">Email address</string>
     <string name="button_update_account">Update username</string>
     <string name="button_delete_account">Delete my account</string>
     <string name="button_sign_out_account">Logout</string>

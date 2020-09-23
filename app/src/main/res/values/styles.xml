@@ -48,4 +48,24 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="UserTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
+    <style name="UserTheme.Button" parent="UserTheme" >
+        <item name="android:textSize">@dimen/prof_user_btn_text_size</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:background">@drawable/btn_radius_primary_color</item>
+        <item name="android:layout_margin">@dimen/default_margin_mini</item>
+        <item name="android:padding">@dimen/default_margin</item>
+        <item name="android:layout_marginStart">@dimen/prof_user_btn_margin_horizontal</item>
+        <item name="android:layout_marginEnd">@dimen/prof_user_btn_margin_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+    </style>
+
 </resources>

@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -23,21 +26,18 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity {
 
     private NavController mNavController;
 
-    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
 
     @Override
@@ -69,8 +69,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(getActivityLayout());
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mCurrentUser = mFirebaseAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
 
         configureToolBar();
         configureDrawerLayoutNavigationView();
@@ -130,12 +130,13 @@ public class MainActivity extends BaseActivity {
         View lHeaderView = mNavigationView.getHeaderView(0);
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        ImageView lImgUser = lHeaderView.findViewById(R.id.img_user);
-        TextView lTxtName = lHeaderView.findViewById(R.id.txt_user_name);
-        TextView lTxtEmail = lHeaderView.findViewById(R.id.txt_user_email);
+        ImageView lImgUser = lHeaderView.findViewById(R.id.nav_img_user);
+        TextView lTxtName = lHeaderView.findViewById(R.id.nav_txt_user_name);
+        TextView lTxtEmail = lHeaderView.findViewById(R.id.nav_txt_user_email);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map, R.id.nav_restaurant_list, R.id.nav_workmate)
+                R.id.nav_home, R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map,
+                R.id.nav_restaurant_list, R.id.nav_workmate)
                 .setDrawerLayout(mDrawerLayout)
                 .build();
 
@@ -150,6 +151,15 @@ public class MainActivity extends BaseActivity {
             lTxtEmail.setText(lEmail);
         }
 
+        lImgUser.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(MainActivity.this,UserActivity.class));
+        }
     }
 
     public void saveWorkmate(FirebaseUser pCurrentWorkmate) {

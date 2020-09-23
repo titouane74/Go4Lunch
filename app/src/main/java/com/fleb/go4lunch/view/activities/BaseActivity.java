@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 /**
  * Created by Florence LE BOURNOT on 03/07/2020
  */
-public abstract class BaseActivity  extends AppCompatActivity{
+public abstract class BaseActivity  extends AppCompatActivity {
     public static final int RC_SIGN_IN = 123;
 
     @Override

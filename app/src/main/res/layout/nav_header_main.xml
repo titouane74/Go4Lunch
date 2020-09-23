@@ -37,14 +37,15 @@
         app:layout_constraintTop_toBottomOf="@+id/nav_title">
 
         <ImageView
-            android:id="@+id/img_user"
+            android:id="@+id/nav_img_user"
             android:layout_width="@dimen/logo_size_add_photo"
             android:layout_height="@dimen/logo_size_add_photo"
             android:contentDescription="@string/nav_header_desc"
             android:layout_marginTop="@dimen/vertical_margin_large"
             app:srcCompat="@mipmap/ic_round_add_photo"
-
-        />
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onClick"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +56,7 @@
             android:gravity="center_vertical"
             >
             <TextView
-                android:id="@+id/txt_user_name"
+                android:id="@+id/nav_txt_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_header_title"
@@ -64,7 +65,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/txt_user_email"
+                android:id="@+id/nav_txt_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/nav_header_subtitle"

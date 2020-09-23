@@ -1,6 +1,5 @@
-package com.fleb.go4lunch.viewmodel;
+package com.fleb.go4lunch.viewmodel.workmatelist;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

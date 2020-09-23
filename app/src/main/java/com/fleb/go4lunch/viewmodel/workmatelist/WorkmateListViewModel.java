@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.viewmodel;
+package com.fleb.go4lunch.viewmodel.workmatelist;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

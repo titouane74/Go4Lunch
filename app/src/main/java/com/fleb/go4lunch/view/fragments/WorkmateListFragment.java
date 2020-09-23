@@ -15,9 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.viewmodel.WorkmateAdapter;
-import com.fleb.go4lunch.viewmodel.WorkmateListViewModel;
-import com.google.firebase.auth.FirebaseAuth;
+import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateAdapter;
+import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateListViewModel;
 
 import java.util.List;
 
