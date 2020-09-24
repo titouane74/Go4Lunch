@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map,
                 R.id.nav_restaurant_list, R.id.nav_workmate)
-                .setDrawerLayout(mDrawerLayout)
+                .setOpenableLayout(mDrawerLayout)
                 .build();
 
         if (mCurrentUser != null) {
