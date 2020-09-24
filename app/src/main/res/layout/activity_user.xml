@@ -26,8 +26,8 @@
             <!-- GO4LUNCH IMAGE -->
             <ImageView
                 android:id="@+id/prof_user_img_logo"
-                android:layout_width="@dimen/prof_user_img_size"
-                android:layout_height="@dimen/prof_user_img_size"
+                android:layout_width="@dimen/user_img_size"
+                android:layout_height="@dimen/user_img_size"
 
                 android:contentDescription="@string/app_name"
                 app:srcCompat="@drawable/logo_go4lunch_white_title" />
@@ -43,9 +43,9 @@
             <!-- PROFILE IMAGE -->
             <ImageView
                 android:id="@+id/prof_user_img_user"
-                android:layout_width="@dimen/prof_user_img_size"
-                android:layout_height="@dimen/prof_user_img_size"
-                android:contentDescription="@string/image_user"
+                android:layout_width="@dimen/user_img_size"
+                android:layout_height="@dimen/user_img_size"
+                android:contentDescription="@string/img_user"
                 app:srcCompat="@drawable/ic_profile_user" />
 
         </LinearLayout>
@@ -103,7 +103,7 @@
             style="@style/UserTheme.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_update_account"
+            android:text="@string/btn_update_account"
             />
 
         <!-- BUTTON SIGN OUT -->
@@ -112,7 +112,7 @@
             style="@style/UserTheme.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_sign_out_account" />
+            android:text="@string/btn_sign_out_account" />
 
         <!-- BUTTON DELETE ACCOUNT -->
         <Button
@@ -120,7 +120,7 @@
             style="@style/UserTheme.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_delete_account"/>
+            android:text="@string/btn_delete_account"/>
 
     </LinearLayout>
 

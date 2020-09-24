@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -26,9 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -123,7 +119,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
-                        .setTheme(R.style.LoginTheme)
+                        .setTheme(R.style.AuthenticationTheme)
                         .setAvailableProviders(Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
@@ -140,17 +136,14 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mFirebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG_AUTHENTICATION, "signInWithCredential:success");
-                            updateUI(mFirebaseAuth.getCurrentUser());
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG_AUTHENTICATION, "signInWithCredential:failure", task.getException());
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG_AUTHENTICATION, "signInWithCredential:success");
+                        updateUI(mFirebaseAuth.getCurrentUser());
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG_AUTHENTICATION, "signInWithCredential:failure", task.getException());
                     }
                 });
     }
@@ -206,19 +199,10 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             // There's something already here! Finish the sign-in for your user.
             pendingResultTask
                     .addOnSuccessListener(
-                            new OnSuccessListener<AuthResult>() {
-                                @Override
-                                public void onSuccess(AuthResult authResult) {
-                                    updateUI(mFirebaseAuth.getCurrentUser());
-                                }
-                            })
-                    .addOnFailureListener(
-                            new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Handle failure.
-                                    Log.d(TAG_AUTHENTICATION, "onFailure: " + e.getMessage());
-                                }
+                            authResult -> updateUI(mFirebaseAuth.getCurrentUser()))
+                    .addOnFailureListener( e -> {
+                                // Handle failure.
+                                Log.d(TAG_AUTHENTICATION, "onFailure: " + e.getMessage());
                             });
         } else {
             // There's no pending result so you need to start the sign-in flow.
@@ -227,20 +211,11 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             mFirebaseAuth
                     .startActivityForSignInWithProvider(this, provider.build())
                     .addOnSuccessListener(
-                            new OnSuccessListener<AuthResult>() {
-                                @Override
-                                public void onSuccess(AuthResult authResult) {
-                                    updateUI(mFirebaseAuth.getCurrentUser());
-                                }
-                            })
-                    .addOnFailureListener(
-                            new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Handle failure.
-                                    Toast.makeText(getApplicationContext(), getString(R.string.error_msg_email_user_exists), Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG_AUTHENTICATION, "onFailure: 2" + e.getMessage());
-                                }
+                            authResult -> updateUI(mFirebaseAuth.getCurrentUser()))
+                    .addOnFailureListener(e -> {
+                                // Handle failure.
+                                Toast.makeText(getApplicationContext(), getString(R.string.error_msg_email_user_exists), Toast.LENGTH_SHORT).show();
+                                Log.d(TAG_AUTHENTICATION, "onFailure: 2" + e.getMessage());
                             });
         }
     }

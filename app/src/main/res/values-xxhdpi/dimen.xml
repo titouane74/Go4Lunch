@@ -30,10 +30,10 @@
     <dimen name="auth_btn_vertical_margin">20dp</dimen>
     <dimen name="auth_btn_text_align_padding">30dp</dimen>
 
-    <!-- Profile User -->
-    <dimen name="prof_user_btn_text_size">16sp</dimen>
-    <dimen name="prof_user_btn_margin_horizontal">@dimen/default_margin</dimen>
-    <dimen name="prof_user_img_size">150dp</dimen>
+    <!-- User -->
+    <dimen name="user_btn_text_size">16sp</dimen>
+    <dimen name="user_btn_margin_horizontal">@dimen/default_margin</dimen>
+    <dimen name="user_img_size">150dp</dimen>
 
 
     <!-- List restaurant -->

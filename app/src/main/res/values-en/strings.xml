@@ -10,23 +10,24 @@
     <string name="error_no_internet">No internet connection !</string>
     <string name="error_unknown_error">An unknown error has occurred&#8230;</string>
     <string name="connection_succeed">Successful authentication !</string>
-    <string name="button_login_text_logged">Display profil</string>
-    <string name="button_login_text_not_logged">Connection</string>
+    <string name="btn_login_text_logged">Display profil</string>
+    <string name="btn_login_text_not_logged">Connection</string>
     <string name="msg_sign_in_to_continue">Please sign in to continue.</string>
     <string name="user_connected">User connected</string>
     <string name="error_msg_email_user_exists">An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.</string>
-    <string name="button_signout">Logout</string>
+    <string name="btn_signout">Logout</string>
     <string name="img_desc_logo">Logo</string>
 
-    <!-- PROFILE ACTIVITY -->
+    <!-- USER ACTIVITY -->
+    <string name="user_activity_label">User account</string>
     <string name="text_input_username">Username</string>
     <string name="text_view_email">Email address</string>
-    <string name="button_update_account">Update username</string>
-    <string name="button_delete_account">Delete my account</string>
-    <string name="button_sign_out_account">Logout</string>
+    <string name="btn_update_account">Update username</string>
+    <string name="btn_delete_account">Delete my account</string>
+    <string name="btn_sign_out_account">Logout</string>
     <string name="info_no_email_found">No email address</string>
     <string name="info_no_username_found">No username</string>
-    <string name="image_user">User image</string>
+    <string name="img_user">User image</string>
 
     <!--DRAWER-->
     <string name="menu_hungry">I\'M HUNGRY!</string>

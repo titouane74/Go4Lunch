@@ -36,17 +36,18 @@
             android:theme="@style/StartTheme"></activity>
         <activity
             android:name=".view.activities.AuthenticationActivity"
-            android:theme="@style/LoginTheme">
+            android:theme="@style/AuthenticationTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Activity_Main -->
+        </activity>
         <activity android:name=".view.activities.MainActivity" />
 
         <activity android:name=".view.activities.UserActivity"
             android:parentActivityName=".view.activities.MainActivity"
+            android:label="@string/user_activity_label"
             android:theme="@style/UserTheme"/>
 
         <activity android:name=".view.activities.RestaurantDetailActivity" /> <!-- PROFILE ACTIVITY -->
