@@ -1,5 +1,7 @@
 package com.fleb.go4lunch.model;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.firestore.DocumentId;
 
 import java.util.Objects;
@@ -14,9 +16,10 @@ public class Workmate {
     private String workmateId;
     private String workmateName;
     private String workmateEmail;
+    @Nullable
     private String workmatePhotoUrl;
 
-    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, @Nullable String pWorkmatePhotoUrl) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
@@ -37,9 +40,10 @@ public class Workmate {
 
     public void setWorkmateEmail(String pWorkmateEmail) { workmateEmail = pWorkmateEmail; }
 
+    @Nullable
     public String getWorkmatePhotoUrl() { return workmatePhotoUrl; }
 
-    public void setWorkmatePhotoUrl(String pWorkmatePhotoUrl) { workmatePhotoUrl = pWorkmatePhotoUrl; }
+    public void setWorkmatePhotoUrl(@Nullable String pWorkmatePhotoUrl) { workmatePhotoUrl = pWorkmatePhotoUrl; }
 
     @Override
     public boolean equals(Object pObj) {
