@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.viewmodel.workmatelist;
+package com.fleb.go4lunch.repository;
 
 import com.fleb.go4lunch.model.Workmate;
 

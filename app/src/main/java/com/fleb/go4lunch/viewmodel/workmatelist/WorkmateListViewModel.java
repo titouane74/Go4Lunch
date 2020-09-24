@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.repository.WorkmateRepo;
 
 import java.util.List;
 

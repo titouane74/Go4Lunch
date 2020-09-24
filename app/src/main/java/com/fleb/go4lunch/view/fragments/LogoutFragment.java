@@ -17,8 +17,7 @@ public class LogoutFragment extends BaseFragment {
     protected int getFragmentLayout() { return R.layout.fragment_maps; }
 
     @Override
-    protected void configureFragmentOnCreateView(View pView) {
-    }
+    protected void configureFragmentOnCreateView(View pView) {    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
