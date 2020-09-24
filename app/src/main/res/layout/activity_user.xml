@@ -99,7 +99,7 @@
 
         <!-- BUTTON UPDATE USERNAME -->
         <Button
-            android:id="@+id/prof_user_btn_update"
+            android:id="@+id/user_btn_update"
             style="@style/UserTheme.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
 
         <!-- BUTTON SIGN OUT -->
         <Button
-            android:id="@+id/prof_user_btn_sign_out"
+            android:id="@+id/user_btn_sign_out"
             style="@style/UserTheme.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
 
         <!-- BUTTON DELETE ACCOUNT -->
         <Button
-            android:id="@+id/prof_user_btn_delete"
+            android:id="@+id/user_btn_delete"
             style="@style/UserTheme.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

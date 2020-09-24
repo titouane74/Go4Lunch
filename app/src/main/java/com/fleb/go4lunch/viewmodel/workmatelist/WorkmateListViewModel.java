@@ -17,12 +17,11 @@ public class WorkmateListViewModel extends ViewModel implements WorkmateRepo.OnF
         return mWorkmateList;
     }
 
-    private WorkmateRepo mWorkmateRepo = new WorkmateRepo(this);
-
     //Constructor if fragment is ised for another fragment
     // put mWorkmateRepo.getWorkmateData(); elsewhere
     public WorkmateListViewModel() {
-        mWorkmateRepo.getWorkmateData();
+        WorkmateRepo lWorkmateRepo = new WorkmateRepo(this);
+        lWorkmateRepo.getWorkmateData();
     }
 
     @Override

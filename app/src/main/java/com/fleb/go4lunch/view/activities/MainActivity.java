@@ -5,14 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -31,7 +27,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private static final String TAG_MAIN = "TAG_MAIN";
+    //private static final String TAG_MAIN = "TAG_MAIN";
 
     public static final String TAG_FIRESTORE = "TAG_FIRESTORE";
     public static final String WORKMATE_EMAIL_KEY = "workmateEmail";
@@ -53,11 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Access a Cloud Firestore instance from your Activity
     private FirebaseFirestore mFirestoreDB = FirebaseFirestore.getInstance();
-    private CollectionReference workmateRef = mFirestoreDB.collection(WORKMATE_COLLECTION);
 
     private NavController mNavController;
 
-    private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
 
     @Override
@@ -65,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
-        mCurrentUser = mAuth.getCurrentUser();
+        FirebaseAuth lAuth = FirebaseAuth.getInstance();
+        mCurrentUser = lAuth.getCurrentUser();
 
         configureToolBar();
         configureDrawerLayoutNavigationView();
@@ -158,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //TODO Add test if user exist or not in Firebase
     public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
         Map<String, Object> lWorkmate = new HashMap<>();
         lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());

@@ -4,13 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.view.activities.MainActivity;
-import com.fleb.go4lunch.viewmodel.LogoutViewModel;
-
-
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
@@ -22,9 +18,6 @@ public class LogoutFragment extends BaseFragment {
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-        LogoutViewModel lLogoutViewModel = ViewModelProviders.of(this).get(LogoutViewModel.class);
-//        final TextView textView = pView.findViewById(R.id.text_view_map);
-//        lLogoutViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.fleb.go4lunch.view.fragments;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
@@ -13,17 +13,15 @@ import com.fleb.go4lunch.viewmodel.SettingsViewModel;
  */
 public class SettingsFragment extends BaseFragment {
 
-    private SettingsViewModel mSettingsViewModel;
-
     @Override
     protected int getFragmentLayout() { return R.layout.fragment_settings; }
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-        mSettingsViewModel =
-                ViewModelProviders.of(this).get(SettingsViewModel.class);
+        SettingsViewModel lSettingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
         final TextView textView = pView.findViewById(R.id.text_settings);
-        mSettingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        lSettingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
     }
 
 }

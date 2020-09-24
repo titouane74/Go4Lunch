@@ -33,7 +33,7 @@
 
         <activity
             android:name=".view.activities.StartActivity"
-            android:theme="@style/StartTheme"></activity>
+            android:theme="@style/StartTheme"/>
         <activity
             android:name=".view.activities.AuthenticationActivity"
             android:theme="@style/AuthenticationTheme">

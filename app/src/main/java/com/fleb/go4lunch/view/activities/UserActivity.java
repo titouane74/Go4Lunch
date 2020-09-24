@@ -3,9 +3,9 @@ package com.fleb.go4lunch.view.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,15 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener{
-    public static final String TAG_USER = "TAG_USER";
-
-    private ImageView mImgLogo;
-    private ImageView mImgUser;
-    private TextView mTxtEmail;
-    private TextView mTxtName;
-    private Button mBtnUpdate;
-    private Button mBtnSignOut;
-    private Button mBtnDelete;
+    //public static final String TAG_USER = "TAG_USER";
 
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
@@ -40,36 +32,36 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
-        mImgUser = findViewById(R.id.prof_user_img_user);
-        mImgLogo = findViewById(R.id.prof_user_img_logo);
-        mTxtEmail = findViewById(R.id.prof_user_txt_email);
-        mTxtName = findViewById(R.id.prof_user_edit_text_username);
+        ImageView lImgUser = findViewById(R.id.prof_user_img_user);
+//        ImageView lImgLogo = findViewById(R.id.prof_user_img_logo);
+        TextView lTxtEmail = findViewById(R.id.prof_user_txt_email);
+        EditText lTxtName = findViewById(R.id.prof_user_edit_text_username);
 
         String lPhotoUrl = Objects.requireNonNull(mCurrentUser.getPhotoUrl()).toString();
-        Glide.with(this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
-        mTxtEmail.setText(mCurrentUser.getEmail());
-        mTxtName.setText(mCurrentUser.getDisplayName());
+        Glide.with(this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(lImgUser);
+        lTxtEmail.setText(mCurrentUser.getEmail());
+        lTxtName.setText(mCurrentUser.getDisplayName());
 
-        mBtnUpdate = findViewById(R.id.prof_user_btn_update);
-        mBtnSignOut = findViewById(R.id.prof_user_btn_sign_out);
-        mBtnDelete = findViewById(R.id.prof_user_btn_delete);
+        Button lBtnUpdate = findViewById(R.id.user_btn_update);
+        Button lBtnSignOut = findViewById(R.id.user_btn_sign_out);
+        Button lBtnDelete = findViewById(R.id.user_btn_delete);
 
         //TODO : to implement
-        mBtnUpdate.setOnClickListener(this);
-        mBtnSignOut.setOnClickListener(this);
-        mBtnDelete.setOnClickListener(this);
+        lBtnUpdate.setOnClickListener(this);
+        lBtnSignOut.setOnClickListener(this);
+        lBtnDelete.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.prof_user_btn_update:
-                Toast.makeText(this, R.string.to_do + "UPDATE", Toast.LENGTH_SHORT).show();
+            case R.id.user_btn_update:
+                Toast.makeText(this, R.string.to_do + " UPDATE", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.prof_user_btn_sign_out:
+            case R.id.user_btn_sign_out:
                 Toast.makeText(this, R.string.to_do + " SIGN OUT", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.prof_user_btn_delete:
+            case R.id.user_btn_delete:
                 Toast.makeText(this, R.string.to_do + " DELETE", Toast.LENGTH_SHORT).show();
                 break;
         }
