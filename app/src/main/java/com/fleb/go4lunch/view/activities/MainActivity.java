@@ -24,7 +24,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.Workmate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,9 +35,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG_FIRESTORE_ADD = "TAG_FIRESTORE_ADD";
+    private static final String TAG_SAVE = "TAG_SAVE";
+    private static final String TAG_EXIST = "TAG_EXIST";
+    private static final String TAG_DISPLAY = "TAG_DISPLAY";
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -57,44 +58,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private NavController mNavController;
 
     private FirebaseUser mCurrentUser;
-    private boolean mExistWorkmate = false;
-    private Workmate mWorkmate;
 
     private ImageView mImgUser;
     private TextView mTxtName;
     private TextView mTxtEmail;
 
 
-    @Override
-    protected int getActivityLayout() { return R.layout.activity_main; }
-
-    @Override
-    protected void configureActivityOnCreate() {
-        FirebaseAuth lAuth = FirebaseAuth.getInstance();
-        mCurrentUser = lAuth.getCurrentUser();
-
-        configureToolBar();
-        configureDrawerLayoutNavigationView();
-
-        NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
-        //Contient un navigationitemselectedlistener
-        NavigationUI.setupWithNavController(mNavigationView, mNavController);
-
-        //Bottom navigation
-        BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
-        //When drawer and bottomnav are identical
-        NavigationUI.setupWithNavController(lBottomNav, mNavController);
-
-        //TODO Update user in database Firestore if not exist
-        //TODO Add test if user exist or not in Firebase
-
-        if (existWorkmate(mCurrentUser)) {
-            saveWorkmate(mCurrentUser);
-        }
-
-    }
-
-/*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +73,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mCurrentUser = lAuth.getCurrentUser();
 
         configureToolBar();
+
+        //saveWorkmateIfNotExist(mCurrentUser);
+
         configureDrawerLayoutNavigationView();
 
         NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
@@ -115,14 +87,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //When drawer and bottomnav are identical
         NavigationUI.setupWithNavController(lBottomNav, mNavController);
 
-        //TODO Update user in database Firestore if not exist
-        //TODO Add test if user exist or not in Firebase
-
-        if (existWorkmate(mCurrentUser)) {
-            saveWorkmate(mCurrentUser);
-        }
     }
-*/
+
 
     /**
      * Suppress the super.onBackPressed because we don't want that the user can press Back
@@ -134,10 +100,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        configureDrawerLayoutNavigationView();
+    }
+
     public void signOutFromFirebase() {
         AuthUI.getInstance()
                 .signOut(this)
-                .addOnCompleteListener(task -> startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class)));
+                .addOnCompleteListener(task ->
+                {
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class));
+                });
     }
 
     @Override
@@ -177,7 +153,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         if (mCurrentUser != null) {
             displayWorkmateData(mCurrentUser);
-
         }
 
         mImgUser.setOnClickListener(this);
@@ -191,8 +166,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    //TODO Add test if user exist or not in Firebase
-    public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
+/*    public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
+
+        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+                .get()
+                .addOnSuccessListener(pVoid -> {
+                    if (pVoid.exists()) {
+                        Log.d(TAG_EXIST, "RIEN NE SE PASSE");
+                    } else {
+                        saveWorkmate(mCurrentUser);
+                        Log.d(TAG_EXIST, "SAUVEGARDE EFFECTUEE");
+                        Toast.makeText(MainActivity.this, "Compte créé", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(pE -> {
+                        Log.d(TAG_EXIST, "onFailure Save: Document not updated", pE); });
+    }*/
+
+/*    public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
 
         Map<String, Object> lWorkmate = new HashMap<>();
         lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
@@ -203,24 +194,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
                 .set(lWorkmate)
-                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_FIRESTORE, "onSuccess: Document saved "))
-                .addOnFailureListener(pE -> Log.d(TAG_FIRESTORE, "onFailure: Document not saved", pE));
+                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
+                .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
 
-        Log.d(TAG_FIRESTORE_ADD, "saveWorkmate: " + mWorkmateRef.document().getId());
-    }
-
-    public boolean existWorkmate(FirebaseUser pCurrentWorkmate) {
-
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-                .get()
-                .addOnSuccessListener(pVoid -> {
-                    Log.d(TAG_FIRESTORE, "onSuccess: Document updated ");
-                    mExistWorkmate = true;
-                })
-                .addOnFailureListener(pE -> Log.d(TAG_FIRESTORE, "onFailure: Document not updated", pE));
-
-        return mExistWorkmate;
-    }
+        Log.d(TAG_SAVE, "saveWorkmate: " + mWorkmateRef.document().getId());
+    }*/
 
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
@@ -233,13 +211,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         String lPhotoUrl = pDocumentSnapshot.getString(WORKMATE_PHOTO_URL_KEY);
 
                         if (lPhotoUrl != null) {
-                            Glide.with(this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
+                            Glide.with(MainActivity.this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
                         }
                         mTxtName.setText(lName);
                         mTxtEmail.setText(lEmail);
 
                     } else {
-                        Toast.makeText(this, "Document does not exist", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG_DISPLAY, "displayWorkmateData: PAS DE DOC");
+                        Toast.makeText(MainActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(pE -> Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show());

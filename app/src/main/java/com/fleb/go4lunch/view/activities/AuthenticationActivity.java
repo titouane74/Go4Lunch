@@ -33,19 +33,34 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_COLLECTION;
+import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_EMAIL_KEY;
+import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_NAME_KEY;
+import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_PHOTO_URL_KEY;
 
 public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_AUTHENTICATION = "TAG_AUTHENTICATION";
+    private static final String TAG_SAVE = "TAG_SAVE";
+    private static final String TAG_EXIST = "TAG_EXIST";
+
     public static final int RC_SIGN_IN = 123;
     public static final int RC_SIGN_IN_GOOGLE = 456;
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
+
+    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+    private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
 
     Button mBtnLoginGoogle, mBtnLoginFacebook, mBtnLoginEmail, mBtnLoginTwitter;
     FirebaseUser mCurrentUser;
@@ -274,6 +289,8 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getEmail());
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getPhotoUrl());
 
+            saveWorkmateIfNotExist(pCurrentUser);
+
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         } else {
@@ -332,6 +349,41 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
+    }
+
+    public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
+
+        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+                .get()
+                .addOnSuccessListener(pVoid -> {
+                    if (pVoid.exists()) {
+                        Log.d(TAG_EXIST, "RIEN NE SE PASSE");
+                    } else {
+                        saveWorkmate(mCurrentUser);
+                        Log.d(TAG_EXIST, "SAUVEGARDE EFFECTUEE");
+                        Toast.makeText(AuthenticationActivity.this, "Compte créé", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG_EXIST, "onFailure Save: Document not updated", pE); });
+    }
+
+    public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
+
+        Map<String, Object> lWorkmate = new HashMap<>();
+        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
+        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
+        if (pCurrentWorkmate.getPhotoUrl() != null) {
+            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
+        }
+
+        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+                .set(lWorkmate)
+                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
+                .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
+
+        Log.d(TAG_SAVE, "saveWorkmate: " + mWorkmateRef.document().getId());
     }
 
 }

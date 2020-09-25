@@ -107,12 +107,14 @@
             />
 
         <!-- BUTTON SIGN OUT -->
+        <!--
         <Button
             android:id="@+id/user_btn_sign_out"
             style="@style/UserTheme.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_sign_out_account" />
+        -->
 
         <!-- BUTTON DELETE ACCOUNT -->
         <Button
