@@ -69,4 +69,11 @@
     <string name="text_call">CALL</string>
     <string name="text_like">LIKE</string>
     <string name="text_website">WEBSITE</string>
+
+    <!-- RESTAURANT LIST -->
+    <string name="text_resto_list_name">Le Zinc</string>
+    <string name="text_resto_list_address">French - 12 rue du Faubourg Poissonnière</string>
+    <string name="text_resti_list_distance">120 m</string>
+    <string name="texte_resto_list_nb_workmate">2</string>
+    <string name="text_resto_list_opening">Open until 2.30pm</string>
 </resources>

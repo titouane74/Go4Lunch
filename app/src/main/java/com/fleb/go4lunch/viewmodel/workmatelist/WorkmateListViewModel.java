@@ -1,9 +1,5 @@
 package com.fleb.go4lunch.viewmodel.workmatelist;
 
-
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -16,7 +12,7 @@ import java.util.List;
 
 public class WorkmateListViewModel extends ViewModel implements WorkmateRepo.OnFirestoreTaskComplete {
 
-    public static final String TAG_WORKMATE_VM = "TAG_WORKMATE_VM";
+    //public static final String TAG_WORKMATE_VM = "TAG_WORKMATE_VM";
 
     private MutableLiveData<List<Workmate>> mWorkmateList = new MutableLiveData<>();
 
@@ -24,7 +20,7 @@ public class WorkmateListViewModel extends ViewModel implements WorkmateRepo.OnF
         return mWorkmateList;
     }
 
-    //Constructor if fragment is ised for another fragment
+    //Constructor if fragment is used for another fragment
     // put mWorkmateRepo.getWorkmateData(); elsewhere
     public WorkmateListViewModel() {
         WorkmateRepo lWorkmateRepo = new WorkmateRepo(this);

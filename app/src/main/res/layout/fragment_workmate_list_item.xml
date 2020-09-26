@@ -15,7 +15,9 @@
         android:layout_marginBottom="@dimen/margin_vertical_between_item_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/ic_profile_user"
+        android:contentDescription="@string/img_user"/>
 
     <TextView
         android:id="@+id/item_list_workmate_name"
@@ -23,8 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_start_item"
         android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/default_text_size_middle"
-        android:text="Workmate"
+        android:textSize="@dimen/default_text_size"
         app:layout_constraintBottom_toBottomOf="@+id/item_list_workmate_img"
         app:layout_constraintStart_toEndOf="@+id/item_list_workmate_img"
         app:layout_constraintTop_toTopOf="@+id/item_list_workmate_img" />

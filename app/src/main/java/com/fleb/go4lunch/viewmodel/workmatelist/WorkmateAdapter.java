@@ -37,11 +37,11 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     @Override
     public void onBindViewHolder(@NonNull WorkmateHolder pWorkmateHolder, int position) {
-        pWorkmateHolder.lTxtViewName.setText(mWorkmateList.get(position).getWorkmateName());
-        Glide.with(pWorkmateHolder.lImgViewWorkmate.getContext())
+        pWorkmateHolder.mTxtViewName.setText(mWorkmateList.get(position).getWorkmateName());
+        Glide.with(pWorkmateHolder.mImgViewWorkmate.getContext())
                 .load(mWorkmateList.get(position).getWorkmatePhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
-                .into(pWorkmateHolder.lImgViewWorkmate);
+                .into(pWorkmateHolder.mImgViewWorkmate);
     }
 
     @Override
@@ -55,14 +55,14 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     static class WorkmateHolder extends RecyclerView.ViewHolder {
 
-        private TextView lTxtViewName;
-        private ImageView lImgViewWorkmate;
+        private TextView mTxtViewName;
+        private ImageView mImgViewWorkmate;
 
         public WorkmateHolder(@NonNull View itemView) {
             super(itemView);
 
-            lTxtViewName = itemView.findViewById(R.id.item_list_workmate_name);
-            lImgViewWorkmate = itemView.findViewById(R.id.item_list_workmate_img);
+            mTxtViewName = itemView.findViewById(R.id.item_list_workmate_name);
+            mImgViewWorkmate = itemView.findViewById(R.id.item_list_workmate_img);
         }
     }
 }
