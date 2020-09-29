@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_list_workmates"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="@dimen/item_size_height"
+    android:orientation="horizontal">
+
 
     <ImageView
         android:id="@+id/item_list_workmate_img"
         android:layout_width="@dimen/img_size_workmate_width_height"
         android:layout_height="@dimen/img_size_workmate_width_height"
-        android:layout_marginStart="@dimen/vertical_margin"
-        android:layout_marginTop="@dimen/margin_vertical_between_item_description"
-        android:layout_marginBottom="@dimen/margin_vertical_between_item_description"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/ic_profile_user"
-        android:contentDescription="@string/img_user"/>
+        android:contentDescription="@string/img_user"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        />
 
-    <TextView
-        android:id="@+id/item_list_workmate_name"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_start_item"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/item_list_workmate_img"
-        app:layout_constraintStart_toEndOf="@+id/item_list_workmate_img"
-        app:layout_constraintTop_toTopOf="@+id/item_list_workmate_img" />
+        android:layout_height="@dimen/linear_layout_size_height_workmate"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_toEndOf="@+id/item_list_workmate_img"
+        android:layout_alignTop="@+id/item_list_workmate_img"
+        >
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/item_list_workmate_name"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/img_size_workmate_width_height"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/text_size_workmate"
+            android:text="@string/text_resto_list_address"
+            android:gravity="center_vertical"
+            />
+        <View
+            android:id="@+id/divider_workmate_item"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/divider_height_size"
+            android:background="@color/colorDiviseur"
+            android:layout_marginTop="@dimen/default_margin"
+            />
+    </LinearLayout>
+</RelativeLayout>

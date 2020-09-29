@@ -55,6 +55,9 @@
     <!-- List workmate -->
     <dimen name="margin_start_item">24dp</dimen>
     <dimen name="img_size_workmate_width_height">80dp</dimen>
+    <dimen name="item_size_height">122dp</dimen>
+    <dimen name="linear_layout_size_height_workmate">110dp</dimen>
+
 
     <!-- Pin mam -->
     <dimen name="pin_width">10dp</dimen>

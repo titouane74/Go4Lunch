@@ -73,7 +73,12 @@
     <!-- RESTAURANT LIST -->
     <string name="text_resto_list_name">Le Zinc</string>
     <string name="text_resto_list_address">French - 12 rue du Faubourg Poissonnière</string>
-    <string name="text_resti_list_distance">120 m</string>
-    <string name="texte_resto_list_nb_workmate">2</string>
+    <string name="text_resto_list_distance">120 m</string>
+    <string name="text_resto_list_nb_workmate">2</string>
     <string name="text_resto_list_opening">Open until 2.30pm</string>
+
+    <!-- WORKMATE LIST -->
+    <string name="text_workmate_not_decided">hasn\'t decided yet</string>
+    <string name="text_workmate_eating">is eating</string>
+
 </resources>

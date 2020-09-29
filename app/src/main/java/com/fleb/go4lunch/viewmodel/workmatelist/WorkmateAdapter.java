@@ -1,5 +1,9 @@
 package com.fleb.go4lunch.viewmodel.workmatelist;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +20,19 @@ import com.fleb.go4lunch.model.Workmate;
 
 import java.util.List;
 
+
 /**
  * Created by Florence LE BOURNOT on 22/09/2020
  */
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateHolder> {
 
+    private static final String TAG_WORKMATE_ADAPT = "TAG_WORKMATE_ADAPT";
     private List<Workmate> mWorkmateList;
 
     public void setWorkmateList(List<Workmate> pWorkmateList) {
         mWorkmateList = pWorkmateList;
     }
+
 
     @NonNull
     @Override
@@ -37,12 +44,29 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     @Override
     public void onBindViewHolder(@NonNull WorkmateHolder pWorkmateHolder, int position) {
-        pWorkmateHolder.mTxtViewName.setText(mWorkmateList.get(position).getWorkmateName());
+
+        String lTxtWorkmate ;
+
+        Context lContext = pWorkmateHolder.itemView.getContext();
+
+        if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
+            lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
+                    + " " + lContext.getString(R.string.text_workmate_eating)
+                    + " (" + mWorkmateList.get(position).getWorkmateRestoChoosed() + ")";
+        } else {
+            lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
+                + " " + lContext.getString(R.string.text_workmate_not_decided);
+            pWorkmateHolder.mTxtViewName.setTextColor(lContext.getResources().getColor(R.color.colorTextUnavailable));
+            pWorkmateHolder.mTxtViewName.setTypeface(null, Typeface.ITALIC);
+        }
+        pWorkmateHolder.mTxtViewName.setText(lTxtWorkmate);
+
         Glide.with(pWorkmateHolder.mImgViewWorkmate.getContext())
                 .load(mWorkmateList.get(position).getWorkmatePhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(pWorkmateHolder.mImgViewWorkmate);
     }
+
 
     @Override
     public int getItemCount() {

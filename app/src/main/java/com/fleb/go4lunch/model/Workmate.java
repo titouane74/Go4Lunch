@@ -2,6 +2,7 @@ package com.fleb.go4lunch.model;
 
 import androidx.annotation.Nullable;
 
+import com.fleb.go4lunch.R;
 import com.google.firebase.firestore.DocumentId;
 
 import java.util.Objects;
@@ -18,12 +19,17 @@ public class Workmate {
     private String workmateEmail;
     @Nullable
     private String workmatePhotoUrl;
+    private String workmateRestoChoosed;
+    private String workmateRestoId;
 
-    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, @Nullable String pWorkmatePhotoUrl) {
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, @Nullable String pWorkmatePhotoUrl,
+                    String pWorkmateRestoChoosed, String pWorkmateRestoId) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
+        this.workmateRestoChoosed = pWorkmateRestoChoosed;
+        this.workmateRestoId = pWorkmateRestoId;
     }
 
     public Workmate() {}
@@ -45,6 +51,14 @@ public class Workmate {
 
     public void setWorkmatePhotoUrl(@Nullable String pWorkmatePhotoUrl) { workmatePhotoUrl = pWorkmatePhotoUrl; }
 
+    public String getWorkmateRestoChoosed() { return workmateRestoChoosed; }
+
+    public void setWorkmateRestoChoosed(String pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
+
+    public String getWorkmateRestoId() { return workmateRestoId; }
+
+    public void setWorkmateRestoId(String pWorkmateRestoId) { workmateRestoId = pWorkmateRestoId; }
+
     @Override
     public boolean equals(Object pObj) {
         if (this == pObj) return true;
@@ -56,4 +70,5 @@ public class Workmate {
     public int hashCode() {
         return Objects.hash(getWorkmateEmail());
     }
+
 }
