@@ -82,21 +82,20 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         } else {
             lNote = 0;
         }
-        Log.d(TAG_LIST_RESTO, "onBindViewHolder: new note : " + lNote);
-        //TODO display the stars null object reference
+//        Log.d(TAG_LIST_RESTO, "onBindViewHolder: new note : " + lNote);
 
         if (lNote == 0) {
             Log.d(TAG_LIST_RESTO, "onBindViewHolder: 3 stars to hide : " + lNote);
-//            pRestoHolder.mRestoNote1.setVisibility(View.INVISIBLE);
-//            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
-//            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+            pRestoHolder.mRestoNote1.setVisibility(View.INVISIBLE);
+            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
+            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
         } else if (lNote > 0 && lNote <= lMaxLevelOneStar) {
             Log.d(TAG_LIST_RESTO, "onBindViewHolder: 2 stars to hide : " + lNote);
-//            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
-//            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
+            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
         } else if (lNote > lMaxLevelOneStar && lNote <= lMaxLevelTwoStar) {
             Log.d(TAG_LIST_RESTO, "onBindViewHolder: 1 star to hide : " + lNote);
-//            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
         } else {
             Log.d(TAG_LIST_RESTO, "onBindViewHolder: no star to hide : " + lNote);
         }
@@ -157,9 +156,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             mRestoAddress = itemView.findViewById(R.id.text_restaurant_address);
             mRestoNbWorkmates = itemView.findViewById(R.id.text_nb_workmates);
             mRestoOpening = itemView.findViewById(R.id.text_opening_info);
-            mRestoNote1 = itemView.findViewById(R.id.img_note1);
-            mRestoNote2 = itemView.findViewById(R.id.img_note2);
-            mRestoNote3 = itemView.findViewById(R.id.img_note3);
+            mRestoNote1 = itemView.findViewById(R.id.img_star_note_1);
+            mRestoNote2 = itemView.findViewById(R.id.img_star_note_2);
+            mRestoNote3 = itemView.findViewById(R.id.img_star_note_3);
             mRestoImage = itemView.findViewById(R.id.img_restaurant);
         }
     }
