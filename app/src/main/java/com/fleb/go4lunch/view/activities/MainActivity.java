@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -21,14 +22,18 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.internal.WebDialog;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -202,7 +207,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+//        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+        mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pDocumentSnapshot -> {
                     if (pDocumentSnapshot.exists()) {
@@ -222,6 +228,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 })
                 .addOnFailureListener(pE -> Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show());
+
+/*
+        mWorkmateRef.document(pCurrentWorkmate.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> pTask) {
+                        if (pTask.isSuccessful()) {
+                            Log.d(TAG_EXIST, "onComplete: ");
+                            DocumentSnapshot pDocumentSnapshot = pTask.getResult();
+                            if (Objects.requireNonNull(pDocumentSnapshot).exists()) {
+                                String lEmail = pDocumentSnapshot.getString(WORKMATE_EMAIL_KEY);
+                                String lName = pDocumentSnapshot.getString(WORKMATE_NAME_KEY);
+                                String lPhotoUrl = pDocumentSnapshot.getString(WORKMATE_PHOTO_URL_KEY);
+
+                                if (lPhotoUrl != null) {
+                                    Glide.with(MainActivity.this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
+                                }
+                                mTxtName.setText(lName);
+                                mTxtEmail.setText(lEmail);
+
+                            } else {
+                                Log.d(TAG_DISPLAY, "displayWorkmateData: PAS DE DOC");
+                                Toast.makeText(MainActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(pE -> Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show());
+*/
+
 
     }
 

@@ -93,7 +93,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+//        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+        mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pDocumentSnapshot -> {
                     if (pDocumentSnapshot.exists()) {

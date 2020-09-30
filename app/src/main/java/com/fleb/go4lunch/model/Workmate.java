@@ -2,7 +2,6 @@ package com.fleb.go4lunch.model;
 
 import androidx.annotation.Nullable;
 
-import com.fleb.go4lunch.R;
 import com.google.firebase.firestore.DocumentId;
 
 import java.util.Objects;
@@ -23,7 +22,7 @@ public class Workmate {
     private String workmateRestoId;
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, @Nullable String pWorkmatePhotoUrl,
-                    String pWorkmateRestoChoosed, String pWorkmateRestoId) {
+                String pWorkmateRestoChoosed, String pWorkmateRestoId) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;

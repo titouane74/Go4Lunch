@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -20,11 +21,14 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 
+import com.fleb.go4lunch.model.Workmate;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +38,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
@@ -354,7 +360,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
 
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+/*        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
                 .get()
                 .addOnSuccessListener(pVoid -> {
                     if (pVoid.exists()) {
@@ -366,7 +372,39 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                     }
                 })
                 .addOnFailureListener(pE -> {
-                    Log.d(TAG_EXIST, "onFailure Save: Document not updated", pE); });
+                    Log.d(TAG_EXIST, "onFailure Save: Document not updated", pE); });*/
+        String lWorkmateId = pCurrentWorkmate.getUid();
+        Map<String, Object> lWorkmate = new HashMap<>();
+        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
+        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
+        if (pCurrentWorkmate.getPhotoUrl() != null) {
+            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
+        }
+
+        mWorkmateRef.document(lWorkmateId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG_EXIST, "onComplete: ");
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot != null && !documentSnapshot.exists()) {
+                                Log.d(TAG_EXIST, "onComplete: documentSnapshot!exist");
+                                mWorkmateRef.document(lWorkmateId)
+                                        .set(lWorkmate)
+                                        .addOnSuccessListener(pDocumentReference -> Log.d(TAG_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
+                                        .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG_EXIST, "onFailure: " + e.getMessage());
+                    }
+                })
+        ;
     }
 
     public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
@@ -384,6 +422,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                 .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
 
         Log.d(TAG_SAVE, "saveWorkmate: " + mWorkmateRef.document().getId());
+
     }
 
 }
