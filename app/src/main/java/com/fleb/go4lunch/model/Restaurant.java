@@ -16,13 +16,13 @@ public class Restaurant {
     private String restoDistance;
     private int restoNbWorkmates;
     private String restoOpening;
-    private double restoNote;
+    private String restoNote;
     private String restoPhotoUrl;
 
     public Restaurant() {}
 
     public Restaurant(String pRestoId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
-                      String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoNote, String pRestoPhotoUrl) {
+                      String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, String pRestoNote, String pRestoPhotoUrl) {
         restoId = pRestoId;
         restoName = pRestoName;
         restoAddress = pRestoAddress;
@@ -67,9 +67,9 @@ public class Restaurant {
 
     public void setRestoOpening(String pRestoOpening) { restoOpening = pRestoOpening; }
 
-    public double getRestoNote() { return restoNote; }
+    public String getRestoNote() { return restoNote; }
 
-    public void setRestoNote(int pRestoNote) { restoNote = pRestoNote; }
+    public void setRestoNote(String pRestoNote) { restoNote = pRestoNote; }
 
     public String getRestoPhotoUrl() { return restoPhotoUrl; }
 

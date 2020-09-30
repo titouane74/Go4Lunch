@@ -45,6 +45,11 @@
     <dimen name="margin_vertical_between_item">19dp</dimen>
     <dimen name="margin_vertical_between_item_description">16dp</dimen>
     <dimen name="img_corner_radius">5dp</dimen>
+    <dimen name="margin_vertical_top_img_workmate">4dp</dimen>
+    <dimen name="margin_horizontal_border">8dp</dimen>
+    <dimen name="img_size_resto_width_height">70dp</dimen>
+    <dimen name="percent_center_guideline">0.60</dimen>
+    <dimen name="percent_right_guideline">0.76</dimen>
 
     <!-- restaurant detail -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

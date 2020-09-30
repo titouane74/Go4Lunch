@@ -1,8 +1,11 @@
 package com.fleb.go4lunch.viewmodel.restaurantlist;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +25,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
+
 /**
  * Created by Florence LE BOURNOT on 26/09/2020
  */
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.RestaurantHolder> {
 
+    private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private List<Restaurant> mRestoList;
 
     public void setRestoList(List<Restaurant> pRestoList) {
@@ -44,19 +49,58 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RestaurantHolder pRestoHolder, int position) {
+
+        Context lContext = pRestoHolder.itemView.getContext();
+        String lOpening;
+        int lMaxNote = Integer.parseInt(lContext.getResources().getString(R.string.max_level_three_star));
+        int lNbNote = Integer.parseInt(lContext.getResources().getString(R.string.nb_star));
+        double lMaxLevelOneStar = Double.parseDouble(lContext.getResources().getString(R.string.max_level_one_star));
+        double lMaxLevelTwoStar = Double.parseDouble(lContext.getResources().getString(R.string.max_level_two_star));
+        double lNote;
+
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
         pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistance());
         pRestoHolder.mRestoAddress.setText(mRestoList.get(position).getRestoAddress());
-        pRestoHolder.mRestoNbWorkmates.setText(Integer.toString(mRestoList.get(position).getRestoNbWorkmates()));
-        pRestoHolder.mRestoOpening.setText(mRestoList.get(position).getRestoOpening());
-        //TODO Calculer le nombre d'étoile à afficher en fonction de la note
-        // VISIBLE par defaut pour le moment
+        pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
+
+        if (mRestoList.get(position).getRestoOpening() != null) {
+            lOpening = mRestoList.get(position).getRestoOpening();
+            pRestoHolder.mRestoOpening.setText(lOpening);
+            if (lOpening.contains(lContext.getResources().getString(R.string.text_resto_list_clos))) {
+                pRestoHolder.mRestoOpening.setTextColor(lContext.getResources().getColor(R.color.colorTextRed));
+                pRestoHolder.mRestoOpening.setTypeface(null, Typeface.BOLD);
+            } else {
+                pRestoHolder.mRestoOpening.setTypeface(null, Typeface.ITALIC);
+            }
+        }
+
+        if (mRestoList.get(position).getRestoNote() != null) {
+            lNote = Double.parseDouble(mRestoList.get(position).getRestoNote());
+//                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: note google : " + mRestoList.get(position).getRestoNote());
+//                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: note google : " + lNote);
+            lNote = (lNote / lMaxNote) * lNbNote;
+        } else {
+            lNote = 0;
+        }
+        Log.d(TAG_LIST_RESTO, "onBindViewHolder: new note : " + lNote);
+        //TODO display the stars null object reference
+
+        if (lNote == 0) {
+            Log.d(TAG_LIST_RESTO, "onBindViewHolder: 3 stars to hide : " + lNote);
+//            pRestoHolder.mRestoNote1.setVisibility(View.INVISIBLE);
+//            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
+//            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+        } else if (lNote > 0 && lNote <= lMaxLevelOneStar) {
+            Log.d(TAG_LIST_RESTO, "onBindViewHolder: 2 stars to hide : " + lNote);
+//            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
+//            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+        } else if (lNote > lMaxLevelOneStar && lNote <= lMaxLevelTwoStar) {
+            Log.d(TAG_LIST_RESTO, "onBindViewHolder: 1 star to hide : " + lNote);
+//            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+        } else {
+            Log.d(TAG_LIST_RESTO, "onBindViewHolder: no star to hide : " + lNote);
+        }
 /*
-        pRestoHolder.mRestoNote1.setVisibility(View.VISIBLE);
-        pRestoHolder.mRestoNote2.setVisibility(View.VISIBLE);
-        pRestoHolder.mRestoNote3.setVisibility(View.VISIBLE);
-
-
         Bitmap lImg = null;
         try {
             lImg = downLoadImage(mRestoList.get(position).getRestoPhotoUrl());
@@ -117,7 +161,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             mRestoNote2 = itemView.findViewById(R.id.img_note2);
             mRestoNote3 = itemView.findViewById(R.id.img_note3);
             mRestoImage = itemView.findViewById(R.id.img_restaurant);
-
         }
     }
 }

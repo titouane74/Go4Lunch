@@ -37,14 +37,19 @@
 
 
     <!-- List restaurant -->
-    <dimen name="text_size_item_title">18sp</dimen>
-    <dimen name="text_size_item_nb_workmate">14sp</dimen>
-    <dimen name="text_size_item_description">13sp</dimen>
+    <dimen name="text_size_item_title">12sp</dimen>
+    <dimen name="text_size_item_nb_workmate">10sp</dimen>
+    <dimen name="text_size_item_description">10sp</dimen>
     <dimen name="margin_end_item_title">16dp</dimen>
     <dimen name="margin_end_item_description">4dp</dimen>
-    <dimen name="margin_vertical_between_item">16dp</dimen>
-    <dimen name="margin_vertical_between_item_description">12dp</dimen>
+    <dimen name="margin_vertical_between_item">12dp</dimen>
+    <dimen name="margin_vertical_between_item_description">10dp</dimen>
+    <dimen name="margin_vertical_top_img_workmate">4dp</dimen>
+    <dimen name="margin_horizontal_border">8dp</dimen>
     <dimen name="img_corner_radius">5dp</dimen>
+    <dimen name="img_size_resto_width_height">70dp</dimen>
+    <dimen name="percent_center_guideline">0.60</dimen>
+    <dimen name="percent_right_guideline">0.76</dimen>
 
     <!-- restaurant detail -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

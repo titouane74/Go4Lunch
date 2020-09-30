@@ -81,10 +81,15 @@
 
     <!-- RESTAURANT LIST -->
     <string name="text_resto_list_name">Le Zinc</string>
-    <string name="text_resto_list_address">French - 12 rue du Faubourg Poissonnière</string>
-    <string name="text_resto_list_distance">120 m</string>
+    <string name="text_resto_list_address">12 rue du Poissonnier</string>
+    <string name="text_resto_list_distance">120m</string>
     <string name="text_resto_list_nb_workmate">2</string>
     <string name="text_resto_list_opening">Open until 2.30pm</string>
+    <string name="text_resto_list_clos">Ferme</string>
+    <string name="max_level_one_star">1.67</string>
+    <string name="max_level_two_star">3.34</string>
+    <string name="max_level_three_star">5</string>
+    <string name="nb_star">3</string>
 
     <!-- WORKMATE LIST -->
     <string name="text_workmate_not_decided">n\'a pas encore décidé</string>
