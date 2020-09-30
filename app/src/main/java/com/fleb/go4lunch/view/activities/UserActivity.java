@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,9 +21,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -57,7 +53,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        //public static final String TAG_USER = "TAG_USER";
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
 
@@ -96,69 +91,39 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-/*
         mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
-                .addOnSuccessListener(pDocumentSnapshot -> {
-                    if (pDocumentSnapshot.exists()) {
-                        Workmate lWorkmate = pDocumentSnapshot.toObject(Workmate.class);
-                        String lPhotoUrl = Objects.requireNonNull(lWorkmate).getWorkmatePhotoUrl();
-                        if (lPhotoUrl != null) {
-                            Glide.with(this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
-                        }
-                        mTxtName.setText(lWorkmate.getWorkmateName());
-                        mTxtEmail.setText(lWorkmate.getWorkmateEmail());
-                    } else {
-                        Toast.makeText(this, "Document does not exist", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(pE -> Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show());
-*/
-
-        //mWorkmateRef.document(pCurrentWorkmate.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> pTask) {
-                        if (pTask.isSuccessful()) {
-                            Log.d(TAG_USER, "onComplete: SUCCESSFUL" );
-                            DocumentSnapshot pDocSnap = pTask.getResult();
-                            if (Objects.requireNonNull(pDocSnap).exists()) {
-                                Log.d(TAG_USER, "onComplete: SUCCESSFUL and EXIST" );
-                                Workmate lWorkmate = pDocSnap.toObject(Workmate.class);
-                                String lPhotoUrl = Objects.requireNonNull(lWorkmate).getWorkmatePhotoUrl();
-                                if (lPhotoUrl != null) {
-                                    Glide.with(UserActivity.this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
-                                }
-                                mTxtName.setText(lWorkmate.getWorkmateName());
-                                mTxtEmail.setText(lWorkmate.getWorkmateEmail());
-                            } else {
-                                Log.d(TAG_USER, "onComplete: SUCCESSFUL and NOT EXIST" );
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        Log.d(TAG_USER, "onComplete: SUCCESSFUL" );
+                        DocumentSnapshot pDocSnap = pTask.getResult();
+                        if (Objects.requireNonNull(pDocSnap).exists()) {
+                            Log.d(TAG_USER, "onComplete: SUCCESSFUL and EXIST" );
+                            Workmate lWorkmate = pDocSnap.toObject(Workmate.class);
+                            String lPhotoUrl = Objects.requireNonNull(lWorkmate).getWorkmatePhotoUrl();
+                            if (lPhotoUrl != null) {
+                                Glide.with(UserActivity.this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
                             }
+                            mTxtName.setText(lWorkmate.getWorkmateName());
+                            mTxtEmail.setText(lWorkmate.getWorkmateEmail());
                         } else {
-                            Log.d(TAG_USER, "onComplete: NOT SUCCESSFUL" );
+                            Log.d(TAG_USER, "onComplete: SUCCESSFUL and NOT EXIST" );
                         }
+                    } else {
+                        Log.d(TAG_USER, "onComplete: NOT SUCCESSFUL" );
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception pE) {
-                        Log.d(TAG_USER, "onComplete: FAILURE" );
-                    }
-                });
+                .addOnFailureListener(pE -> Log.d(TAG_USER, "onComplete: FAILURE" ));
 
     }
 
     public void deleteWorkmate(FirebaseUser pCurrentWorkmate) {
 
-
-        mWorkmateRef.document( Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-//        mWorkmateRef.document( pCurrentWorkmate.getUid())
+        mWorkmateRef.document( pCurrentWorkmate.getUid())
                 .delete()
                 .addOnSuccessListener(pVoid -> Log.d(TAG_USER, "onSuccess: Document deleted " ))
                 .addOnFailureListener(pE -> Log.d(TAG_USER, "onFailure: Document not deleted", pE));
-        Toast.makeText(this, "COMPTE SUPPRIME", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.user_account_deleted, Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -169,12 +134,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         Map<String, Object> lWorkmate = new HashMap<>();
         lWorkmate.put(WORKMATE_NAME_KEY, lWorkmateName);
 
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-//        mWorkmateRef.document( pCurrentWorkmate.getUid())
+        mWorkmateRef.document( pCurrentWorkmate.getUid())
                 .update(lWorkmate)
                 .addOnSuccessListener(pVoid -> Log.d(TAG_USER, "onSuccess: Document updated " ))
                 .addOnFailureListener(pE -> Log.d(TAG_USER, "onFailure: Document not updated", pE));
-        Toast.makeText(this, "COMPTE MIS A JOUR", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.user_account_updated, Toast.LENGTH_SHORT).show();
         finish();
     }
 

@@ -20,7 +20,6 @@
     <string name="connection_succeed">Authentification réussie !</string>
     <string name="btn_login_text_logged">Afficher le profil</string>
     <string name="btn_login_text_not_logged">Connexion</string>
-    <string name="msg_sign_in_to_continue">Authentifiez-vous pour continuer.</string>
     <string name="user_connected">Utilisateur connecté</string>
     <string name="error_msg_email_user_exists">Un compte existe déjà avec la même adresse e-mail mais des informations de connexion différentes. Connectez-vous à l\'aide d\'un fournisseur associé à cette adresse e-mail.</string>
     <string name="btn_signout">Déconnexion</string>
@@ -37,6 +36,9 @@
     <string name="info_no_email_found">Auncune adresse mail</string>
     <string name="info_no_username_found">Aucun nom d\'utilisateur</string>
     <string name="img_user">Image utilisateur</string>
+    <string name="user_account_updated">Compte mis à jour</string>
+    <string name="user_account_deleted">Compte supprimé</string>
+
 
     <!--DRAWER-->
     <string name="menu_hungry">J\'AI FAIM!</string>
@@ -67,6 +69,8 @@
     <string name="desc_logo_google">Google</string>
     <string name="desc_logo_email">Email</string>
     <string name="desc_logo_twitter">Twitter</string>
+    <string name="auth_account_created">Compte créé</string>
+    <string name="auth_msg_sign_in_to_continue">Authentifiez-vous pour continuer.</string>
 
     <string name="nav_host_fragment">nav_host_fragment</string>
     <string name="text_initializing">Initialisation…</string>

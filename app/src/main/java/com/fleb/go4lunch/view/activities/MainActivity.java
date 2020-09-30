@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.model.Workmate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,19 +31,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class  MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG_MAIN_SAVE = "TAG_MAIN_SAVE";
-    private static final String TAG_MAIN_EXIST = "TAG_MAIN_EXIST";
-    private static final String TAG_MAIN_DISPLAY = "TAG_MAIN_DISPLAY";
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-//    private static final String TAG_MAIN = "TAG_MAIN";
+    private static final String TAG_MAIN = "TAG_MAIN";
 
-    public static final String TAG_FIRESTORE = "TAG_FIRESTORE";
     public static final String WORKMATE_EMAIL_KEY = "workmateEmail";
     public static final String WORKMATE_NAME_KEY = "workmateName";
     public static final String WORKMATE_PHOTO_URL_KEY = "workmatePhotoUrl";
@@ -162,33 +157,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-//        mWorkmateRef.document(pCurrentWorkmate.getUid())
+        mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pDocumentSnapshot -> {
                     if (pDocumentSnapshot.exists()) {
-                        String lEmail = pDocumentSnapshot.getString(WORKMATE_EMAIL_KEY);
-                        String lName = pDocumentSnapshot.getString(WORKMATE_NAME_KEY);
-                        String lPhotoUrl = pDocumentSnapshot.getString(WORKMATE_PHOTO_URL_KEY);
-
-                        if (lPhotoUrl != null) {
-                            Glide.with(MainActivity.this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
-                        }
-                        mTxtName.setText(lName);
-                        mTxtEmail.setText(lEmail);
-                        Toast.makeText(MainActivity.this, "DONNEES AFFICHEES", Toast.LENGTH_LONG).show();
-
+                        displayDrawerData(pDocumentSnapshot.getString(WORKMATE_EMAIL_KEY),
+                                pDocumentSnapshot.getString(WORKMATE_NAME_KEY),
+                                pDocumentSnapshot.getString(WORKMATE_PHOTO_URL_KEY));
                     } else {
-                        Log.d(TAG_MAIN_DISPLAY, "displayWorkmateData: PAS DE DOC");
-                        Toast.makeText(MainActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
+                        String lUrl = null;
+                        if (pCurrentWorkmate.getPhotoUrl() != null) {
+                            lUrl = pCurrentWorkmate.getPhotoUrl().toString();
+                        }
+                        Workmate lWorkmate = new Workmate(pCurrentWorkmate.getDisplayName(), pCurrentWorkmate.getEmail(), lUrl);
+                        displayDrawerData(lWorkmate.getWorkmateEmail(), lWorkmate.getWorkmateName() , lWorkmate.getWorkmatePhotoUrl());
                     }
                 })
-                .addOnFailureListener(pE -> Toast.makeText(this, "Error TAG_DISPLAY", Toast.LENGTH_SHORT).show());
-
+                .addOnFailureListener(pE -> Log.d(TAG_MAIN, "displayWorkmateData: " + pE.getMessage()));
     }
 
+        private void  displayDrawerData(String pEmail, String pName, String pPhotoUrl) {
+            if (pPhotoUrl != null) {
+                Glide.with(MainActivity.this).load(pPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
+            }
+            mTxtName.setText(pName);
+            mTxtEmail.setText(pEmail);
+        }
 }
 

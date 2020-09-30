@@ -12,7 +12,6 @@
     <string name="connection_succeed">Successful authentication !</string>
     <string name="btn_login_text_logged">Display profil</string>
     <string name="btn_login_text_not_logged">Connection</string>
-    <string name="msg_sign_in_to_continue">Please sign in to continue.</string>
     <string name="user_connected">User connected</string>
     <string name="error_msg_email_user_exists">An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.</string>
     <string name="btn_signout">Logout</string>
@@ -28,6 +27,9 @@
     <string name="info_no_email_found">No email address</string>
     <string name="info_no_username_found">No username</string>
     <string name="img_user">User image</string>
+    <string name="user_account_updated">Account updated</string>
+    <string name="user_account_deleted">account deleted</string>
+
 
     <!--DRAWER-->
     <string name="menu_hungry">I\'M HUNGRY!</string>
@@ -58,6 +60,10 @@
     <string name="desc_logo_google">Google</string>
     <string name="desc_logo_email">Email</string>
     <string name="desc_logo_twitter">Twitter</string>
+    <string name="auth_account_created">Account created</string>
+    <string name="auth_msg_sign_in_to_continue">Please sign in to continue.</string>
+
+
 
     <string name="nav_host_fragment">nav_host_fragment</string>
     <string name="text_initializing">Initializing…</string>
