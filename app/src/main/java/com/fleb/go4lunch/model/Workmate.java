@@ -11,9 +11,6 @@ import java.util.Objects;
  */
 public class Workmate {
 
-
-    @DocumentId
-    private String workmateId;
     private String workmateName;
     private String workmateEmail;
     @Nullable
@@ -21,9 +18,8 @@ public class Workmate {
     private String workmateRestoChoosed;
     private String workmateRestoId;
 
-    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, @Nullable String pWorkmatePhotoUrl,
+    public Workmate( String pWorkmateName, String pWorkmateEmail, @Nullable String pWorkmatePhotoUrl,
                 String pWorkmateRestoChoosed, String pWorkmateRestoId) {
-        this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
@@ -32,10 +28,6 @@ public class Workmate {
     }
 
     public Workmate() {}
-
-    public String getWorkmateId() { return workmateId; }
-
-    public void setWorkmateId(String pWorkmateId) { workmateId = pWorkmateId; }
 
     public String getWorkmateName() { return workmateName; }
 

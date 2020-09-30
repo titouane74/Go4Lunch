@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -21,14 +20,11 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 
-import com.fleb.go4lunch.model.Workmate;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -38,8 +34,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
@@ -56,8 +50,9 @@ import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_PHOTO_URL_
 public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_AUTHENTICATION = "TAG_AUTHENTICATION";
-    private static final String TAG_SAVE = "TAG_SAVE";
-    private static final String TAG_EXIST = "TAG_EXIST";
+    private static final String TAG_AUTH_SAVE = "TAG_AUTH_SAVE";
+    private static final String TAG_AUTH_EXIST = "TAG_AUTH_EXIST";
+    public static final String TAG_AUTH_RESULT = "TAG_AUTH_RESULT";
 
     public static final int RC_SIGN_IN = 123;
     public static final int RC_SIGN_IN_GOOGLE = 456;
@@ -95,12 +90,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
         //Firebase instantiation
         mFirebaseAuth = FirebaseAuth.getInstance();
-/*
-        mBtnLoginGoogle.setOnClickListener((v -> { startSignInWith(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build())); }));
-        mBtnLoginFacebook.setOnClickListener((v -> { startSignInWith(Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build())); }));
-        mBtnLoginEmail.setOnClickListener((v -> { startSignInWith(Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build()));}));
-        mBtnLoginTwitter.setOnClickListener((v -> { startSignInWith(Collections.singletonList(new AuthUI.IdpConfig.TwitterBuilder().build())); }));
-*/
+
         mBtnLoginEmail.setOnClickListener(this);
         mBtnLoginGoogle.setOnClickListener(this);
         mBtnLoginFacebook.setOnClickListener(this);
@@ -112,6 +102,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         super.onStart();
         mCurrentUser = mFirebaseAuth.getCurrentUser();
         if (mCurrentUser != null) {
+            Log.d(TAG_AUTHENTICATION, "onStart: updateUI");
             updateUI(mCurrentUser);
         }
     }
@@ -160,7 +151,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG_AUTHENTICATION, "signInWithCredential:success");
+                        Log.d(TAG_AUTHENTICATION, "signInWithCredential:success UPDATEUI");
                         updateUI(mFirebaseAuth.getCurrentUser());
                     } else {
                         // If sign in fails, display a message to the user.
@@ -269,8 +260,9 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
+                Toast.makeText(this, getString(R.string.connection_succeed) + mCurrentUser.getDisplayName(), Toast.LENGTH_LONG).show();
+                Log.d(TAG_AUTH_RESULT, "onActivityResult: ");
                 updateUI(mFirebaseAuth.getCurrentUser());
-                Toast.makeText(this, getString(R.string.connection_succeed) + mCurrentUser.getDisplayName(), Toast.LENGTH_SHORT).show();
             } else {
                 if (response == null) {
                     Toast.makeText(this, getString(R.string.error_authentication_canceled), Toast.LENGTH_SHORT).show();
@@ -303,54 +295,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             Toast.makeText(this, "Please sign in to continue.", Toast.LENGTH_SHORT).show();
         }
     }
-/*    protected void startSignInWith(List<AuthUI.IdpConfig> pProvider) {
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setTheme(R.style.LoginTheme)
-                        .setAvailableProviders( pProvider)
-                        .setIsSmartLockEnabled(false, true)
-                        .build(),
-                RC_SIGN_IN);
-    }
- //prebuild
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(TAG_AUTHENTICATION, "onActivityResult: value requestCode" + requestCode);
-        Log.d(TAG_AUTHENTICATION, "onActivityResult: value resultCode" + resultCode);
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                finish();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                mCurrentUser=getCurrentUser();
-                updateUI(mCurrentUser);
-                Toast.makeText(this, getString(R.string.connection_succeed) + mCurrentUser.getDisplayName(), Toast.LENGTH_SHORT).show();
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-
-                if (response == null) {
-                    Toast.makeText(this, getString(R.string.error_authentication_canceled), Toast.LENGTH_SHORT).show();
-                } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    Toast.makeText(this, getString(R.string.error_no_internet), Toast.LENGTH_SHORT).show();
-                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    Toast.makeText(this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d(TAG_AUTHENTICATION, "onActivityResult: " + response.getError().getErrorCode()
-                            + response.getError().getMessage());
-                }
-            }
-        }
-    }
-*/
 
     @Override
     public void onBackPressed() {
@@ -360,51 +304,21 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
 
-/*        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+//        mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pVoid -> {
                     if (pVoid.exists()) {
-                        Log.d(TAG_EXIST, "RIEN NE SE PASSE");
+                        Log.d(TAG_AUTH_EXIST, "RIEN NE SE PASSE");
                     } else {
                         saveWorkmate(mCurrentUser);
-                        Log.d(TAG_EXIST, "SAUVEGARDE EFFECTUEE");
+                        Log.d(TAG_AUTH_EXIST, "SAUVEGARDE EFFECTUEE");
                         Toast.makeText(AuthenticationActivity.this, "Compte créé", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(pE -> {
-                    Log.d(TAG_EXIST, "onFailure Save: Document not updated", pE); });*/
-        String lWorkmateId = pCurrentWorkmate.getUid();
-        Map<String, Object> lWorkmate = new HashMap<>();
-        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
-        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
-        if (pCurrentWorkmate.getPhotoUrl() != null) {
-            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
-        }
+                    Log.d(TAG_AUTH_EXIST, "onFailure Save: Document not updated", pE); });
 
-        mWorkmateRef.document(lWorkmateId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG_EXIST, "onComplete: ");
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if (documentSnapshot != null && !documentSnapshot.exists()) {
-                                Log.d(TAG_EXIST, "onComplete: documentSnapshot!exist");
-                                mWorkmateRef.document(lWorkmateId)
-                                        .set(lWorkmate)
-                                        .addOnSuccessListener(pDocumentReference -> Log.d(TAG_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
-                                        .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG_EXIST, "onFailure: " + e.getMessage());
-                    }
-                })
-        ;
     }
 
     public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
@@ -417,11 +331,13 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         }
 
         mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+//        mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .set(lWorkmate)
-                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
-                .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
+                .addOnSuccessListener(pDocumentReference -> {
+                    Log.d(TAG_AUTH_SAVE, "onSuccess SAVEWORKMATE: Document saved ");
+                })
+                .addOnFailureListener(pE -> Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE));
 
-        Log.d(TAG_SAVE, "saveWorkmate: " + mWorkmateRef.document().getId());
 
     }
 

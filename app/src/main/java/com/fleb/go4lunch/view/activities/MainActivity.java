@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -22,29 +21,23 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.internal.WebDialog;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG_SAVE = "TAG_SAVE";
-    private static final String TAG_EXIST = "TAG_EXIST";
-    private static final String TAG_DISPLAY = "TAG_DISPLAY";
+    private static final String TAG_MAIN_SAVE = "TAG_MAIN_SAVE";
+    private static final String TAG_MAIN_EXIST = "TAG_MAIN_EXIST";
+    private static final String TAG_MAIN_DISPLAY = "TAG_MAIN_DISPLAY";
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -78,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCurrentUser = lAuth.getCurrentUser();
 
         configureToolBar();
-
-        //saveWorkmateIfNotExist(mCurrentUser);
 
         configureDrawerLayoutNavigationView();
 
@@ -171,44 +162,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-/*    public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
-
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-                .get()
-                .addOnSuccessListener(pVoid -> {
-                    if (pVoid.exists()) {
-                        Log.d(TAG_EXIST, "RIEN NE SE PASSE");
-                    } else {
-                        saveWorkmate(mCurrentUser);
-                        Log.d(TAG_EXIST, "SAUVEGARDE EFFECTUEE");
-                        Toast.makeText(MainActivity.this, "Compte créé", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(pE -> {
-                        Log.d(TAG_EXIST, "onFailure Save: Document not updated", pE); });
-    }*/
-
-/*    public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
-
-        Map<String, Object> lWorkmate = new HashMap<>();
-        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
-        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
-        if (pCurrentWorkmate.getPhotoUrl() != null) {
-            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
-        }
-
-        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-                .set(lWorkmate)
-                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
-                .addOnFailureListener(pE -> Log.d(TAG_SAVE, "onFailure: Document not saved", pE));
-
-        Log.d(TAG_SAVE, "saveWorkmate: " + mWorkmateRef.document().getId());
-    }*/
 
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
-//        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
-        mWorkmateRef.document(pCurrentWorkmate.getUid())
+        mWorkmateRef.document(Objects.requireNonNull(pCurrentWorkmate.getEmail()))
+//        mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pDocumentSnapshot -> {
                     if (pDocumentSnapshot.exists()) {
@@ -221,45 +179,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         mTxtName.setText(lName);
                         mTxtEmail.setText(lEmail);
+                        Toast.makeText(MainActivity.this, "DONNEES AFFICHEES", Toast.LENGTH_LONG).show();
 
                     } else {
-                        Log.d(TAG_DISPLAY, "displayWorkmateData: PAS DE DOC");
+                        Log.d(TAG_MAIN_DISPLAY, "displayWorkmateData: PAS DE DOC");
                         Toast.makeText(MainActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(pE -> Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show());
-
-/*
-        mWorkmateRef.document(pCurrentWorkmate.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> pTask) {
-                        if (pTask.isSuccessful()) {
-                            Log.d(TAG_EXIST, "onComplete: ");
-                            DocumentSnapshot pDocumentSnapshot = pTask.getResult();
-                            if (Objects.requireNonNull(pDocumentSnapshot).exists()) {
-                                String lEmail = pDocumentSnapshot.getString(WORKMATE_EMAIL_KEY);
-                                String lName = pDocumentSnapshot.getString(WORKMATE_NAME_KEY);
-                                String lPhotoUrl = pDocumentSnapshot.getString(WORKMATE_PHOTO_URL_KEY);
-
-                                if (lPhotoUrl != null) {
-                                    Glide.with(MainActivity.this).load(lPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
-                                }
-                                mTxtName.setText(lName);
-                                mTxtEmail.setText(lEmail);
-
-                            } else {
-                                Log.d(TAG_DISPLAY, "displayWorkmateData: PAS DE DOC");
-                                Toast.makeText(MainActivity.this, "Document does not exist", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(pE -> Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show());
-*/
-
+                .addOnFailureListener(pE -> Toast.makeText(this, "Error TAG_DISPLAY", Toast.LENGTH_SHORT).show());
 
     }
 
