@@ -2,11 +2,20 @@ package com.fleb.go4lunch.view.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.fleb.go4lunch.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,7 +23,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsFragment extends BaseFragment {
+import java.util.Objects;
+
+public class MapsFragment extends Fragment {
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -29,19 +40,31 @@ public class MapsFragment extends BaseFragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+            Context lContext = requireContext();
+
+/*            FusedLocationProviderClient lProviderClient;
+            lProviderClient = LocationServices.getFusedLocationProviderClient(lContext);
+
+            if (ActivityCompat.checkSelfPermission(lContext, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation()
+            }*/
+            LatLng lMyPosition = new LatLng(48.823773, 2.411423);
+            googleMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(lMyPosition));
         }
     };
 
+    @Nullable
     @Override
-    protected int getFragmentLayout() { return R.layout.fragment_maps; }
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-    @Override
-    protected void configureFragmentOnCreateView(View pView) {
-
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

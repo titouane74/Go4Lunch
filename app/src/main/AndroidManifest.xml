@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.fleb.go4lunch">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -10,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="false"
@@ -33,7 +35,7 @@
 
         <activity
             android:name=".view.activities.StartActivity"
-            android:theme="@style/StartTheme"/>
+            android:theme="@style/StartTheme" />
         <activity
             android:name=".view.activities.AuthenticationActivity"
             android:theme="@style/AuthenticationTheme">
@@ -44,15 +46,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activities.MainActivity" />
-
-        <activity android:name=".view.activities.UserActivity"
-            android:parentActivityName=".view.activities.MainActivity"
+        <activity
+            android:name=".view.activities.UserActivity"
             android:label="@string/user_activity_label"
-            android:theme="@style/UserTheme"/>
-
+            android:parentActivityName=".view.activities.MainActivity"
+            android:theme="@style/UserTheme" />
         <activity android:name=".view.activities.RestaurantDetailActivity" /> <!-- PROFILE ACTIVITY -->
-
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"
