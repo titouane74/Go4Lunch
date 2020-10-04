@@ -10,6 +10,10 @@
         android:icon="@drawable/ic_nav_view_list"
         android:title="@string/menu_restaurant_list" />
     <item
+        android:id="@+id/nav_restaurant_test"
+        android:icon="@drawable/ic_nav_view_list"
+        android:title="@string/menu_restaurant_list" />
+    <item
         android:id="@+id/nav_workmate"
         android:icon="@drawable/ic_nav_workmate"
         android:title="@string/menu_workmate_list" />
