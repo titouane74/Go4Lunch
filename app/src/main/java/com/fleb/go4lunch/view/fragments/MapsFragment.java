@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.view.fragments;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +11,17 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,8 +38,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -39,6 +50,8 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
@@ -74,16 +87,27 @@ public class MapsFragment extends Fragment implements LocationListener {
             mMap = googleMap;
             Context lContext = requireContext();
 
+            try {
+                boolean success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                lContext, R.raw.style_json));
+
+                if (!success) {
+                    Log.e(TAG_MAP, "Style parsing failed.");
+                }
+            } catch (Resources.NotFoundException e) {
+                Log.e(TAG_MAP, "Can't find style. Error: ", e);
+            }
+
             enableMyLocation(googleMap);
             getCurrentLocation();
 
-
-            LatLng lMyPosition = new LatLng(48.823773, 2.411423);
+            mLatitude = 48.823773;
+            mLongitude = 2.41423;
+            LatLng lMyPosition = new LatLng(mLatitude, mLongitude);
             googleMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
 
-            mLatitude = 48.823773;
-            mLongitude = 2.41423;
             getRestaurantsPlaces("restaurant");
 
         }
@@ -96,6 +120,7 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable Bundle savedInstanceState) {
        View lView = inflater.inflate(R.layout.fragment_maps, container, false);
         mKey = requireContext().getResources().getString(R.string.maps_api_key);
+
 
         mProximityRadius = Integer.parseInt(requireContext().getResources().getString(R.string.proximity_radius));
         return lView;
@@ -137,7 +162,7 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     private void getRestaurantsPlaces(String pType) {
 
-        mJsonRetrofitApi = ApiClient.getClient(JsonRetrofitApi.BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
+        mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
         Call<RestaurantPOJO> call = mJsonRetrofitApi.getNearByPlaces(mKey,pType,
                 mLatitude + "," + mLongitude, mProximityRadius);
@@ -150,24 +175,21 @@ public class MapsFragment extends Fragment implements LocationListener {
 
                     RestaurantPOJO lRestoPojo = response.body();
                     Log.d(TAG_GETRESTO, "onResponse: " + lRestoPojo.getResults().size());
-                    // This loop will go through all the results and add marker on each location.
+
+                    BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
 
                     for (int i = 0; i < response.body().getResults().size(); i++) {
                         Double lat = response.body().getResults().get(i).getGeometry().getLocation().getLat();
                         Double lng = response.body().getResults().get(i).getGeometry().getLocation().getLng();
                         String placeName = response.body().getResults().get(i).getName();
                         String vicinity = response.body().getResults().get(i).getVicinity();
-                        MarkerOptions markerOptions = new MarkerOptions();
+
                         LatLng latLng = new LatLng(lat, lng);
-                        // Position of Marker on Map
-                        markerOptions.position(latLng);
-                        // Adding Title to the Marker
-                        markerOptions.title(placeName + " : " + vicinity);
-                        // Adding Marker to the Camera.
-                        Marker m = mMap.addMarker(markerOptions);
-                        // Adding colour to the marker
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                        // move map camera
+                        mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title(placeName + " : " + vicinity)
+                            .icon(lIcon));
+
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
                     }
