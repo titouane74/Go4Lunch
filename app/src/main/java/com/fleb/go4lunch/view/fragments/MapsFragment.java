@@ -1,6 +1,5 @@
 package com.fleb.go4lunch.view.fragments;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,16 +11,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,8 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.POJO.RestaurantPOJO;
+import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.PermissionUtils;
@@ -91,7 +84,6 @@ public class MapsFragment extends Fragment implements LocationListener {
                 boolean success = googleMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                                 lContext, R.raw.style_json));
-
                 if (!success) {
                     Log.e(TAG_MAP, "Style parsing failed.");
                 }
@@ -109,6 +101,7 @@ public class MapsFragment extends Fragment implements LocationListener {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
 
             getRestaurantsPlaces("restaurant");
+//            getRestaurantsPlaces(lContext,"restaurant",mLatitude, mLongitude,mKey);
 
         }
     };
@@ -119,9 +112,8 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
        View lView = inflater.inflate(R.layout.fragment_maps, container, false);
-        mKey = requireContext().getResources().getString(R.string.maps_api_key);
 
-
+        mKey = BuildConfig.MAPS_API_KEY;
         mProximityRadius = Integer.parseInt(requireContext().getResources().getString(R.string.proximity_radius));
         return lView;
     }
@@ -164,25 +156,26 @@ public class MapsFragment extends Fragment implements LocationListener {
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
-        Call<RestaurantPOJO> call = mJsonRetrofitApi.getNearByPlaces(mKey,pType,
+        Call<RestaurantPojo> call = mJsonRetrofitApi.getNearByPlaces(mKey,pType,
                 mLatitude + "," + mLongitude, mProximityRadius);
 
-        call.enqueue(new Callback<RestaurantPOJO>() {
+        call.enqueue(new Callback<RestaurantPojo>() {
             @Override
-            public void onResponse(Call<RestaurantPOJO> call, Response<RestaurantPOJO> response) {
+            public void onResponse(Call<RestaurantPojo> call, Response<RestaurantPojo> response) {
                 try {
                     mMap.clear();
 
-                    RestaurantPOJO lRestoPojo = response.body();
+                    RestaurantPojo lRestoPojo = response.body();
                     Log.d(TAG_GETRESTO, "onResponse: " + lRestoPojo.getResults().size());
 
                     BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
 
-                    for (int i = 0; i < response.body().getResults().size(); i++) {
-                        Double lat = response.body().getResults().get(i).getGeometry().getLocation().getLat();
-                        Double lng = response.body().getResults().get(i).getGeometry().getLocation().getLng();
-                        String placeName = response.body().getResults().get(i).getName();
-                        String vicinity = response.body().getResults().get(i).getVicinity();
+                    for (int i = 0; i < lRestoPojo.getResults().size(); i++) {
+                        Double lat = lRestoPojo.getResults().get(i).getGeometry().getLocation().getLat();
+                        Double lng = lRestoPojo.getResults().get(i).getGeometry().getLocation().getLng();
+
+                        String placeName = lRestoPojo.getResults().get(i).getName();
+                        String vicinity = lRestoPojo.getResults().get(i).getVicinity();
 
                         LatLng latLng = new LatLng(lat, lng);
                         mMap.addMarker(new MarkerOptions()
@@ -202,7 +195,7 @@ public class MapsFragment extends Fragment implements LocationListener {
             }
 
             @Override
-            public void onFailure(Call<RestaurantPOJO> call, Throwable t) {
+            public void onFailure(Call<RestaurantPojo> call, Throwable t) {
                 Log.d("onFailure", t.toString());
 
             }

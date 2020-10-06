@@ -14,16 +14,18 @@ public class Workmate {
     private String workmatePhotoUrl;
     private String workmateRestoChoosed;
     private String workmateRestoId;
+    private Boolean workmateLike;
 
 
 
     public Workmate( String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                String pWorkmateRestoChoosed, String pWorkmateRestoId) {
+                String pWorkmateRestoChoosed, String pWorkmateRestoId, Boolean pWorkmateLike ) {
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
         this.workmateRestoChoosed = pWorkmateRestoChoosed;
         this.workmateRestoId = pWorkmateRestoId;
+        this.workmateLike = pWorkmateLike;
     }
 
     public Workmate( String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
@@ -54,6 +56,10 @@ public class Workmate {
     public String getWorkmateRestoId() { return workmateRestoId; }
 
     public void setWorkmateRestoId(String pWorkmateRestoId) { workmateRestoId = pWorkmateRestoId; }
+
+    public Boolean getWorkmateLike() { return workmateLike; }
+
+    public void setWorkmateLike(Boolean pWorkmateLike) { workmateLike = pWorkmateLike; }
 
     @Override
     public boolean equals(Object pObj) {

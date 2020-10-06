@@ -1,8 +1,8 @@
 package com.fleb.go4lunch.network;
 
-import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.CommentPost;
-import com.fleb.go4lunch.model.POJO.RestaurantPOJO;
+import com.fleb.go4lunch.model.RestaurantDetailPojo;
+import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.model.Post;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public interface JsonRetrofitApi {
     String BASE_URL_GOOGLE = "https://maps.googleapis.com/maps/api/place/";
 
     @GET("nearbysearch/json")
-    Call<RestaurantPOJO> getNearByPlaces(
+    Call<RestaurantPojo> getNearByPlaces(
             @Query("key") String pKey,
             @Query("type") String pType,
             @Query("location") String pLocation,
@@ -32,6 +32,14 @@ public interface JsonRetrofitApi {
 
 
 
+    @GET("details/json")
+    Call<RestaurantDetailPojo> getRestaurantDetail(
+            @Query("key") String pKey,
+            @Query("place_id") String pPlaceId,
+            @Query("fields") String pFields
+    );
+//"name,address_components,formatted_phone_number,icon,id,international_phone_number," +
+//                    "rating,website,utc_offset,opening_hours"
 
 
 
