@@ -8,7 +8,7 @@ import com.google.firebase.firestore.DocumentId;
 public class Restaurant {
 
     @DocumentId
-    private String restoId;
+    private String restoPlaceId;
     private String restoName;
     private String restoAddress;
     private String restoPhone;
@@ -16,14 +16,17 @@ public class Restaurant {
     private String restoDistance;
     private int restoNbWorkmates;
     private String restoOpening;
-    private String restoNote;
+    private double restoRating;
     private String restoPhotoUrl;
+    private Double restoLat;
+    private Double restoLng;
 
     public Restaurant() {}
 
-    public Restaurant(String pRestoId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
-                      String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, String pRestoNote, String pRestoPhotoUrl) {
-        restoId = pRestoId;
+    public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
+                      String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoRating, String pRestoPhotoUrl,
+                      Double pRestoLat, Double pRestoLng) {
+        restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
         restoAddress = pRestoAddress;
         restoPhone = pRestoPhone;
@@ -31,13 +34,15 @@ public class Restaurant {
         restoDistance = pRestoDistance;
         restoNbWorkmates = pRestoNbWorkmates;
         restoOpening = pRestoOpening;
-        restoNote = pRestoNote;
+        restoRating = pRestoRating;
         restoPhotoUrl = pRestoPhotoUrl;
+        restoLat = pRestoLat;
+        restoLng = pRestoLng;
     }
 
-    public String getRestoId() { return restoId; }
+    public String getRestoPlaceId() { return restoPlaceId; }
 
-    public void setRestoId(String pRestoId) { restoId = pRestoId; }
+    public void setRestoPlaceId(String pRestoPlaceId) { restoPlaceId = pRestoPlaceId; }
 
     public String getRestoName() { return restoName; }
 
@@ -67,11 +72,19 @@ public class Restaurant {
 
     public void setRestoOpening(String pRestoOpening) { restoOpening = pRestoOpening; }
 
-    public String getRestoNote() { return restoNote; }
+    public double getRestoRating() { return restoRating; }
 
-    public void setRestoNote(String pRestoNote) { restoNote = pRestoNote; }
+    public void setRestoRating(double pRestoRating) { restoRating = pRestoRating; }
 
     public String getRestoPhotoUrl() { return restoPhotoUrl; }
 
     public void setRestoPhotoUrl(String pRestoPhotoUrl) { restoPhotoUrl = pRestoPhotoUrl; }
+
+    public Double getRestoLat() { return restoLat; }
+
+    public void setRestoLat(Double pRestoLat) { restoLat = pRestoLat; }
+
+    public Double getRestoLng() { return restoLng; }
+
+    public void setRestoLng(Double pRestoLng) { restoLng = pRestoLng; }
 }

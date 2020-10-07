@@ -11,7 +11,7 @@ import com.fleb.go4lunch.repository.RestaurantRepo;
 import java.util.List;
 
 
-public class RestaurantListViewModel extends ViewModel implements RestaurantRepo.OnFirestoreTaskComplete, RestaurantRepo.OnGoogleResponse {
+public class RestaurantListViewModel extends ViewModel implements RestaurantRepo.OnFirestoreTaskComplete {
 
     private MutableLiveData<List<Restaurant>> mRestoList = new MutableLiveData<>();
 
@@ -21,10 +21,6 @@ public class RestaurantListViewModel extends ViewModel implements RestaurantRepo
         RestaurantRepo lRestoRepo = new RestaurantRepo(this);
         lRestoRepo.getRestoData();
     }
-/*    public RestaurantListViewModel(double pLat, double pLong) {
-        RestaurantRepo lRestoRepo = new RestaurantRepo(this);
-        lRestoRepo.getRestaurantsPlaces(this, "restaurant", pLat,pLong);
-    }*/
 
     @Override
     public void restoDataLoaded(List<Restaurant> pRestoList) {
@@ -37,12 +33,8 @@ public class RestaurantListViewModel extends ViewModel implements RestaurantRepo
     }
 
     @Override
-    public void restoDataGoogle(RestaurantPojo pRestoListGoogle) {
+    public void restoOnGoogleError(String pErrorGoogle) {
 
     }
 
-    @Override
-    public void restoOnErrrorGoogle(String pErrorBody) {
-
-    }
 }

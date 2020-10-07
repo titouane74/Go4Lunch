@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,10 +24,11 @@ import android.widget.Toast;
 
 import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.RestaurantPojo;
-import com.fleb.go4lunch.network.ApiClient;
+import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.PermissionUtils;
+import com.fleb.go4lunch.viewmodel.MapViewModel;
+import com.fleb.go4lunch.viewmodel.MapViewModelFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,13 +40,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
@@ -94,17 +91,43 @@ public class MapsFragment extends Fragment implements LocationListener {
             enableMyLocation(googleMap);
             getCurrentLocation();
 
-            mLatitude = 48.823773;
-            mLongitude = 2.41423;
+            mLatitude = 48.8236549;
+            mLongitude = 2.4102578;
+
+            MapViewModelFactory lFactory = new MapViewModelFactory(lContext,"restaurant",mLatitude, mLongitude,mKey);
+
+            MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(),lFactory).get(MapViewModel.class);
+            lMapViewModel.getRestoList().observe(getViewLifecycleOwner(),pRestaurants -> {
+                setMapMarkers(pRestaurants);
+            });
+
             LatLng lMyPosition = new LatLng(mLatitude, mLongitude);
+            Log.d(TAG_MAP, "onMapReady: " + mLatitude + " : " + mLongitude);
             googleMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
 
-            getRestaurantsPlaces("restaurant");
-//            getRestaurantsPlaces(lContext,"restaurant",mLatitude, mLongitude,mKey);
-
         }
     };
+
+    public void setMapMarkers(List<Restaurant> pRestaurants) {
+
+        BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+
+        Log.d(TAG_GETRESTO, "setMapMarkers: response size" + pRestaurants.size());
+
+        for (int i = 0; i < pRestaurants.size(); i++) {
+
+            String lName = pRestaurants.get(i).getRestoName();
+            String lAddress = pRestaurants.get(i).getRestoAddress();
+
+            LatLng latLng = new LatLng(pRestaurants.get(i).getRestoLat(), pRestaurants.get(i).getRestoLng());
+            mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(lName + " : " + lAddress)
+                    .icon(lIcon));
+        }
+    }
+
 
     @Nullable
     @Override
@@ -150,56 +173,6 @@ public class MapsFragment extends Fragment implements LocationListener {
         } catch (Exception pE) {
             pE.printStackTrace();
         }
-    }
-
-    private void getRestaurantsPlaces(String pType) {
-
-        mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
-
-        Call<RestaurantPojo> call = mJsonRetrofitApi.getNearByPlaces(mKey,pType,
-                mLatitude + "," + mLongitude, mProximityRadius);
-
-        call.enqueue(new Callback<RestaurantPojo>() {
-            @Override
-            public void onResponse(Call<RestaurantPojo> call, Response<RestaurantPojo> response) {
-                try {
-                    mMap.clear();
-
-                    RestaurantPojo lRestoPojo = response.body();
-                    Log.d(TAG_GETRESTO, "onResponse: " + lRestoPojo.getResults().size());
-
-                    BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
-
-                    for (int i = 0; i < lRestoPojo.getResults().size(); i++) {
-                        Double lat = lRestoPojo.getResults().get(i).getGeometry().getLocation().getLat();
-                        Double lng = lRestoPojo.getResults().get(i).getGeometry().getLocation().getLng();
-
-                        String placeName = lRestoPojo.getResults().get(i).getName();
-                        String vicinity = lRestoPojo.getResults().get(i).getVicinity();
-
-                        LatLng latLng = new LatLng(lat, lng);
-                        mMap.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title(placeName + " : " + vicinity)
-                            .icon(lIcon));
-
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
-                    }
-
-                } catch (Exception e) {
-                    Log.d("onResponse", "There is an error");
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<RestaurantPojo> call, Throwable t) {
-                Log.d("onFailure", t.toString());
-
-            }
-        });
     }
 
 

@@ -5,12 +5,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.CommentPost;
 import com.fleb.go4lunch.model.Post;
-import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
+import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantAdapter;
+import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,32 +31,46 @@ import retrofit2.Response;
 
 public class RestaurantTestFragment extends BaseFragment {
 
+    private RestaurantAdapter mRestoAdapter;
     private TextView textViewResult;
     private JsonRetrofitApi mJsonRetrofitApi;
 
     public RestaurantTestFragment() {}
 
     @Override
-    protected int getFragmentLayout() { return R.layout.fragment_restaurant_test; }
+    protected int getFragmentLayout() {
+//        return R.layout.fragment_restaurant_test;
+        return R.layout.fragment_restaurant_list;
+    }
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-
-
+/*
         textViewResult = pView.findViewById(R.id.text_view_result);
-
         mJsonRetrofitApi = ApiClient.getClient(JsonRetrofitApi.BASE_URL_TEST).create(JsonRetrofitApi.class);
-
 //        getPostsMap();
 //        getPostsMultipleFirstParameter();
 //        getPosts();
 //        getComments();
             getCommentsUrl();
+*/
+        RecyclerView lRecyclerView = pView.findViewById(R.id.restaurant_list);
+        mRestoAdapter = new RestaurantAdapter();
+
+        lRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        lRecyclerView.setAdapter(mRestoAdapter);
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        RestaurantListViewModel lRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
+        lRestaurantListViewModel.getRestoList().observe(getViewLifecycleOwner(),pRestaurants -> {
+            mRestoAdapter.setRestoList(pRestaurants);
+            mRestoAdapter.notifyDataSetChanged();
+        });
     }
 
     private void getPosts() {

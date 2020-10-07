@@ -321,7 +321,7 @@ public class RestaurantPojo {
         private String placeId;
         @SerializedName("rating")
         @Expose
-        private Double rating;
+        private double rating;
         @SerializedName("reference")
         @Expose
         private String reference;

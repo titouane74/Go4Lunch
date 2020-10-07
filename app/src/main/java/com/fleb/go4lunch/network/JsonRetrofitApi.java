@@ -38,10 +38,8 @@ public interface JsonRetrofitApi {
             @Query("place_id") String pPlaceId,
             @Query("fields") String pFields
     );
-//"name,address_components,formatted_phone_number,icon,id,international_phone_number," +
-//                    "rating,website,utc_offset,opening_hours"
 
-
+//"name,address_components,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours"
 
     @GET("posts")
     Call<List<Post>> getPosts(

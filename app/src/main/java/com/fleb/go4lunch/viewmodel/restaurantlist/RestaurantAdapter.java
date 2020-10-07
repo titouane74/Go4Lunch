@@ -74,8 +74,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             }
         }
 
-        if (mRestoList.get(position).getRestoNote() != null) {
-            lNote = Double.parseDouble(mRestoList.get(position).getRestoNote());
+        if (mRestoList.get(position).getRestoRating() > 0) {
+            lNote = mRestoList.get(position).getRestoRating();
 //                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: note google : " + mRestoList.get(position).getRestoNote());
 //                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: note google : " + lNote);
             lNote = (lNote / lMaxNote) * lNbNote;
