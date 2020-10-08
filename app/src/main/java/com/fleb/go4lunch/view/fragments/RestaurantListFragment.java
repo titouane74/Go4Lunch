@@ -39,7 +39,7 @@ public class RestaurantListFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         RestaurantListViewModel lRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
-        lRestaurantListViewModel.getRestoList().observe(getViewLifecycleOwner(),pRestaurants -> {
+        lRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurants -> {
             mRestoAdapter.setRestoList(pRestaurants);
             mRestoAdapter.notifyDataSetChanged();
         });

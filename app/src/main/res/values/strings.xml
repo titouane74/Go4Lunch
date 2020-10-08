@@ -102,6 +102,7 @@
 
     <!-- MAPS -->
     <string name="proximity_radius">150</string>
+    <string name="type_search">restaurant</string>
     <!--    Permissions    -->
     <string name="permission_rationale_location">L\'accès au service de localisation est nécessaire pour permettre la localisation.</string>
     <string name="location_permission_denied">L\'application nécessite une autorisation de localisation pour permettre la locatlisation . Veuillez réessayer et accorder l\'accès pour utiliser l\'emplacement. \nSi l\'autorisation a été définitivement refusée, elle peut être activée à partir des paramètres système &gt; Applications &gt; \'Go4Lunch \'.</string>

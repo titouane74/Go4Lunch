@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.repository.RestaurantRepo;
 
 import java.util.List;
@@ -15,11 +14,11 @@ public class RestaurantListViewModel extends ViewModel implements RestaurantRepo
 
     private MutableLiveData<List<Restaurant>> mRestoList = new MutableLiveData<>();
 
-    public LiveData<List<Restaurant>> getRestoList() { return mRestoList; }
+    public LiveData<List<Restaurant>> getRestaurantList() { return mRestoList; }
 
     public RestaurantListViewModel() {
         RestaurantRepo lRestoRepo = new RestaurantRepo(this);
-        lRestoRepo.getRestoData();
+        lRestoRepo.getRestaurantData();
     }
 
     @Override

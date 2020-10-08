@@ -18,20 +18,19 @@ public class MapViewModelFactory implements ViewModelProvider.Factory {
     private Double mLng;
     private String mKey;
 
-    public MapViewModelFactory(Context pContext, String pType, Double pLat, Double pLng, String pKey) {
+    public MapViewModelFactory(Context pContext, Double pLat, Double pLng) {
         mContext = pContext;
-        mType = pType;
         mLat = pLat;
         mLng = pLng;
-        mKey = pKey;
     }
 
-        @NonNull
+    @SuppressWarnings("unchecked")
+    @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MapViewModel.class))
         {
-            return (T) new MapViewModel(mContext,mType,mLat,mLng,mKey);
+            return (T) new MapViewModel(mContext,mLat,mLng);
         }
         throw new IllegalArgumentException("Problem with ViewModelFactory");    }
 

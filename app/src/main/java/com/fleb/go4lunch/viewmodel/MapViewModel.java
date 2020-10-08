@@ -20,10 +20,9 @@ public class MapViewModel extends ViewModel implements RestaurantRepo.OnFirestor
 
     public MapViewModel() {}
 
-    public MapViewModel(Context pContext, String pType, Double pLat,
-                        Double pLng, String pKey) {
+    public MapViewModel(Context pContext, Double pLat, Double pLng) {
         RestaurantRepo lRestoRepo = new RestaurantRepo(this);
-        lRestoRepo.getRestaurantsPlaces(pContext, pType,pLat,pLng,pKey);
+        lRestoRepo.getRestaurantsPlaces(pContext,pLat,pLng);
     }
 
     @Override

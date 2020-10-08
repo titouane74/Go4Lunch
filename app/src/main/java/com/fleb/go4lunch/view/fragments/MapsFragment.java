@@ -94,7 +94,7 @@ public class MapsFragment extends Fragment implements LocationListener {
             mLatitude = 48.8236549;
             mLongitude = 2.4102578;
 
-            MapViewModelFactory lFactory = new MapViewModelFactory(lContext,"restaurant",mLatitude, mLongitude,mKey);
+            MapViewModelFactory lFactory = new MapViewModelFactory(lContext,mLatitude, mLongitude);
 
             MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(),lFactory).get(MapViewModel.class);
             lMapViewModel.getRestoList().observe(getViewLifecycleOwner(),pRestaurants -> {

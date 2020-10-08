@@ -13,6 +13,8 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.CommentPost;
 import com.fleb.go4lunch.model.Post;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
+import com.fleb.go4lunch.viewmodel.MapViewModel;
+import com.fleb.go4lunch.viewmodel.MapViewModelFactory;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantAdapter;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
 
@@ -65,9 +67,13 @@ public class RestaurantTestFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Double lLatitude = 48.8236549;
+        Double lLongitude = 2.4102578;
+        MapViewModelFactory lFactory = new MapViewModelFactory(getContext(),lLatitude, lLongitude);
 
-        RestaurantListViewModel lRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
-        lRestaurantListViewModel.getRestoList().observe(getViewLifecycleOwner(),pRestaurants -> {
+        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(),lFactory).get(MapViewModel.class);
+
+        lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), pRestaurants -> {
             mRestoAdapter.setRestoList(pRestaurants);
             mRestoAdapter.notifyDataSetChanged();
         });

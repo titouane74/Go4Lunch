@@ -3,17 +3,12 @@ package com.fleb.go4lunch.repository;
 import android.content.Context;
 import android.util.Log;
 
-import com.facebook.places.BuildConfig;
+import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -42,29 +37,19 @@ public class RestaurantRepo {
         void restoOnGoogleError(String pErrorGoogle);
     }
 
-    public interface OnGoogleResponse {
-        void restoDataGoogle(RestaurantPojo pRestoListGoogle);
-
-        void restoOnErrrorGoogle(String pErrorBody);
-    }
-
     public static final String RESTO_COLLECTION = "Restaurant";
+    private String mKey = BuildConfig.MAPS_API_KEY;
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
 
     private OnFirestoreTaskComplete mOnFirestoreTaskComplete;
-    private OnGoogleResponse mOnGoogleResponse;
 
     public RestaurantRepo(OnFirestoreTaskComplete pOnFirestoreTaskComplete) {
         this.mOnFirestoreTaskComplete = pOnFirestoreTaskComplete;
     }
 
-/*    public RestaurantRepo(OnGoogleResponse pOnGoogleResponse) {
-        this.mOnGoogleResponse = pOnGoogleResponse;
-    }*/
-
-    public void getRestoData() {
+    public void getRestaurantData() {
         mRestoRef.get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
@@ -77,13 +62,14 @@ public class RestaurantRepo {
                 });
     }
 
-    public void getRestaurantsPlaces(Context pContext, String pType, Double pLatitude, Double pLongitude, String pKey) {
+    public void getRestaurantsPlaces(Context pContext, Double pLatitude, Double pLongitude) {
 
         int lProximityRadius = Integer.parseInt(pContext.getResources().getString(R.string.proximity_radius));
+        String lType = pContext.getResources().getString(R.string.type_search);
 
         JsonRetrofitApi lJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
-        Call<RestaurantPojo> call = lJsonRetrofitApi.getNearByPlaces(pKey, pType,
+        Call<RestaurantPojo> call = lJsonRetrofitApi.getNearByPlaces(mKey, lType,
                 pLatitude + "," + pLongitude, lProximityRadius);
 
         call.enqueue(new Callback<RestaurantPojo>() {
@@ -145,13 +131,7 @@ public class RestaurantRepo {
                 } else {
                     mOnFirestoreTaskComplete.restoOnGoogleError("Error Google");
                 }
-/*
-                if (response.isSuccessful()) {
-                    mOnGoogleResponse.restoDataGoogle(response.body());
-                } else {
-                    mOnGoogleResponse.restoOnErrrorGoogle("Error response");
-                }
-*/
+
             }
 
             @Override
