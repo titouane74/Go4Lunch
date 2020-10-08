@@ -3,6 +3,7 @@ package com.fleb.go4lunch.view.fragments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -10,25 +11,30 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.fleb.go4lunch.viewmodel.MapViewModelFactory;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +45,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,15 +59,20 @@ public class MapsFragment extends Fragment implements LocationListener {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static final String TAG_GETRESTO = "TAG_GETRESTO";
 
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000;
+
     LocationManager mLocationManager;
     private GoogleMap mMap;
-    double mLatitude,  mLongitude ;
-    Location mLastLocation;
+    double mLatitude, mLongitude;
+    private Location mLastLocation;
     Marker mCurrLocationMarker;
+    public Location mCurrentLocation;
+    private LocationCallback mLocationCallback;
+    private LocationRequest mLocationRequest;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     private JsonRetrofitApi mJsonRetrofitApi;
-    private String mKey ;
-    private int mProximityRadius;
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -77,6 +92,10 @@ public class MapsFragment extends Fragment implements LocationListener {
             mMap = googleMap;
             Context lContext = requireContext();
 
+            if (checkPermissions()) {
+                mMap.setMyLocationEnabled(true);
+            }
+
             try {
                 boolean success = googleMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
@@ -87,27 +106,40 @@ public class MapsFragment extends Fragment implements LocationListener {
             } catch (Resources.NotFoundException e) {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
-
-            enableMyLocation(googleMap);
-            getCurrentLocation();
-
+//            getCurrentLocation();
+            if (mCurrentLocation == null) {
+                if (mLastLocation != null) {
+                    mCurrentLocation = mLastLocation;
+                    Log.d(TAG_MAP, "onMapReady: last " + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
+                } else {
+                    Log.d(TAG_MAP, "onMapReady: current and last location null" );
+                }
+            } else {
+                Log.d(TAG_MAP, "onMapReady: current " + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude());
+            }
             mLatitude = 48.8236549;
             mLongitude = 2.4102578;
 
-            MapViewModelFactory lFactory = new MapViewModelFactory(lContext,mLatitude, mLongitude);
 
-            MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(),lFactory).get(MapViewModel.class);
-            lMapViewModel.getRestoList().observe(getViewLifecycleOwner(),pRestaurants -> {
+            MapViewModelFactory lFactory = new MapViewModelFactory(lContext, mLatitude, mLongitude);
+
+            MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
+            lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), pRestaurants -> {
                 setMapMarkers(pRestaurants);
             });
 
             LatLng lMyPosition = new LatLng(mLatitude, mLongitude);
-            Log.d(TAG_MAP, "onMapReady: " + mLatitude + " : " + mLongitude);
-            googleMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
+//            Log.d(TAG_MAP, "onMapReady: " + mLatitude + " : " + mLongitude);
+            mMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
+
 
         }
     };
+
+    public  void saveLocation(Location pLocation) {
+        mCurrentLocation = pLocation;
+    }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
 
@@ -120,7 +152,8 @@ public class MapsFragment extends Fragment implements LocationListener {
             String lName = pRestaurants.get(i).getRestoName();
             String lAddress = pRestaurants.get(i).getRestoAddress();
 
-            LatLng latLng = new LatLng(pRestaurants.get(i).getRestoLat(), pRestaurants.get(i).getRestoLng());
+            LatLng latLng = new LatLng(pRestaurants.get(i).getRestoLocation().getLat(),
+                    pRestaurants.get(i).getRestoLocation().getLng());
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(lName + " : " + lAddress)
@@ -129,15 +162,17 @@ public class MapsFragment extends Fragment implements LocationListener {
     }
 
 
+    @SuppressLint("MissingPermission")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-       View lView = inflater.inflate(R.layout.fragment_maps, container, false);
+        View lView = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        mKey = BuildConfig.MAPS_API_KEY;
-        mProximityRadius = Integer.parseInt(requireContext().getResources().getString(R.string.proximity_radius));
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        getCurrentLocation();
+
         return lView;
     }
 
@@ -146,33 +181,47 @@ public class MapsFragment extends Fragment implements LocationListener {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
     }
 
-    private void enableMyLocation(GoogleMap pMap) {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            if (pMap != null) {
-                pMap.setMyLocationEnabled(true);
-            }
-        } else {
-            // Permission to access the location is missing. Show rationale and request permission
-            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        }
-
-    }
-
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
-        try {
-            mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-            Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
-        } catch (Exception pE) {
-            pE.printStackTrace();
-        }
+//        mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+//        Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
+
+        Task<Location> lLocationTask = mFusedLocationClient.getLastLocation();
+        lLocationTask.addOnSuccessListener(location -> {
+            if (location != null) {
+                saveLocation(location);
+            } else {
+                mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+                Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
+/*
+                Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        saveLocation(location);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+                    }
+                });
+*/
+            }
+        });
+
     }
 
 
@@ -183,8 +232,11 @@ public class MapsFragment extends Fragment implements LocationListener {
      *
      * @param location The new location, as a Location object.
      */
+
     @Override
     public void onLocationChanged(Location location) {
+        saveLocation(location);
+/*
         Toast.makeText(getContext(), "Lat: " + location.getLatitude() + ", Long: "
                 + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
@@ -215,7 +267,9 @@ public class MapsFragment extends Fragment implements LocationListener {
         Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f", mLatitude, mLongitude));
 
         Log.d("onLocationChanged", "Exit");
+*/
     }
+
 
     /**
      * This callback will never be invoked and providers can be considers as always in the
@@ -252,4 +306,55 @@ public class MapsFragment extends Fragment implements LocationListener {
     public void onProviderDisabled(String provider) {
     }
 
+    @Override
+    public void onPause() {
+        stopLocationUpdates();
+        super.onPause();
+    }
+
+    private void stopLocationUpdates() {
+//        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+//        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (!checkPermissions()) {
+//            startLocationUpdates();
+            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+        } else {
+//            getLastLocation();
+//            startLocationUpdates();
+            getCurrentLocation();
+        }
+    }
+
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(requireActivity(), new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLastLocation = task.getResult();
+
+                        } else {
+                            Log.w(TAG_MAP, "getLastLocation:exception", task.getException());
+                        }
+                    }
+                });
+    }
 }

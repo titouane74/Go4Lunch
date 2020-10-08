@@ -1,6 +1,7 @@
 package com.fleb.go4lunch.repository;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import com.fleb.go4lunch.BuildConfig;
@@ -95,6 +96,10 @@ public class RestaurantRepo {
                             lOpening = null;
                         }
 */
+                        String lPhoto = (lRestoResponse.get(i).getPhotos() != null ? getPhoto(lRestoResponse.get(i).getPhotos().get(0).getPhotoReference(), 400) : "") ;
+                        Boolean openNow = (lRestoResponse.get(i).getOpeningHours() != null ? lRestoResponse.get(i).getOpeningHours().getOpenNow() : false);
+                        String lDistance  = null ;
+                        //String.valueOf(getRestaurantDistanceToCurrentLocation(null,lRestoResponse.get(i).getGeometry().getLocation()));
 
                         Restaurant lRestaurant = new Restaurant(
                                 //pRestoPlaceId
@@ -108,7 +113,7 @@ public class RestaurantRepo {
                                 //pRestoWebsite
                                 null,
                                 //pRestoDistance
-                                null,
+                                lDistance,
                                 //pRestoNbWorkmates
                                 0,
                                 //pRestoOpening
@@ -116,12 +121,17 @@ public class RestaurantRepo {
                                 //pRestoRating
                                 lRestoResponse.get(i).getRating(),
                                 //pRestoPhotoUrl
-                                //lRestoResponse.get(i).getPhotos().get(i).getHtmlAttributions(),
-                                null,
+                                //lRestoResponse.get(i).getPhotos().get(i).getPhotoReference(),
+                                lPhoto,
+//                                null,
+/*
                                 //pRestoLat
                                 lRestoResponse.get(i).getGeometry().getLocation().getLat(),
                                 //pRestoLng
                                 lRestoResponse.get(i).getGeometry().getLocation().getLng()
+*/
+                                //pRestoLocation
+                                lRestoResponse.get(i).getGeometry().getLocation()
                         );
 
                         lRestoList.add(lRestaurant);
@@ -142,4 +152,18 @@ public class RestaurantRepo {
         });
     }
 
+    public String getPhoto(String pPhotoReference, int pMaxWidth) {
+         return BASE_URL_GOOGLE + "photo?photoreference=" + pPhotoReference
+                + "&maxwidth=" + pMaxWidth + "&key=" + mKey;
+    }
+
+    public int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation )
+    {
+        Location lRestaurantLocation = new Location("fusedLocationProvider");
+
+        lRestaurantLocation.setLatitude(pRestoLocation.getLat());
+        lRestaurantLocation.setLongitude(pRestoLocation.getLng());
+
+        return (int) pCurrentLocation.distanceTo(lRestaurantLocation);
+    }
 }

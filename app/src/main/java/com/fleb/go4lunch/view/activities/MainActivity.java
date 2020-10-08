@@ -1,16 +1,27 @@
 package com.fleb.go4lunch.view.activities;
 //TODO implement the javadoc
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -24,15 +35,32 @@ import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import java.util.Objects;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 
-public class  MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
@@ -55,7 +83,6 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
     private ImageView mImgUser;
     private TextView mTxtName;
     private TextView mTxtEmail;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,18 +199,19 @@ public class  MainActivity extends AppCompatActivity implements View.OnClickList
                             lUrl = pCurrentWorkmate.getPhotoUrl().toString();
                         }
                         Workmate lWorkmate = new Workmate(pCurrentWorkmate.getDisplayName(), pCurrentWorkmate.getEmail(), lUrl);
-                        displayDrawerData(lWorkmate.getWorkmateEmail(), lWorkmate.getWorkmateName() , lWorkmate.getWorkmatePhotoUrl());
+                        displayDrawerData(lWorkmate.getWorkmateEmail(), lWorkmate.getWorkmateName(), lWorkmate.getWorkmatePhotoUrl());
                     }
                 })
                 .addOnFailureListener(pE -> Log.d(TAG_MAIN, "displayWorkmateData: " + pE.getMessage()));
     }
 
-        private void  displayDrawerData(String pEmail, String pName, String pPhotoUrl) {
-            if (pPhotoUrl != null) {
-                Glide.with(MainActivity.this).load(pPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
-            }
-            mTxtName.setText(pName);
-            mTxtEmail.setText(pEmail);
+    private void displayDrawerData(String pEmail, String pName, String pPhotoUrl) {
+        if (pPhotoUrl != null) {
+            Glide.with(MainActivity.this).load(pPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
         }
+        mTxtName.setText(pName);
+        mTxtEmail.setText(pEmail);
+    }
+
 }
 

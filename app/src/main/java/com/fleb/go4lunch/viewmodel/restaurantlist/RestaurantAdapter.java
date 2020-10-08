@@ -57,9 +57,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         double lMaxLevelOneStar = Double.parseDouble(lContext.getResources().getString(R.string.max_level_one_star));
         double lMaxLevelTwoStar = Double.parseDouble(lContext.getResources().getString(R.string.max_level_two_star));
         double lNote;
+        String lDistance = String.valueOf(mRestoList.get(position).getRestoDistance());
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
-        pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistance());
+        pRestoHolder.mRestoDistance.setText(lDistance);
         pRestoHolder.mRestoAddress.setText(mRestoList.get(position).getRestoAddress());
         pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
 

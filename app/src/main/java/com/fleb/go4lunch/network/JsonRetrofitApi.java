@@ -31,7 +31,6 @@ public interface JsonRetrofitApi {
             @Query("radius") int pRadius);
 
 
-
     @GET("details/json")
     Call<RestaurantDetailPojo> getRestaurantDetail(
             @Query("key") String pKey,
