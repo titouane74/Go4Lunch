@@ -25,7 +25,7 @@
             android:textSize="@dimen/text_size_item_title"/>
 
         <ImageView
-            android:id="@+id/img_note1"
+            android:id="@+id/img_detail_note1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_mini"
@@ -35,22 +35,22 @@
             app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
             />
         <ImageView
-            android:id="@+id/img_note2"
+            android:id="@+id/img_detail_note2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_mini"
             app:srcCompat="@drawable/ic_star_yellow_note"
-            app:layout_constraintStart_toEndOf="@+id/img_note1"
+            app:layout_constraintStart_toEndOf="@+id/img_detail_note1"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
             />
         <ImageView
-            android:id="@+id/img_note3"
+            android:id="@+id/img_detail_note3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_mini"
             app:srcCompat="@drawable/ic_star_yellow_note"
-            app:layout_constraintStart_toEndOf="@+id/img_note2"
+            app:layout_constraintStart_toEndOf="@+id/img_detail_note2"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
             />

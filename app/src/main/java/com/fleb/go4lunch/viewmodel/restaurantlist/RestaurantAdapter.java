@@ -2,6 +2,7 @@ package com.fleb.go4lunch.viewmodel.restaurantlist;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -18,6 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.utils.GsonHelper;
+import com.fleb.go4lunch.utils.RatingCalculation;
+import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,11 +60,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         Context lContext = pRestoHolder.itemView.getContext();
         String lOpening;
-        int lMaxNote = Integer.parseInt(lContext.getResources().getString(R.string.max_level_three_star));
-        int lNbNote = Integer.parseInt(lContext.getResources().getString(R.string.nb_star));
-        double lMaxLevelOneStar = Double.parseDouble(lContext.getResources().getString(R.string.max_level_one_star));
-        double lMaxLevelTwoStar = Double.parseDouble(lContext.getResources().getString(R.string.max_level_two_star));
-        double lNote;
         String lDistance = String.valueOf(mRestoList.get(position).getRestoDistance());
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
@@ -79,27 +78,27 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             }
         }
 
-        if (mRestoList.get(position).getRestoRating() > 0) {
-            lNote = mRestoList.get(position).getRestoRating();
-            lNote = (lNote / lMaxNote) * lNbNote;
-        } else {
-            lNote = 0;
-        }
-
-        if (lNote == 0) {
-            Log.d(TAG_LIST_RESTO, "onBindViewHolder: 3 stars to hide : " + lNote);
-            pRestoHolder.mRestoNote1.setVisibility(View.INVISIBLE);
-            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
-            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
-        } else if (lNote > 0 && lNote <= lMaxLevelOneStar) {
-            Log.d(TAG_LIST_RESTO, "onBindViewHolder: 2 stars to hide : " + lNote);
-            pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
-            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
-        } else if (lNote > lMaxLevelOneStar && lNote <= lMaxLevelTwoStar) {
-            Log.d(TAG_LIST_RESTO, "onBindViewHolder: 1 star to hide : " + lNote);
-            pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
-        } else {
-            Log.d(TAG_LIST_RESTO, "onBindViewHolder: no star to hide : " + lNote);
+        int lnbStarToDisplay = RatingCalculation.numberStarToDisplay(lContext,
+                mRestoList.get(position).getRestoRating());
+        switch (lnbStarToDisplay) {
+            case 1:
+                Log.d(TAG_LIST_RESTO, "onBindViewHolder: 2 stars to hide : " );
+                pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
+                pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                Log.d(TAG_LIST_RESTO, "onBindViewHolder: 1 star to hide : " );
+                pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+                break;
+            case 3:
+                Log.d(TAG_LIST_RESTO, "onBindViewHolder: no star to hide : " );
+                break;
+            default:
+                Log.d(TAG_LIST_RESTO, "onBindViewHolder: 3 stars to hide : " );
+                pRestoHolder.mRestoNote1.setVisibility(View.INVISIBLE);
+                pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
+                pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
+                break;
         }
 
         if (mRestoList.get(position).getRestoPhotoUrl() != null ) {
@@ -113,6 +112,19 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 pRestoHolder.mRestoImage.setImageBitmap(mResult);
             }
         }
+
+        pRestoHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
+                String lJsonRestaurant = GsonHelper.getGsonString(mRestoList.get(position));
+                lIntentRestoDetail.putExtra("placeid",mRestoList.get(position).getRestoPlaceId());
+                lIntentRestoDetail.putExtra("restaurant" ,lJsonRestaurant);
+                lContext.startActivity(lIntentRestoDetail);
+            }
+        });
+
+
     }
 
     @Override
@@ -167,7 +179,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             mResult = result;
         }
     }
-
 
     public void downLoadImage(String pUrl) throws IOException {
 

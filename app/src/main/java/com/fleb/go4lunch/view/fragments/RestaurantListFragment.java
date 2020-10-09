@@ -44,4 +44,5 @@ public class RestaurantListFragment extends BaseFragment {
             mRestoAdapter.notifyDataSetChanged();
         });
     }
+
 }
