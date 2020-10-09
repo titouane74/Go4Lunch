@@ -59,20 +59,16 @@ public class MapsFragment extends Fragment implements LocationListener {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static final String TAG_GETRESTO = "TAG_GETRESTO";
 
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000;
-
-    LocationManager mLocationManager;
+    private LocationManager mLocationManager;
     private GoogleMap mMap;
-    double mLatitude, mLongitude;
+    private double mLatitude, mLongitude;
     private Location mLastLocation;
-    Marker mCurrLocationMarker;
-    public Location mCurrentLocation;
+    private Marker mCurrLocationMarker;
+    private Location mCurrentLocation;
+    private Location mCurrentLocation2;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
-
-    private JsonRetrofitApi mJsonRetrofitApi;
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -106,8 +102,6 @@ public class MapsFragment extends Fragment implements LocationListener {
             } catch (Resources.NotFoundException e) {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
-//            getCurrentLocation();
-
 
             if (mCurrentLocation == null) {
                 if (mLastLocation != null) {
@@ -121,7 +115,8 @@ public class MapsFragment extends Fragment implements LocationListener {
             }
             mLatitude = 48.8236549;
             mLongitude = 2.4102578;
-
+            Log.d(TAG_MAP, "onMapReady location by save: " + mCurrentLocation);
+            Log.d(TAG_MAP, "onMapReady location2 " + mCurrentLocation2);
 
             MapViewModelFactory lFactory = new MapViewModelFactory(lContext, mLatitude, mLongitude);
 
@@ -131,10 +126,8 @@ public class MapsFragment extends Fragment implements LocationListener {
             });
 
             LatLng lMyPosition = new LatLng(mLatitude, mLongitude);
-//            Log.d(TAG_MAP, "onMapReady: " + mLatitude + " : " + mLongitude);
             mMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
-
 
         }
     };
@@ -178,6 +171,9 @@ public class MapsFragment extends Fragment implements LocationListener {
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
             getCurrentLocation();
+            Log.d(TAG_MAP, "onCreateView location by save: " + mCurrentLocation);
+            Log.d(TAG_MAP, "onCreateView location2 " + mCurrentLocation2);
+
         }
 
         return lView;
@@ -201,13 +197,14 @@ public class MapsFragment extends Fragment implements LocationListener {
 
 
         Task<Location> lLocationTask = mFusedLocationClient.getLastLocation();
+/*
         lLocationTask.addOnSuccessListener(location -> {
             if (location != null) {
                 saveLocation(location);
             } else {
                 mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
                 Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
-/*
+
                 Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
@@ -226,9 +223,23 @@ public class MapsFragment extends Fragment implements LocationListener {
                     public void onProviderDisabled(String provider) {
                     }
                 });
-*/
             }
         });
+        */
+    lLocationTask.addOnCompleteListener(new OnCompleteListener<Location>() {
+        @Override
+        public void onComplete(@NonNull Task<Location> pTask) {
+            if (pTask.isSuccessful() ) {
+                saveLocation(pTask.getResult());
+                mCurrentLocation2 = pTask.getResult();
+                Log.d(TAG_MAP, "onComplete: " + mCurrentLocation2);
+            } else {
+                mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+                Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
+            }
+
+        }
+    });
 
     }
 
