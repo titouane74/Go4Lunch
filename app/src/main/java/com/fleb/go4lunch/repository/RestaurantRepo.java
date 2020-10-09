@@ -7,9 +7,11 @@ import android.util.Log;
 import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
+import com.fleb.go4lunch.utils.GsonHelper;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,14 +39,17 @@ public class RestaurantRepo {
 
         void restoOnGoogleError(String pErrorGoogle);
     }
+    private OnFirestoreTaskComplete mOnFirestoreTaskComplete;
 
+    public static final String TAG_REPO = "TAG_REPO";
     public static final String RESTO_COLLECTION = "Restaurant";
     private String mKey = BuildConfig.MAPS_API_KEY;
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
 
-    private OnFirestoreTaskComplete mOnFirestoreTaskComplete;
+    private String mWebSite;
+
 
     public RestaurantRepo(OnFirestoreTaskComplete pOnFirestoreTaskComplete) {
         this.mOnFirestoreTaskComplete = pOnFirestoreTaskComplete;
@@ -65,15 +70,17 @@ public class RestaurantRepo {
 
     public void getRestaurantsPlaces(Context pContext, Double pLatitude, Double pLongitude) {
 
+        String lFields = pContext.getResources().getString(R.string.place_detail_fields);
+
         int lProximityRadius = Integer.parseInt(pContext.getResources().getString(R.string.proximity_radius));
         String lType = pContext.getResources().getString(R.string.type_search);
 
         JsonRetrofitApi lJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
-        Call<RestaurantPojo> call = lJsonRetrofitApi.getNearByPlaces(mKey, lType,
+        Call<RestaurantPojo> lRestaurantPojoCall = lJsonRetrofitApi.getNearByPlaces(mKey, lType,
                 pLatitude + "," + pLongitude, lProximityRadius);
 
-        call.enqueue(new Callback<RestaurantPojo>() {
+        lRestaurantPojoCall.enqueue(new Callback<RestaurantPojo>() {
             @Override
             public void onResponse(Call<RestaurantPojo> call, Response<RestaurantPojo> response) {
 
@@ -83,6 +90,7 @@ public class RestaurantRepo {
                     List<RestaurantPojo.Result> lRestoResponse = response.body().getResults();
                     List<Restaurant> lRestoList = new ArrayList<>();
                     String lOpening ;
+                    RestaurantDetailPojo lRestoDet;
 
                     //TODO à supprimer après avoir trouver la currentlocation
 
@@ -109,6 +117,28 @@ public class RestaurantRepo {
                         String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
                                 lFusedLocationProvider, lRestoResponse.get(i).getGeometry().getLocation()));
 
+                        Call<RestaurantDetailPojo> lRestaurantDetailPojoCall = lJsonRetrofitApi.getRestaurantDetail(mKey,
+                                lPlaceId,lFields);
+                        lRestaurantDetailPojoCall.enqueue(new Callback<RestaurantDetailPojo>() {
+                            @Override
+                            public void onResponse(Call<RestaurantDetailPojo> call, Response<RestaurantDetailPojo> response) {
+                                if (response.isSuccessful()) {
+                                    RestaurantDetailPojo.Result lRestoDetResponse = response.body().getResult();
+                                    Log.d(TAG_REPO, "onResponse:weekdaytext: " + lRestoDetResponse.getOpeningHours().getWeekdayText());
+                                    Log.d(TAG_REPO, "onResponse:periods: " + lRestoDetResponse.getOpeningHours().getPeriods());
+                                    Log.d(TAG_REPO, "onResponse:opennow: " + lRestoDetResponse.getOpeningHours().getOpenNow());
+                                    mWebSite = lRestoDetResponse.getWebsite();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<RestaurantDetailPojo> call, Throwable t) {
+                                mOnFirestoreTaskComplete.restoOnGoogleError("Error Google");
+                            }
+                        });
+
+                        Log.d(TAG_REPO, "onResponse:website " + mWebSite);
+
                         Restaurant lRestaurant = new Restaurant(
                                 lPlaceId, lName, lAddress, null, null, lDistance, 0,
                                 lOpening, lRating, lPhoto, lLocation
@@ -130,6 +160,8 @@ public class RestaurantRepo {
 
             }
         });
+
+
     }
 
     public String getPhoto(String pPhotoReference, int pMaxWidth, String pKey) {

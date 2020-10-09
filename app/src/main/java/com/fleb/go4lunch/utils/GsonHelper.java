@@ -2,11 +2,7 @@ package com.fleb.go4lunch.utils;
 
 import com.fleb.go4lunch.model.Restaurant;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 09/10/2020
