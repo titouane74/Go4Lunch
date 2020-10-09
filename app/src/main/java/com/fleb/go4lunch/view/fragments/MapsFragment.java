@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
@@ -189,7 +190,6 @@ public class MapsFragment extends Fragment implements LocationListener {
 //        mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 //        Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
 
-
         Task<Location> lLocationTask = mFusedLocationClient.getLastLocation();
 /*
         lLocationTask.addOnSuccessListener(location -> {
@@ -249,11 +249,12 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         saveLocation(location);
-/*
+        Log.d("onLocationChanged", "entered");
+
         Toast.makeText(getContext(), "Lat: " + location.getLatitude() + ", Long: "
                 + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
-        Log.d("onLocationChanged", "entered");
+        Log.d("TAG_onLocationChanged", "entered");
 
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
@@ -277,10 +278,10 @@ public class MapsFragment extends Fragment implements LocationListener {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-        Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f", mLatitude, mLongitude));
+        Log.d("TAG_onLocationChanged", String.format("latitude:%.3f longitude:%.3f", mLatitude, mLongitude));
 
-        Log.d("onLocationChanged", "Exit");
-*/
+        Log.d("TAG_onLocationChanged", "Exit");
+
     }
 
 
