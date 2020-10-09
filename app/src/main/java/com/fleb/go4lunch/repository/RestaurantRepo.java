@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
-import static com.fleb.go4lunch.view.fragments.MapsFragment.TAG_GETRESTO;
+
 
 
 /**
@@ -101,11 +101,9 @@ public class RestaurantRepo {
 
                         String lPlaceId = lRestoResponse.get(i).getPlaceId();
                         String lName = lRestoResponse.get(i).getName();
-                        String lPhoto = (lRestoResponse.get(i).getPhotos() != null ? getPhoto(lRestoResponse.get(i).getPhotos().get(0).getPhotoReference(), 400) : "");
+                        String lPhoto = (lRestoResponse.get(i).getPhotos() != null ? getPhoto(lRestoResponse.get(i).getPhotos().get(0).getPhotoReference(), 400,mKey) : "");
                         RestaurantPojo.Location lLocation = lRestoResponse.get(i).getGeometry().getLocation();
-                        String lAddress = lRestoResponse.get(i).getVicinity();
-
-                        lAddress = formatAddress(lAddress);
+                        String lAddress = formatAddress(lRestoResponse.get(i).getVicinity());
 
                         Double lRating = lRestoResponse.get(i).getRating();
                         String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
@@ -118,7 +116,7 @@ public class RestaurantRepo {
 
                         lRestoList.add(lRestaurant);
                     }
-                    Log.d(TAG_GETRESTO, "onResponse: " + lRestoList.size());
+                    //Log.d(TAG_GETRESTO, "onResponse: " + lRestoList.size());
                     mOnFirestoreTaskComplete.restoDataLoaded(lRestoList);
                 } else {
                     mOnFirestoreTaskComplete.restoOnGoogleError("Error Google");
@@ -134,9 +132,9 @@ public class RestaurantRepo {
         });
     }
 
-    public String getPhoto(String pPhotoReference, int pMaxWidth) {
+    public String getPhoto(String pPhotoReference, int pMaxWidth, String pKey) {
         return BASE_URL_GOOGLE + "photo?photoreference=" + pPhotoReference
-                + "&maxwidth=" + pMaxWidth + "&key=" + mKey;
+                + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
     }
 
     public int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation) {
@@ -149,6 +147,6 @@ public class RestaurantRepo {
     }
 
     public String formatAddress(String pAddress) {
-        return pAddress.substring(0,pAddress.indexOf(",")-1);
+        return pAddress.substring(0,pAddress.indexOf(","));
     }
 }

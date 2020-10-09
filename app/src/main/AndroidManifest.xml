@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -33,13 +33,20 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="buildConfig.MAPS_API_KEY" />
+            android:value="@string/maps_api_key" />
+
         <!--
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="BuildConfig.MAPS_API_KEY" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/maps_api_key" />
-            android:value="AIzaSyBZLiwb1fvsU2hjjT3S4dekI2oEk3DfQTs" />
+            android:value="${MAPS_API_KEY_FOR_MANIFEST}" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/MAPS_API_KEY" />
 
         -->
         <activity

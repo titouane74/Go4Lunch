@@ -4,36 +4,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.fleb.go4lunch.viewmodel.MapViewModelFactory;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,7 +41,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 
@@ -226,20 +220,20 @@ public class MapsFragment extends Fragment implements LocationListener {
             }
         });
         */
-    lLocationTask.addOnCompleteListener(new OnCompleteListener<Location>() {
-        @Override
-        public void onComplete(@NonNull Task<Location> pTask) {
-            if (pTask.isSuccessful() ) {
-                saveLocation(pTask.getResult());
-                mCurrentLocation2 = pTask.getResult();
-                Log.d(TAG_MAP, "onComplete: " + mCurrentLocation2);
-            } else {
-                mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-                Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
-            }
+        lLocationTask.addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> pTask) {
+                if (pTask.isSuccessful() ) {
+                    saveLocation(pTask.getResult());
+                    mCurrentLocation2 = pTask.getResult();
+                    Log.d(TAG_MAP, "onComplete: " + mCurrentLocation2);
+                } else {
+                    mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+                    Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, com.fleb.go4lunch.view.fragments.MapsFragment.this);
+                }
 
-        }
-    });
+            }
+        });
 
     }
 
