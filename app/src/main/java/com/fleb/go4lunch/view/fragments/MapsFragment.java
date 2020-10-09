@@ -107,6 +107,8 @@ public class MapsFragment extends Fragment implements LocationListener {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
 //            getCurrentLocation();
+
+
             if (mCurrentLocation == null) {
                 if (mLastLocation != null) {
                     mCurrentLocation = mLastLocation;
@@ -170,8 +172,13 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable Bundle savedInstanceState) {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        getCurrentLocation();
+        if (!checkPermissions()) {
+            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+        } else {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+            getCurrentLocation();
+        }
 
         return lView;
     }
@@ -191,6 +198,7 @@ public class MapsFragment extends Fragment implements LocationListener {
     public void getCurrentLocation() {
 //        mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 //        Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
+
 
         Task<Location> lLocationTask = mFusedLocationClient.getLastLocation();
         lLocationTask.addOnSuccessListener(location -> {

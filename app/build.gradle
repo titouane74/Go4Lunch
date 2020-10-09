@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
-
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Facebook
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'

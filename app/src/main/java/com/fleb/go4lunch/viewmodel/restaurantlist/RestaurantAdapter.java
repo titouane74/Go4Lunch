@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.fleb.go4lunch.model.Restaurant;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +35,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
     private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private List<Restaurant> mRestoList;
+    private Bitmap mResult;
+    private String mUrl;
 
     public void setRestoList(List<Restaurant> pRestoList) {
         mRestoList = pRestoList;
@@ -77,13 +81,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         if (mRestoList.get(position).getRestoRating() > 0) {
             lNote = mRestoList.get(position).getRestoRating();
-//                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: note google : " + mRestoList.get(position).getRestoNote());
-//                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: note google : " + lNote);
             lNote = (lNote / lMaxNote) * lNbNote;
         } else {
             lNote = 0;
         }
-//        Log.d(TAG_LIST_RESTO, "onBindViewHolder: new note : " + lNote);
 
         if (lNote == 0) {
             Log.d(TAG_LIST_RESTO, "onBindViewHolder: 3 stars to hide : " + lNote);
@@ -100,17 +101,18 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         } else {
             Log.d(TAG_LIST_RESTO, "onBindViewHolder: no star to hide : " + lNote);
         }
-/*
-        Bitmap lImg = null;
-        try {
-            lImg = downLoadImage(mRestoList.get(position).getRestoPhotoUrl());
-        } catch (IOException pE) {
-            pE.printStackTrace();
+
+        if (mRestoList.get(position).getRestoPhotoUrl() != null ) {
+            mUrl = mRestoList.get(position).getRestoPhotoUrl();
+            try {
+                downLoadImage(mRestoList.get(position).getRestoPhotoUrl());
+            } catch (IOException pE) {
+                pE.printStackTrace();
+            }
+            if (mResult != null) {
+                pRestoHolder.mRestoImage.setImageBitmap(mResult);
+            }
         }
-        if (lImg != null) {
-            pRestoHolder.mRestoImage.setImageBitmap(lImg);
-        }
-*/
     }
 
     @Override
@@ -122,9 +124,58 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
-    public Bitmap downLoadImage(String pUrl) throws IOException {
+    @SuppressLint("StaticFieldLeak")
+    private class MyAsyncTasks extends AsyncTask<URL, Integer, Bitmap> {
 
-        URL url = new URL(pUrl);
+
+        protected Bitmap doInBackground(URL... urls) {
+            URL url = null;
+            try {
+                url = new URL(mUrl);
+            } catch (MalformedURLException pE) {
+                pE.printStackTrace();
+            }
+
+            HttpURLConnection httpConn = null;
+            int resCode = 0;
+            try {
+                httpConn = (HttpURLConnection) Objects.requireNonNull(url).openConnection();
+                Objects.requireNonNull(httpConn).connect();
+                resCode = Objects.requireNonNull(httpConn).getResponseCode();
+            } catch (IOException pE) {
+                pE.printStackTrace();
+            }
+            if (resCode == HttpURLConnection.HTTP_OK) {
+                InputStream in = null;
+                try {
+                    in = httpConn.getInputStream();
+                } catch (IOException pE) {
+                    pE.printStackTrace();
+                }
+                return BitmapFactory.decodeStream(in);
+            } else {
+                return null;
+            }
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            //setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            //showDialog("Downloaded " + result + " bytes");
+            mResult = result;
+        }
+    }
+
+
+    public void downLoadImage(String pUrl) throws IOException {
+
+        MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+        myAsyncTasks.execute();
+
+/*        URL url = new URL(pUrl);
+
         HttpURLConnection httpConn = (HttpURLConnection) Objects.requireNonNull(url).openConnection();
         Objects.requireNonNull(httpConn).connect();
         int resCode = Objects.requireNonNull(httpConn).getResponseCode();
@@ -134,7 +185,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             return BitmapFactory.decodeStream(in);
         } else {
             return null;
-        }
+        }*/
     }
 
     static class RestaurantHolder extends RecyclerView.ViewHolder {

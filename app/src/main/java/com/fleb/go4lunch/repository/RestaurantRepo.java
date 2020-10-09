@@ -82,56 +82,35 @@ public class RestaurantRepo {
 
                     List<RestaurantPojo.Result> lRestoResponse = response.body().getResults();
                     List<Restaurant> lRestoList = new ArrayList<>();
-                    String lOpening = null;
+                    String lOpening ;
 
-                    Log.d(TAG_GETRESTO, "onResponse: lrestoResponse size" + lRestoResponse.size());
+                    //TODO à supprimer après avoir trouver la currentlocation
+
+                    Location lFusedLocationProvider = new Location("fusedLocationProvider");
+                    lFusedLocationProvider.setLatitude(pLatitude);
+                    lFusedLocationProvider.setLongitude(pLongitude);
 
                     for (int i = 0; i < lRestoResponse.size(); i++) {
 
                         //TODO gérer openinghours
-/*
-                        if (lRestoResponse.get(i).getOpeningHours().getOpenNow() ) {
-                            lOpening = null;
+                        if (lRestoResponse.get(i).getOpeningHours().getOpenNow()) {
+                            lOpening = "Ouvert";
                         } else {
-                            lOpening = null;
+                            lOpening = "Ferme";
                         }
-*/
-                        String lPhoto = (lRestoResponse.get(i).getPhotos() != null ? getPhoto(lRestoResponse.get(i).getPhotos().get(0).getPhotoReference(), 400) : "") ;
-                        Boolean openNow = (lRestoResponse.get(i).getOpeningHours() != null ? lRestoResponse.get(i).getOpeningHours().getOpenNow() : false);
-                        String lDistance  = null ;
-                        //String.valueOf(getRestaurantDistanceToCurrentLocation(null,lRestoResponse.get(i).getGeometry().getLocation()));
+
+                        String lPlaceId = lRestoResponse.get(i).getPlaceId();
+                        String lName = lRestoResponse.get(i).getName();
+                        String lPhoto = (lRestoResponse.get(i).getPhotos() != null ? getPhoto(lRestoResponse.get(i).getPhotos().get(0).getPhotoReference(), 400) : "");
+                        RestaurantPojo.Location lLocation = lRestoResponse.get(i).getGeometry().getLocation();
+                        String lAddress = lRestoResponse.get(i).getVicinity();
+                        Double lRating = lRestoResponse.get(i).getRating();
+                        String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
+                                lFusedLocationProvider, lRestoResponse.get(i).getGeometry().getLocation()));
 
                         Restaurant lRestaurant = new Restaurant(
-                                //pRestoPlaceId
-                                lRestoResponse.get(i).getPlaceId(),
-                                //pRestoName
-                                lRestoResponse.get(i).getName(),
-                                //pRestoAddress
-                                lRestoResponse.get(i).getVicinity(),
-                                //pRestoPhone
-                                null,
-                                //pRestoWebsite
-                                null,
-                                //pRestoDistance
-                                lDistance,
-                                //pRestoNbWorkmates
-                                0,
-                                //pRestoOpening
-                                lOpening,
-                                //pRestoRating
-                                lRestoResponse.get(i).getRating(),
-                                //pRestoPhotoUrl
-                                //lRestoResponse.get(i).getPhotos().get(i).getPhotoReference(),
-                                lPhoto,
-//                                null,
-/*
-                                //pRestoLat
-                                lRestoResponse.get(i).getGeometry().getLocation().getLat(),
-                                //pRestoLng
-                                lRestoResponse.get(i).getGeometry().getLocation().getLng()
-*/
-                                //pRestoLocation
-                                lRestoResponse.get(i).getGeometry().getLocation()
+                                lPlaceId, lName, lAddress, null, null, lDistance, 0,
+                                lOpening, lRating, lPhoto, lLocation
                         );
 
                         lRestoList.add(lRestaurant);
@@ -153,12 +132,11 @@ public class RestaurantRepo {
     }
 
     public String getPhoto(String pPhotoReference, int pMaxWidth) {
-         return BASE_URL_GOOGLE + "photo?photoreference=" + pPhotoReference
+        return BASE_URL_GOOGLE + "photo?photoreference=" + pPhotoReference
                 + "&maxwidth=" + pMaxWidth + "&key=" + mKey;
     }
 
-    public int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation )
-    {
+    public int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation) {
         Location lRestaurantLocation = new Location("fusedLocationProvider");
 
         lRestaurantLocation.setLatitude(pRestoLocation.getLat());
