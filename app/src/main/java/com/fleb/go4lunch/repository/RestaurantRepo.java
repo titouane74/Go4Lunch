@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,24 +100,24 @@ public class RestaurantRepo {
                     lFusedLocationProvider.setLatitude(pLatitude);
                     lFusedLocationProvider.setLongitude(pLongitude);
 
-                    for (int i = 0; i < lRestoResponse.size(); i++) {
+                    for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
 
                         //TODO gérer openinghours
-                        if (lRestoResponse.get(i).getOpeningHours().getOpenNow()) {
+                        if (restaurantPojo.getOpeningHours().getOpenNow()) {
                             lOpening = "Ouvert";
                         } else {
                             lOpening = "Ferme";
                         }
 
-                        String lPlaceId = lRestoResponse.get(i).getPlaceId();
-                        String lName = lRestoResponse.get(i).getName();
-                        String lPhoto = (lRestoResponse.get(i).getPhotos() != null ? getPhoto(lRestoResponse.get(i).getPhotos().get(0).getPhotoReference(), 400,mKey) : "");
-                        RestaurantPojo.Location lLocation = lRestoResponse.get(i).getGeometry().getLocation();
-                        String lAddress = formatAddress(lRestoResponse.get(i).getVicinity());
+                        String lPlaceId = restaurantPojo.getPlaceId();
+                        String lName = restaurantPojo.getName();
+                        String lPhoto = (restaurantPojo.getPhotos() != null ? getPhoto(restaurantPojo.getPhotos().get(0).getPhotoReference(), 400,mKey) : "");
+                        RestaurantPojo.Location lLocation = restaurantPojo.getGeometry().getLocation();
+                        String lAddress = formatAddress(restaurantPojo.getVicinity());
 
-                        Double lRating = lRestoResponse.get(i).getRating();
+                        Double lRating = restaurantPojo.getRating();
                         String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
-                                lFusedLocationProvider, lRestoResponse.get(i).getGeometry().getLocation()));
+                                lFusedLocationProvider, restaurantPojo.getGeometry().getLocation()));
 
                         Call<RestaurantDetailPojo> lRestaurantDetailPojoCall = lJsonRetrofitApi.getRestaurantDetail(mKey,
                                 lPlaceId,lFields);

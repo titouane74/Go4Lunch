@@ -20,16 +20,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.fleb.go4lunch.viewmodel.MapViewModelFactory;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,23 +42,19 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
     public static final String TAG_MAP = "TAG_MAP";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static final String TAG_GETRESTO = "TAG_GETRESTO";
+    private final int mZoom = 16;
 
-    private LocationManager mLocationManager;
-    private GoogleMap mMap;
-    private double mLatitude, mLongitude;
-    private Location mLastLocation;
     private Marker mCurrLocationMarker;
+    private GoogleMap mMap;
+    private double mLatitude = 48.8236549;
+    private double mLongitude = 2.4102578;
     private Location mCurrentLocation;
-    private Location mCurrentLocation2;
-    private LocationCallback mLocationCallback;
-    private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
 
 
@@ -98,37 +90,34 @@ public class MapsFragment extends Fragment implements LocationListener {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
 
-            if (mCurrentLocation == null) {
-                if (mLastLocation != null) {
-                    mCurrentLocation = mLastLocation;
-                    Log.d(TAG_MAP, "onMapReady: last " + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
-                } else {
-                    Log.d(TAG_MAP, "onMapReady: current and last location null" );
-                }
-            } else {
-                Log.d(TAG_MAP, "onMapReady: current " + mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude());
-            }
-            mLatitude = 48.8236549;
-            mLongitude = 2.4102578;
-            Log.d(TAG_MAP, "onMapReady location by save: " + mCurrentLocation);
-            Log.d(TAG_MAP, "onMapReady location2 " + mCurrentLocation2);
-
-            MapViewModelFactory lFactory = new MapViewModelFactory(lContext, mLatitude, mLongitude);
-
-            MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
-            lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), pRestaurants -> {
-                setMapMarkers(pRestaurants);
-            });
-
-            LatLng lMyPosition = new LatLng(mLatitude, mLongitude);
-            mMap.addMarker(new MarkerOptions().position(lMyPosition).title("Charenton Le Pont Maison"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lMyPosition, 16));
+            //TODO find a solution to remove this code
+            //Pour que ça fonctionne sur le téléphone
+            configViewModel(requireContext(), mLatitude,mLongitude);
+            setCameraOnCurrentLocation(new LatLng(mLatitude, mLongitude),mZoom);
 
         }
     };
 
+    public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
+        MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
+
+        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
+        lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+    }
+
     public  void saveLocation(Location pLocation) {
         mCurrentLocation = pLocation;
+
+        configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
+    }
+
+    private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
+        Log.d(TAG_MAP, "moveCamera: ");
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//        mMap.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
@@ -137,20 +126,19 @@ public class MapsFragment extends Fragment implements LocationListener {
 
         Log.d(TAG_GETRESTO, "setMapMarkers: response size" + pRestaurants.size());
 
-        for (int i = 0; i < pRestaurants.size(); i++) {
+        for (Restaurant restaurant : pRestaurants) {
 
-            String lName = pRestaurants.get(i).getRestoName();
-            String lAddress = pRestaurants.get(i).getRestoAddress();
+            String lName = restaurant.getRestoName();
+            String lAddress = restaurant.getRestoAddress();
 
-            LatLng latLng = new LatLng(pRestaurants.get(i).getRestoLocation().getLat(),
-                    pRestaurants.get(i).getRestoLocation().getLng());
+            LatLng latLng = new LatLng(restaurant.getRestoLocation().getLat(),
+                    restaurant.getRestoLocation().getLng());
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(lName + " : " + lAddress)
                     .icon(lIcon));
         }
     }
-
 
     @SuppressLint("MissingPermission")
     @Nullable
@@ -165,10 +153,8 @@ public class MapsFragment extends Fragment implements LocationListener {
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+            getLastLocation();
             getCurrentLocation();
-            Log.d(TAG_MAP, "onCreateView location by save: " + mCurrentLocation);
-            Log.d(TAG_MAP, "onCreateView location2 " + mCurrentLocation2);
-
         }
 
         return lView;
@@ -187,56 +173,44 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
-        mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-        Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MapsFragment.this);
 
-        Task<Location> lLocationTask = mFusedLocationClient.getLastLocation();
-/*
-        lLocationTask.addOnSuccessListener(location -> {
-            if (location != null) {
-                saveLocation(location);
-            } else {
-                mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-                Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
-
-                Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        saveLocation(location);
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-                    }
-                });
+        try {
+            LocationManager locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
             }
-        });
-        */
-        lLocationTask.addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> pTask) {
-                if (pTask.isSuccessful() ) {
-                    saveLocation(pTask.getResult());
-                    mCurrentLocation2 = pTask.getResult();
-                    Log.d(TAG_MAP, "onComplete: " + mCurrentLocation2);
-                } else {
-                    mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-                    Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, com.fleb.go4lunch.view.fragments.MapsFragment.this);
-                }
-
-            }
-        });
-
+        } catch (SecurityException securityException) {
+            Log.d("TAG", "getCurrentLocation: ", securityException);
+        }
     }
 
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation()
+                .addOnCompleteListener(requireActivity(), new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            getCurrentLocation();
+                            saveLocation(task.getResult());
+                        } else {
+                            Log.w(TAG_MAP, "getLastLocation:exception", task.getException());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!checkPermissions()) {
+            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+        } else {
+            getLastLocation();
+            getCurrentLocation();
+        }
+    }
 
     /**
      * Called when the location has changed.
@@ -248,40 +222,16 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG_MAP, "onLocationChanged: ");
         saveLocation(location);
-        Log.d("onLocationChanged", "entered");
-
-        Toast.makeText(getContext(), "Lat: " + location.getLatitude() + ", Long: "
-                + location.getLongitude(), Toast.LENGTH_SHORT).show();
-
-        Log.d("TAG_onLocationChanged", "entered");
-
-        mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
-        //Place current location marker
+        mCurrentLocation = location;
         mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-
-        // Adding colour to the marker
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-
-        // Adding Marker to the Map
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
-
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-
-        Log.d("TAG_onLocationChanged", String.format("latitude:%.3f longitude:%.3f", mLatitude, mLongitude));
-
-        Log.d("TAG_onLocationChanged", "Exit");
-
+        LatLng latLng = new LatLng(mLatitude, mLongitude);
+        setCameraOnCurrentLocation(latLng, mZoom);
     }
 
 
@@ -320,55 +270,11 @@ public class MapsFragment extends Fragment implements LocationListener {
     public void onProviderDisabled(String provider) {
     }
 
-    @Override
-    public void onPause() {
-        stopLocationUpdates();
-        super.onPause();
-    }
-
-    private void stopLocationUpdates() {
-//        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startLocationUpdates() {
-//        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (!checkPermissions()) {
-//            startLocationUpdates();
-            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        } else {
-//            getLastLocation();
-//            startLocationUpdates();
-            getCurrentLocation();
-        }
-    }
-
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(requireActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
-    @SuppressWarnings("MissingPermission")
-    private void getLastLocation() {
-        mFusedLocationClient.getLastLocation()
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            mLastLocation = task.getResult();
 
-                        } else {
-                            Log.w(TAG_MAP, "getLastLocation:exception", task.getException());
-                        }
-                    }
-                });
-    }
 }
