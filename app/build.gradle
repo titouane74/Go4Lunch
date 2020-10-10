@@ -80,10 +80,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation ('com.squareup.retrofit2:retrofit:2.8.1')
+        {exclude module: 'okhttp'}
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    //implementation 'com.squareup.okhttp:okhttp:2.7.5'
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.8.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
     //Facebook
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'

@@ -187,8 +187,8 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
-//        mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-//        Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, MapsFragment.this);
+        mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MapsFragment.this);
 
         Task<Location> lLocationTask = mFusedLocationClient.getLastLocation();
 /*
@@ -229,7 +229,7 @@ public class MapsFragment extends Fragment implements LocationListener {
                     Log.d(TAG_MAP, "onComplete: " + mCurrentLocation2);
                 } else {
                     mLocationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-                    Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, com.fleb.go4lunch.view.fragments.MapsFragment.this);
+                    Objects.requireNonNull(mLocationManager).requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, com.fleb.go4lunch.view.fragments.MapsFragment.this);
                 }
 
             }
