@@ -11,75 +11,49 @@ import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
-import com.fleb.go4lunch.utils.GsonHelper;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
 
-
-
 /**
  * Created by Florence LE BOURNOT on 26/09/2020
  */
 public class RestaurantRepo {
 
+    private List<Restaurant> mRestoList;
+
     public interface OnFirestoreTaskComplete {
         void restoDataLoaded(List<Restaurant> pRestoList);
-
-        void restoOnError(Exception pE);
-
         void restoOnGoogleError(String pErrorGoogle);
     }
     private OnFirestoreTaskComplete mOnFirestoreTaskComplete;
-
     public static final String TAG_REPO = "TAG_REPO";
     public static final String RESTO_COLLECTION = "Restaurant";
     private String mKey = BuildConfig.MAPS_API_KEY;
 
-    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
-
     private String mWebSite;
-
+    private JsonRetrofitApi mJsonRetrofitApi;
+    private RestaurantDetailPojo.Result mRestoDetResponse;
 
     public RestaurantRepo(OnFirestoreTaskComplete pOnFirestoreTaskComplete) {
         this.mOnFirestoreTaskComplete = pOnFirestoreTaskComplete;
     }
-
-    public void getRestaurantData() {
-        mRestoRef.get()
-                .addOnCompleteListener(pTask -> {
-                    if (pTask.isSuccessful()) {
-                        mOnFirestoreTaskComplete.restoDataLoaded(
-                                Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class)
-                        );
-                    } else {
-                        mOnFirestoreTaskComplete.restoOnError(pTask.getException());
-                    }
-                });
-    }
-
-    public void getRestaurantsPlaces(Context pContext, Double pLatitude, Double pLongitude) {
-
-        String lFields = pContext.getResources().getString(R.string.place_detail_fields);
+        //return LiveData
+        public void getRestaurantsPlaces(Context pContext, Double pLatitude, Double pLongitude) {
 
         int lProximityRadius = Integer.parseInt(pContext.getResources().getString(R.string.proximity_radius));
         String lType = pContext.getResources().getString(R.string.type_search);
 
-        JsonRetrofitApi lJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
+        mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
-        Call<RestaurantPojo> lRestaurantPojoCall = lJsonRetrofitApi.getNearByPlaces(mKey, lType,
+        Call<RestaurantPojo> lRestaurantPojoCall = mJsonRetrofitApi.getNearByPlaces(mKey, lType,
                 pLatitude + "," + pLongitude, lProximityRadius);
 
         lRestaurantPojoCall.enqueue(new Callback<RestaurantPojo>() {
@@ -119,6 +93,9 @@ public class RestaurantRepo {
                         String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
                                 lFusedLocationProvider, restaurantPojo.getGeometry().getLocation()));
 
+                        //RestaurantDetailPojo.Result lRestoDetResult = getRestaurantDetail(pContext,lPlaceId);
+                        //Log.d(TAG_REPO, "onResponse: " + lRestoDetResult.getWebsite());
+/*
                         Call<RestaurantDetailPojo> lRestaurantDetailPojoCall = lJsonRetrofitApi.getRestaurantDetail(mKey,
                                 lPlaceId,lFields);
                         lRestaurantDetailPojoCall.enqueue(new Callback<RestaurantDetailPojo>() {
@@ -138,8 +115,7 @@ public class RestaurantRepo {
                                 mOnFirestoreTaskComplete.restoOnGoogleError("Error Google");
                             }
                         });
-
-                        Log.d(TAG_REPO, "onResponse:website " + mWebSite);
+*/
 
                         Restaurant lRestaurant = new Restaurant(
                                 lPlaceId, lName, lAddress, null, null, lDistance, 0,
@@ -149,6 +125,7 @@ public class RestaurantRepo {
                         lRestoList.add(lRestaurant);
                     }
                     //Log.d(TAG_GETRESTO, "onResponse: " + lRestoList.size());
+                    //TODO LiveData.setValue
                     mOnFirestoreTaskComplete.restoDataLoaded(lRestoList);
                 } else {
                     mOnFirestoreTaskComplete.restoOnGoogleError("Error Google");
@@ -163,6 +140,33 @@ public class RestaurantRepo {
             }
         });
 
+
+    }
+
+    public RestaurantDetailPojo.Result getRestaurantDetail(Context pContext, String pPlaceId) {
+
+        String lFields = pContext.getResources().getString(R.string.place_detail_fields);
+        Call<RestaurantDetailPojo> lRestaurantDetailPojoCall = mJsonRetrofitApi.getRestaurantDetail(mKey,
+                pPlaceId,lFields);
+        lRestaurantDetailPojoCall.enqueue(new Callback<RestaurantDetailPojo>() {
+            @Override
+            public void onResponse(Call<RestaurantDetailPojo> call, Response<RestaurantDetailPojo> response) {
+                if (response.isSuccessful()) {
+                    RestaurantDetailPojo.Result lRestoDetResponse = response.body().getResult();
+                    Log.d(TAG_REPO, "onResponse:weekdaytext: " + lRestoDetResponse.getOpeningHours().getWeekdayText());
+                    Log.d(TAG_REPO, "onResponse:periods: " + lRestoDetResponse.getOpeningHours().getPeriods());
+                    Log.d(TAG_REPO, "onResponse:opennow: " + lRestoDetResponse.getOpeningHours().getOpenNow());
+                    mWebSite = lRestoDetResponse.getWebsite();
+                    mRestoDetResponse = lRestoDetResponse;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestaurantDetailPojo> call, Throwable t) {
+                mOnFirestoreTaskComplete.restoOnGoogleError("Error Google");
+            }
+        });
+        return mRestoDetResponse;
 
     }
 

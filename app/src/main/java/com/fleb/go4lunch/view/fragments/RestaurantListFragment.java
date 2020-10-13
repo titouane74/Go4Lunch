@@ -12,6 +12,7 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantAdapter;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
 
+
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
  */
@@ -20,6 +21,7 @@ import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
 public class RestaurantListFragment extends BaseFragment {
 
     private RestaurantAdapter mRestoAdapter;
+    private RecyclerView mRecyclerView;
 
     public RestaurantListFragment() {}
 
@@ -28,21 +30,25 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-        RecyclerView lRecyclerView = pView.findViewById(R.id.restaurant_list);
-        mRestoAdapter = new RestaurantAdapter();
+        mRecyclerView = pView.findViewById(R.id.restaurant_list);
 
-        lRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        lRecyclerView.setAdapter(mRestoAdapter);
+        initRecyclerView();
     }
 
+    private void initRecyclerView()  {
+        mRestoAdapter = new RestaurantAdapter();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        mRecyclerView.setAdapter(mRestoAdapter);
+
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         RestaurantListViewModel lRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
-        lRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurants -> {
-            mRestoAdapter.setRestoList(pRestaurants);
+        lRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
+            mRestoAdapter.setRestoList(pRestaurantList);
             mRestoAdapter.notifyDataSetChanged();
         });
     }
-
 }

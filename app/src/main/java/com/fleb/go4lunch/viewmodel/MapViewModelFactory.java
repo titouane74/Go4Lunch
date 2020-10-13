@@ -13,10 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 public class MapViewModelFactory implements ViewModelProvider.Factory {
 
     private Context mContext;
-    private String mType;
     private Double mLat;
     private Double mLng;
-    private String mKey;
 
     public MapViewModelFactory(Context pContext, Double pLat, Double pLng) {
         mContext = pContext;
@@ -31,6 +29,7 @@ public class MapViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(MapViewModel.class))
         {
             return (T) new MapViewModel(mContext,mLat,mLng);
+            //return null;
         }
         throw new IllegalArgumentException("Problem with ViewModelFactory");    }
 

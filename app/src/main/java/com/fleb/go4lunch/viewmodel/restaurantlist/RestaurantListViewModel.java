@@ -5,35 +5,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.repository.RestaurantRepo;
+import com.fleb.go4lunch.repository.RestaurantRepository;
 
 import java.util.List;
 
+public class RestaurantListViewModel extends ViewModel {
 
-public class RestaurantListViewModel extends ViewModel implements RestaurantRepo.OnFirestoreTaskComplete {
+    private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>() ;
 
-    private MutableLiveData<List<Restaurant>> mRestoList = new MutableLiveData<>();
-
-    public LiveData<List<Restaurant>> getRestaurantList() { return mRestoList; }
+    private RestaurantRepository mRepository = new RestaurantRepository();
 
     public RestaurantListViewModel() {
-        RestaurantRepo lRestoRepo = new RestaurantRepo(this);
-        lRestoRepo.getRestaurantData();
+        mLDRestoList = mRepository.getLDFirestoreRestaurantList();
     }
 
-    @Override
-    public void restoDataLoaded(List<Restaurant> pRestoList) {
-        mRestoList.setValue(pRestoList);
-    }
-
-    @Override
-    public void restoOnError(Exception pE) {
-
-    }
-
-    @Override
-    public void restoOnGoogleError(String pErrorGoogle) {
-
+    public LiveData<List<Restaurant>>  getRestaurantList() {
+        return mLDRestoList;
     }
 
 }

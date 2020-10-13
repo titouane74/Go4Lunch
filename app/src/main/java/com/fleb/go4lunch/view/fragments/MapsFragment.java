@@ -99,25 +99,35 @@ public class MapsFragment extends Fragment implements LocationListener {
     };
 
     public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
+
+/*
+    //TODO to debug return nothing
+        MapViewModel lMapViewModel = new MapViewModel();
+        lMapViewModel.initViewModel(pContext, pLatitude, pLongitude);
+        lMapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+
+*/
+
+//V1
         MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
 
         MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
         lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+
     }
 
     public  void saveLocation(Location pLocation) {
         mCurrentLocation = pLocation;
 
-        configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
+        //TODO to active when it's for the emulator
+        //configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        //setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
     }
 
     private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
         Log.d(TAG_MAP, "moveCamera: ");
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(zoom));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
@@ -153,7 +163,6 @@ public class MapsFragment extends Fragment implements LocationListener {
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-            getLastLocation();
             getCurrentLocation();
         }
 
@@ -207,8 +216,8 @@ public class MapsFragment extends Fragment implements LocationListener {
             PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else {
-            getLastLocation();
-            getCurrentLocation();
+            //getLastLocation();
+            //getCurrentLocation();
         }
     }
 

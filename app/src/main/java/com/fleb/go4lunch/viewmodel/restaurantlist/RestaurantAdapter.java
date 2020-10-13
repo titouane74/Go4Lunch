@@ -32,9 +32,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private List<Restaurant> mRestoList;
 
-    public void setRestoList(List<Restaurant> pRestoList) {
-        mRestoList = pRestoList;
-    }
+    public void setRestoList(List<Restaurant> pRestoList) { mRestoList = pRestoList; }
 
     @NonNull
     @Override
