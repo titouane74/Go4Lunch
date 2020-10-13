@@ -88,7 +88,8 @@ public class RestaurantRepo {
                         String lPhoto = (restaurantPojo.getPhotos() != null ? getPhoto(restaurantPojo.getPhotos().get(0).getPhotoReference(), 400,mKey) : "");
                         RestaurantPojo.Location lLocation = restaurantPojo.getGeometry().getLocation();
                         String lAddress = formatAddress(restaurantPojo.getVicinity());
-
+                        Double lLat = lLocation.getLat();
+                        Double lLng = lLocation.getLng();
                         Double lRating = restaurantPojo.getRating();
                         String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
                                 lFusedLocationProvider, restaurantPojo.getGeometry().getLocation()));
@@ -119,7 +120,7 @@ public class RestaurantRepo {
 
                         Restaurant lRestaurant = new Restaurant(
                                 lPlaceId, lName, lAddress, null, null, lDistance, 0,
-                                lOpening, lRating, lPhoto, lLocation
+                                lOpening, lRating, lPhoto, lLat, lLng, lLocation
                         );
 
                         lRestoList.add(lRestaurant);

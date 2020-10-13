@@ -79,10 +79,12 @@ public class RestaurantRepository {
         Call<RestaurantPojo> lRestaurantPojoCall = mJsonRetrofitApi.getNearByPlaces(mKey, lType,
                 pLatitude + "," + pLongitude, lProximityRadius);
 
+        Log.d(TAG_REPO, "getLDGoogleRestaurantList: before enqueue");
         lRestaurantPojoCall.enqueue(new Callback<RestaurantPojo>() {
             @Override
             public void onResponse(Call<RestaurantPojo> call, Response<RestaurantPojo> response) {
                 if (response.isSuccessful()) {
+                    Log.d(TAG_REPO, "onResponse: ");
                     List<RestaurantPojo.Result> lRestoResponse = response.body().getResults();
                     List<Restaurant> lRestoList = new ArrayList<>();
                     String lOpening ;
@@ -95,6 +97,8 @@ public class RestaurantRepository {
                         String lName = restaurantPojo.getName();
                         String lPhoto = (restaurantPojo.getPhotos() != null ? getPhoto(restaurantPojo.getPhotos().get(0).getPhotoReference(), 400,mKey) : "");
                         RestaurantPojo.Location lLocation = restaurantPojo.getGeometry().getLocation();
+                        Double lLat = lLocation.getLat();
+                        Double lLng = lLocation.getLng();
                         String lAddress = formatAddress(restaurantPojo.getVicinity());
                         Double lRating = restaurantPojo.getRating();
                         String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
@@ -107,13 +111,15 @@ public class RestaurantRepository {
                             lOpening = "Ferme";
                         }
                         Restaurant lRestaurant = new Restaurant(
-                                lPlaceId, lName, lAddress, null, null, null, 0,
-                                lOpening, lRating, lPhoto, lLocation
+                                lPlaceId, lName, lAddress, null, null, lDistance, 0,
+                                lOpening, lRating, lPhoto, lLat, lLng, lLocation
                         );
 
                         lRestoList.add(lRestaurant);
                     }
+                    Log.d(TAG_REPO, "onResponse: size : " +  lRestoList.size());
                     mLDRestoList.setValue(lRestoList);
+                    Log.d(TAG_REPO, "onResponse: setValue");
                 }
             }
 
@@ -122,6 +128,7 @@ public class RestaurantRepository {
                 Log.d("onFailure", t.toString());
             }
         });
+        Log.d(TAG_REPO, "getLDGoogleRestaurantList: return " );
         return mLDRestoList;
     }
 

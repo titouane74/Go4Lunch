@@ -92,32 +92,33 @@ public class MapsFragment extends Fragment implements LocationListener {
 
             //TODO find a solution to remove this code
             //Pour que ça fonctionne sur le téléphone
-            configViewModel(requireContext(), mLatitude,mLongitude);
-            setCameraOnCurrentLocation(new LatLng(mLatitude, mLongitude),mZoom);
+            configViewModel(requireContext(), mLatitude, mLongitude);
+            setCameraOnCurrentLocation(new LatLng(mLatitude, mLongitude), mZoom);
 
         }
     };
 
     public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
+        Log.d("TAG_CONFIGVM", "configViewModel: enter");
+        //TODO to debug return nothing
+        MapViewModel lMapViewModel = new MapViewModel();
+        //lMapViewModel.initViewModel(pContext, pLatitude, pLongitude);
+        lMapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), pRestaurantList -> {
+            Log.d("TAG_CONFIGVM", "configViewModel: size : " + pRestaurantList.size());
+            setMapMarkers(pRestaurantList);
+        });
 
 /*
-    //TODO to debug return nothing
-        MapViewModel lMapViewModel = new MapViewModel();
-        lMapViewModel.initViewModel(pContext, pLatitude, pLongitude);
-        lMapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
-
-*/
-
 //V1
         MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
 
         MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
         lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), this::setMapMarkers);
-
+*/
     }
 
-    public  void saveLocation(Location pLocation) {
+    public void saveLocation(Location pLocation) {
         mCurrentLocation = pLocation;
 
         //TODO to active when it's for the emulator
@@ -141,8 +142,8 @@ public class MapsFragment extends Fragment implements LocationListener {
             String lName = restaurant.getRestoName();
             String lAddress = restaurant.getRestoAddress();
 
-            LatLng latLng = new LatLng(restaurant.getRestoLocation().getLat(),
-                    restaurant.getRestoLocation().getLng());
+            LatLng latLng = new LatLng(restaurant.getRestoLat(),
+                    restaurant.getRestoLng());
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(lName + " : " + lAddress)

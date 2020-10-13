@@ -28,8 +28,8 @@ public class MapViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MapViewModel.class))
         {
-            return (T) new MapViewModel(mContext,mLat,mLng);
-            //return null;
+            //return (T) new MapViewModel(mContext,mLat,mLng);
+            return null;
         }
         throw new IllegalArgumentException("Problem with ViewModelFactory");    }
 

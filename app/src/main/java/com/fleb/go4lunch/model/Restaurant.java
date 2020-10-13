@@ -17,10 +17,9 @@ public class Restaurant {
     private String restoOpening;
     private double restoRating;
     private String restoPhotoUrl;
-    //    private Double restoLat;
-//    private Double restoLng;
+    private Double restoLat;
+    private Double restoLng;
     private RestaurantPojo.Location restoLocation;
-
 
     public Restaurant () {}
 
@@ -32,7 +31,7 @@ public class Restaurant {
 
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
                       String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoRating, String pRestoPhotoUrl,
-                      RestaurantPojo.Location pRestoLocation) {
+                      Double pRestoLat, Double pRestoLng,RestaurantPojo.Location pRestoLocation) {
         restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
         restoAddress = pRestoAddress;
@@ -43,10 +42,8 @@ public class Restaurant {
         restoOpening = pRestoOpening;
         restoRating = pRestoRating;
         restoPhotoUrl = pRestoPhotoUrl;
-/*
         restoLat = pRestoLat;
         restoLng = pRestoLng;
-*/
         restoLocation = pRestoLocation;
     }
 
@@ -90,13 +87,13 @@ public class Restaurant {
 
     public void setRestoPhotoUrl(String pRestoPhotoUrl) { restoPhotoUrl = pRestoPhotoUrl; }
 
-/*    public Double getRestoLat() { return restoLat; }
+    public Double getRestoLat() { return restoLat; }
 
     public void setRestoLat(Double pRestoLat) { restoLat = pRestoLat; }
 
     public Double getRestoLng() { return restoLng; }
 
-    public void setRestoLng(Double pRestoLng) { restoLng = pRestoLng; }*/
+    public void setRestoLng(Double pRestoLng) { restoLng = pRestoLng; }
 
     public RestaurantPojo.Location getRestoLocation() { return restoLocation; }
 
