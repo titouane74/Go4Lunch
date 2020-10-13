@@ -1,5 +1,9 @@
 package com.fleb.go4lunch.repository;
 
+import android.util.Log;
+
+import androidx.lifecycle.MutableLiveData;
+
 import com.fleb.go4lunch.model.Workmate;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -13,33 +17,28 @@ import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_COLLECTION
 /**
  * Created by Florence LE BOURNOT on 22/09/2020
  */
-public class WorkmateRepo {
+public class WorkmateRepository {
 
-    public interface OnFirestoreTaskComplete {
-        void workmateDataLoaded(List<Workmate> pWorkmateList);
-        void workmateOnError(Exception pE);
-    }
-
-    private OnFirestoreTaskComplete mOnFirestoreTaskComplete;
-
+    /**
+     * Firebase declarations
+     */
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
 
-    public WorkmateRepo(OnFirestoreTaskComplete pOnFirestoreTaskComplete) {
-        this.mOnFirestoreTaskComplete = pOnFirestoreTaskComplete;
-    }
+    private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
 
-    public void getWorkmateData() {
+
+    public MutableLiveData<List<Workmate>> getLDWorkmateData() {
         mWorkmateRef
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        mOnFirestoreTaskComplete.workmateDataLoaded(
-                                Objects.requireNonNull(pTask.getResult()).toObjects(Workmate.class));
+                        mLDWorkmateList.setValue(Objects.requireNonNull(pTask.getResult()).toObjects(Workmate.class));
                     } else {
-                        mOnFirestoreTaskComplete.workmateOnError(pTask.getException());
+                        Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
                     }
                 });
+        return mLDWorkmateList;
     }
 
 }

@@ -20,6 +20,7 @@ import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateListViewModel;
 public class WorkmateListFragment extends BaseFragment  {
 
     private WorkmateAdapter mWorkmateAdapter;
+    private RecyclerView mRecyclerView;
 
     public WorkmateListFragment() {}
 
@@ -28,20 +29,23 @@ public class WorkmateListFragment extends BaseFragment  {
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-        RecyclerView lRecyclerView = pView.findViewById(R.id.workmate_list);
-        mWorkmateAdapter = new WorkmateAdapter();
+        mRecyclerView = pView.findViewById(R.id.workmate_list);
 
-        lRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false));
-        lRecyclerView.setAdapter(mWorkmateAdapter);
+        initRecyclerView();
     }
 
+    private void initRecyclerView() {
+        mWorkmateAdapter = new WorkmateAdapter();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mWorkmateAdapter);
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity()).get(WorkmateListViewModel.class);
-        lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateLists -> {
-            mWorkmateAdapter.setWorkmateList(pWorkmateLists);
+        lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
+            mWorkmateAdapter.setWorkmateList(pWorkmateList);
             mWorkmateAdapter.notifyDataSetChanged();
         });
     }

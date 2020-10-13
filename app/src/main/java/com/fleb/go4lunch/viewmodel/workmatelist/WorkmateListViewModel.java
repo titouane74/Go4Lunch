@@ -5,35 +5,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.repository.WorkmateRepo;
+import com.fleb.go4lunch.repository.WorkmateRepository;
 
 import java.util.List;
 
 
-public class WorkmateListViewModel extends ViewModel implements WorkmateRepo.OnFirestoreTaskComplete {
+public class WorkmateListViewModel extends ViewModel {
 
-    //public static final String TAG_WORKMATE_VM = "TAG_WORKMATE_VM";
+    private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
 
-    private MutableLiveData<List<Workmate>> mWorkmateList = new MutableLiveData<>();
+    private WorkmateRepository mRepository = new WorkmateRepository();
 
-    public LiveData<List<Workmate>> getWorkmateList() {
-        return mWorkmateList;
-    }
-
-    //Constructor if fragment is used for another fragment
-    // put mWorkmateRepo.getWorkmateData(); elsewhere
     public WorkmateListViewModel() {
-        WorkmateRepo lWorkmateRepo = new WorkmateRepo(this);
-        lWorkmateRepo.getWorkmateData();
+        mLDWorkmateList = mRepository.getLDWorkmateData();
+    }
+    public LiveData<List<Workmate>> getWorkmateList() {
+        return mLDWorkmateList;
     }
 
-    @Override
-    public void workmateDataLoaded(List<Workmate> pWorkmateList) {
-        mWorkmateList.setValue(pWorkmateList);
-    }
-
-    @Override
-    public void workmateOnError(Exception pE) {
-
-    }
 }
