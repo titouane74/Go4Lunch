@@ -3,10 +3,7 @@ package com.fleb.go4lunch.viewmodel.restaurantlist;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +14,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.RatingCalculation;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.Objects;
-
 
 /**
  * Created by Florence LE BOURNOT on 26/09/2020
@@ -39,8 +31,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
     private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private List<Restaurant> mRestoList;
-    private Bitmap mResult;
-    private String mUrl;
 
     public void setRestoList(List<Restaurant> pRestoList) {
         mRestoList = pRestoList;
@@ -102,15 +92,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
 
         if (mRestoList.get(position).getRestoPhotoUrl() != null ) {
-            mUrl = mRestoList.get(position).getRestoPhotoUrl();
-            try {
-                downLoadImage(mRestoList.get(position).getRestoPhotoUrl());
-            } catch (IOException pE) {
-                pE.printStackTrace();
-            }
-            if (mResult != null) {
-                pRestoHolder.mRestoImage.setImageBitmap(mResult);
-            }
+            Glide.with(pRestoHolder.mRestoImage.getContext())
+                    .load(mRestoList.get(position).getRestoPhotoUrl())
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(pRestoHolder.mRestoImage);
         }
 
         pRestoHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -136,68 +121,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private class MyAsyncTasks extends AsyncTask<URL, Integer, Bitmap> {
-
-
-        protected Bitmap doInBackground(URL... urls) {
-            URL url = null;
-            try {
-                url = new URL(mUrl);
-            } catch (MalformedURLException pE) {
-                pE.printStackTrace();
-            }
-
-            HttpURLConnection httpConn = null;
-            int resCode = 0;
-            try {
-                httpConn = (HttpURLConnection) Objects.requireNonNull(url).openConnection();
-                Objects.requireNonNull(httpConn).connect();
-                resCode = Objects.requireNonNull(httpConn).getResponseCode();
-            } catch (IOException pE) {
-                pE.printStackTrace();
-            }
-            if (resCode == HttpURLConnection.HTTP_OK) {
-                InputStream in = null;
-                try {
-                    in = httpConn.getInputStream();
-                } catch (IOException pE) {
-                    pE.printStackTrace();
-                }
-                return BitmapFactory.decodeStream(in);
-            } else {
-                return null;
-            }
-        }
-
-        protected void onProgressUpdate(Integer... progress) {
-            //setProgressPercent(progress[0]);
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            //showDialog("Downloaded " + result + " bytes");
-            mResult = result;
-        }
-    }
-
-    public void downLoadImage(String pUrl) throws IOException {
-
-        MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
-        myAsyncTasks.execute();
-
-/*        URL url = new URL(pUrl);
-
-        HttpURLConnection httpConn = (HttpURLConnection) Objects.requireNonNull(url).openConnection();
-        Objects.requireNonNull(httpConn).connect();
-        int resCode = Objects.requireNonNull(httpConn).getResponseCode();
-
-        if (resCode == HttpURLConnection.HTTP_OK) {
-            InputStream in = httpConn.getInputStream();
-            return BitmapFactory.decodeStream(in);
-        } else {
-            return null;
-        }*/
-    }
 
     static class RestaurantHolder extends RecyclerView.ViewHolder {
 
