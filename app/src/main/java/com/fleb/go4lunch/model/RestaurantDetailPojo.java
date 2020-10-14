@@ -80,7 +80,7 @@ public class RestaurantDetailPojo implements Serializable {
 
 
     //-----------------------------------com.fleb.go4lunch.model.AddressComponent.java-----------------------------------
-    public class AddressComponent {
+    public static class AddressComponent {
 
         @SerializedName("long_name")
         @Expose
@@ -154,7 +154,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Geometry.java-----------------------------------
-    public class Geometry {
+    public static class Geometry {
 
         @SerializedName("location")
         @Expose
@@ -210,7 +210,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Location.java-----------------------------------
-    public class Location {
+    public static class Location {
 
         @SerializedName("lat")
         @Expose
@@ -266,7 +266,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 //-----------------------------------com.fleb.go4lunch.model.Northeast.java-----------------------------------
 
-    public class Northeast {
+    public static class Northeast {
 
         @SerializedName("lat")
         @Expose
@@ -322,7 +322,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Result.java-----------------------------------
-    public class Result {
+    public static class Result {
 
         @SerializedName("address_components")
         @Expose
@@ -678,7 +678,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Review.java-----------------------------------
-    public class Review {
+    public static class Review {
 
         @SerializedName("author_name")
         @Expose
@@ -843,7 +843,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Southwest.java-----------------------------------
-    public class Southwest {
+    public static class Southwest {
 
         @SerializedName("lat")
         @Expose
@@ -899,7 +899,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Viewport.java-----------------------------------
-    class Viewport {
+    public static class Viewport {
 
         @SerializedName("northeast")
         @Expose
@@ -955,7 +955,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Close.java-----------------------------------
-    public class Close {
+    public static class Close {
 
         @SerializedName("day")
         @Expose
@@ -983,7 +983,7 @@ public class RestaurantDetailPojo implements Serializable {
 
     }
     //-----------------------------------com.fleb.go4lunch.model.Open.java-----------------------------------
-    public class Open {
+    public static class Open {
 
         @SerializedName("day")
         @Expose
@@ -1012,7 +1012,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.OpeningHours.java-----------------------------------
-    public class OpeningHours {
+    public static class OpeningHours {
 
         @SerializedName("open_now")
         @Expose
@@ -1053,7 +1053,7 @@ public class RestaurantDetailPojo implements Serializable {
     }
 
     //-----------------------------------com.fleb.go4lunch.model.Period.java-----------------------------------
-    public class Period {
+    public static class Period {
 
         @SerializedName("close")
         @Expose

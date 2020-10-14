@@ -1,9 +1,6 @@
 package com.fleb.go4lunch.model;
 
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 /**
@@ -22,16 +19,14 @@ public class Restaurant implements Serializable {
     private double restoRating;
     private String restoPhotoUrl;
     private RestaurantPojo.Location restoLocation;
-//TODO temporary
-//    private RestaurantDetailPojo.OpeningHours restoOpeningHours;
+    private RestaurantDetailPojo.OpeningHours restoOpeningHours;
 
     public Restaurant () {}
 
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
                       String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoRating, String pRestoPhotoUrl,
-                      RestaurantPojo.Location pRestoLocation) {
-//TODO temporary
-//        RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
+        RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
+
         restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
         restoAddress = pRestoAddress;
@@ -43,8 +38,7 @@ public class Restaurant implements Serializable {
         restoRating = pRestoRating;
         restoPhotoUrl = pRestoPhotoUrl;
         restoLocation = pRestoLocation;
-//TODO temporary
-        //        restoOpeningHours = pRestoOpeningHours;
+        restoOpeningHours = pRestoOpeningHours;
     }
 
     public String getRestoPlaceId() { return restoPlaceId; }
@@ -91,11 +85,7 @@ public class Restaurant implements Serializable {
 
     public void setRestoLocation(RestaurantPojo.Location pRestoLocation) { restoLocation = pRestoLocation; }
 
-/*
-//TODO temporary
-
     public RestaurantDetailPojo.OpeningHours getRestoOpeningHours() { return restoOpeningHours; }
 
     public void setRestoOpeningHours(RestaurantDetailPojo.OpeningHours pRestoOpeningHours) { restoOpeningHours = pRestoOpeningHours; }
-*/
 }

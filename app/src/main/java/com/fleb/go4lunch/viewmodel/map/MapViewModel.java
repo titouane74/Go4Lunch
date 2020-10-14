@@ -19,7 +19,6 @@ public class MapViewModel extends ViewModel {
     private RestaurantRepository mRepository = new RestaurantRepository();
 
     public MapViewModel(Context pContext, Double pLat, Double pLng) {
-        //TODO temporary
         //mLDRestoList = mRepository.getLDGoogleRestaurantList(pContext, pLat, pLng);
         mLDRestoList = mRepository.getLDFirestoreRestaurantList();
     }
@@ -34,12 +33,14 @@ public class MapViewModel extends ViewModel {
         return mLDRestoList;
     }
 
+    public LiveData<Boolean> restaurantExistInFirestore(Restaurant pRestaurant) {
+        return mRepository.restaurantExistInFirestore(pRestaurant);
+    }
     public void saveFirestoreRestaurant(Restaurant pRestaurant) {
             mRepository.saveRestaurant(pRestaurant);
     }
 
     public LiveData<Restaurant> getGoogleRestaurantDetail(Context pContext, Restaurant pRestaurant) {
-
         return mRepository.getGoogleDetailRestaurant(pContext, pRestaurant);
     }
 

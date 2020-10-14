@@ -55,6 +55,7 @@ public class RestaurantRepository {
      */
     private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>();
     private MutableLiveData<Restaurant> mLDRestoDetail = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mRestoExistInFirestore = new MutableLiveData<>();
 
     private Location mFusedLocationProvider;
 
@@ -95,17 +96,27 @@ public class RestaurantRepository {
                     mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(pLatitude, pLongitude);
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
+                        String lPhoto = null;
+                        Double lRating = 0.0;
+                        String lAddress = null;
+
                         String lPlaceId = restaurantPojo.getPlaceId();
                         String lName = restaurantPojo.getName();
-                        String lPhoto = (restaurantPojo.getPhotos() != null ? getPhoto(restaurantPojo.getPhotos().get(0).getPhotoReference(), 400, mKey) : "");
+                        if (restaurantPojo.getPhotos() != null && restaurantPojo.getPhotos().size() > 0) {
+                            lPhoto = getPhoto(restaurantPojo.getPhotos().get(0).getPhotoReference(), 400, mKey);
+                        }
                         RestaurantPojo.Location lLocation = restaurantPojo.getGeometry().getLocation();
-                        String lAddress = formatAddress(restaurantPojo.getVicinity());
-                        Double lRating = restaurantPojo.getRating();
+                        if (restaurantPojo.getVicinity() != null) {
+                            lAddress = formatAddress(restaurantPojo.getVicinity());
+                        }
+                        if (restaurantPojo.getRating() != null) {
+                            restaurantPojo.getRating();
+                        }
                         String lDistance = String.valueOf(Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                                 mFusedLocationProvider, restaurantPojo.getGeometry().getLocation()));
 
                         //TODO gérer openinghours
-                        if (restaurantPojo.getOpeningHours().getOpenNow()) {
+                        if (restaurantPojo.getOpeningHours() != null && restaurantPojo.getOpeningHours().getOpenNow()) {
                             lOpening = "Ouvert";
                         } else {
                             lOpening = "Ferme";
@@ -113,8 +124,7 @@ public class RestaurantRepository {
                         Restaurant lRestaurant = new Restaurant(
                                 lPlaceId, lName, lAddress, null, null, lDistance, 0,
                                 lOpening, lRating, lPhoto, lLocation
-//TODO temporary
-//                                ,null
+                                , null
                         );
 
                         lRestoList.add(lRestaurant);
@@ -126,7 +136,7 @@ public class RestaurantRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<RestaurantPojo> call,@NonNull Throwable t) {
+            public void onFailure(@NonNull Call<RestaurantPojo> call, @NonNull Throwable t) {
                 Log.d("onFailure", t.toString());
             }
         });
@@ -158,6 +168,21 @@ public class RestaurantRepository {
         mFusedLocationProvider.setLongitude(pLng);
     }*/
 
+    public MutableLiveData<Boolean> restaurantExistInFirestore(Restaurant pRestaurant) {
+        if (pRestaurant!= null) Log.d(TAG_REPO, "restaurantExistInFirestore: " + pRestaurant.getRestoName());
+        mRestoRef.document(pRestaurant.getRestoPlaceId())
+                .get()
+                .addOnSuccessListener(pVoid -> {
+                    if (pVoid.exists()) {
+                        mRestoExistInFirestore.setValue(true);
+                    } else {
+                        mRestoExistInFirestore.setValue(false);
+                    }
+                })
+                .addOnFailureListener(pE -> Log.d("TAG_SAVE_EXIST", "onFailure Save: Document not saved", pE));
+        return mRestoExistInFirestore;
+    }
+
     public void saveRestaurant(Restaurant pRestaurant) {
 
         mRestoRef.document(pRestaurant.getRestoPlaceId())
@@ -173,10 +198,9 @@ public class RestaurantRepository {
                         lRestaurant.put("restoPhotoUrl", pRestaurant.getRestoPhotoUrl());
                         lRestaurant.put("restoLocation", pRestaurant.getRestoLocation());
                         lRestaurant.put("restoNbWorkmates", pRestaurant.getRestoNbWorkmates());
-//TODO temporary
-//                        lRestaurant.put("restoOpeningHours", pRestaurant.getRestoOpeningHours());
-                        lRestaurant.put("restoWebSite",pRestaurant.getRestoWebsite());
-                        lRestaurant.put("restoPhone",pRestaurant.getRestoPhone());
+                        lRestaurant.put("restoOpeningHours", pRestaurant.getRestoOpeningHours());
+                        lRestaurant.put("restoWebSite", pRestaurant.getRestoWebsite());
+                        lRestaurant.put("restoPhone", pRestaurant.getRestoPhone());
                         mRestoRef.document(pRestaurant.getRestoPlaceId())
                                 .set(lRestaurant)
                                 .addOnSuccessListener(pDocumentReference ->
@@ -192,27 +216,28 @@ public class RestaurantRepository {
     public MutableLiveData<Restaurant> getGoogleDetailRestaurant(Context pContext, Restaurant pRestaurant) {
         String lFields = pContext.getResources().getString(R.string.place_detail_fields);
 
+        mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
+
         Call<RestaurantDetailPojo> lRestaurantDetailPojoCall = mJsonRetrofitApi.getRestaurantDetail(mKey,
                 pRestaurant.getRestoPlaceId(), lFields);
 
-            lRestaurantDetailPojoCall.enqueue(new Callback<RestaurantDetailPojo>() {
-                @Override
-                public void onResponse(@NonNull Call<RestaurantDetailPojo> call, @NonNull Response<RestaurantDetailPojo> response) {
-                    if (response.isSuccessful()) {
-                        RestaurantDetailPojo.Result lRestoDetResponse = Objects.requireNonNull(response.body()).getResult();
-                        //TODO temporary
-//                        pRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
-                        pRestaurant.setRestoWebsite(lRestoDetResponse.getWebsite());
-                        pRestaurant.setRestoPhone(lRestoDetResponse.getFormattedPhoneNumber());
-                        mLDRestoDetail.setValue(pRestaurant);
-                    }
+        lRestaurantDetailPojoCall.enqueue(new Callback<RestaurantDetailPojo>() {
+            @Override
+            public void onResponse(@NonNull Call<RestaurantDetailPojo> call, @NonNull Response<RestaurantDetailPojo> response) {
+                if (response.isSuccessful()) {
+                    RestaurantDetailPojo.Result lRestoDetResponse = Objects.requireNonNull(response.body()).getResult();
+                    pRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
+                    pRestaurant.setRestoWebsite(lRestoDetResponse.getWebsite());
+                    pRestaurant.setRestoPhone(lRestoDetResponse.getFormattedPhoneNumber());
+                    mLDRestoDetail.setValue(pRestaurant);
                 }
+            }
 
-                @Override
-                public void onFailure(@NonNull Call<RestaurantDetailPojo> call, @NonNull Throwable t) {
-                    Log.d("TAG_DETRESTO", "onFailure: " + t.getMessage());
-                }
-            });
+            @Override
+            public void onFailure(@NonNull Call<RestaurantDetailPojo> call, @NonNull Throwable t) {
+                Log.d("TAG_DETRESTO", "onFailure: " + t.getMessage());
+            }
+        });
         return mLDRestoDetail;
     }
 }

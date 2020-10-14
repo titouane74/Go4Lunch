@@ -58,6 +58,7 @@ public class MapsFragment extends Fragment implements LocationListener {
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocationKnown;
     private LocationManager mLocationManager;
+    private MapViewModel mMapViewModel;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
@@ -105,22 +106,58 @@ public class MapsFragment extends Fragment implements LocationListener {
         lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
             @Override
             public void onChanged(List<Restaurant> pRestaurantList) {
-                //TODO temporary
-/*
+                if (pRestaurantList != null) Log.d(TAG_MAP, "onChanged:getrestaurantlist " + pRestaurantList.size());
 
                 for (Restaurant pRestaurant : pRestaurantList) {
-                    lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
-                            .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
+
+                    lMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
+                            new Observer<Boolean>() {
                                 @Override
-                                public void onChanged(Restaurant pRestaurant) {
-                                    lMapViewModel.saveFirestoreRestaurant(pRestaurant);
+                                public void onChanged(Boolean pNotExist) {
+                                    if (pNotExist) {
+                                        lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
+                                                .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
+                                                    @Override
+                                                    public void onChanged(Restaurant pRestaurant) {
+                                                        lMapViewModel.saveFirestoreRestaurant(pRestaurant);
+                                                    }
+                                                });
+                                    }
                                 }
                             });
                 }
-*/
-                MapsFragment.this.setMapMarkers(pRestaurantList);
+
+//                restaurantExistInFirestore(pRestaurantList);
+                setMapMarkers(pRestaurantList);
             }
         });
+    }
+
+    public void restaurantExistInFirestore(List<Restaurant> pRestaurantList) {
+        if (pRestaurantList != null) {
+            Log.d(TAG_MAP, "restaurantExistInFirestore " + pRestaurantList.size());
+            for (Restaurant pRestaurant : pRestaurantList) {
+                mMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
+                        new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean pNotExist) {
+                                if (pNotExist) {
+                                    getGoogleRestaurantDetail(pRestaurant);
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    public void getGoogleRestaurantDetail(Restaurant pRestaurant) {
+        mMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
+                .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
+                    @Override
+                    public void onChanged(Restaurant pRestaurant) {
+                        mMapViewModel.saveFirestoreRestaurant(pRestaurant);
+                    }
+                });
 
     }
 
