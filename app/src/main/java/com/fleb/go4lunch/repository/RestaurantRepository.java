@@ -113,6 +113,7 @@ public class RestaurantRepository {
                         Restaurant lRestaurant = new Restaurant(
                                 lPlaceId, lName, lAddress, null, null, lDistance, 0,
                                 lOpening, lRating, lPhoto, lLocation
+//TODO temporary
 //                                ,null
                         );
 
@@ -172,7 +173,8 @@ public class RestaurantRepository {
                         lRestaurant.put("restoPhotoUrl", pRestaurant.getRestoPhotoUrl());
                         lRestaurant.put("restoLocation", pRestaurant.getRestoLocation());
                         lRestaurant.put("restoNbWorkmates", pRestaurant.getRestoNbWorkmates());
-                        //lRestaurant.put("restoOpeningHours", pRestaurant.getRestoOpeningHours());
+//TODO temporary
+//                        lRestaurant.put("restoOpeningHours", pRestaurant.getRestoOpeningHours());
                         lRestaurant.put("restoWebSite",pRestaurant.getRestoWebsite());
                         lRestaurant.put("restoPhone",pRestaurant.getRestoPhone());
                         mRestoRef.document(pRestaurant.getRestoPlaceId())
@@ -198,6 +200,7 @@ public class RestaurantRepository {
                 public void onResponse(@NonNull Call<RestaurantDetailPojo> call, @NonNull Response<RestaurantDetailPojo> response) {
                     if (response.isSuccessful()) {
                         RestaurantDetailPojo.Result lRestoDetResponse = Objects.requireNonNull(response.body()).getResult();
+                        //TODO temporary
 //                        pRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
                         pRestaurant.setRestoWebsite(lRestoDetResponse.getWebsite());
                         pRestaurant.setRestoPhone(lRestoDetResponse.getFormattedPhoneNumber());
