@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
@@ -36,7 +37,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -49,14 +49,15 @@ public class MapsFragment extends Fragment implements LocationListener {
     public static final String TAG_MAP = "TAG_MAP";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static final String TAG_GETRESTO = "TAG_GETRESTO";
-    private int mZoom ;
+    private int mZoom;
 
     private GoogleMap mMap;
     private double mLatitude = 48.8236549;
     private double mLongitude = 2.4102578;
     private Location mCurrentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
-
+    private Location mLastLocationKnown;
+    private LocationManager mLocationManager;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
@@ -90,11 +91,9 @@ public class MapsFragment extends Fragment implements LocationListener {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
 
-            //TODO find a solution to remove this code
-            //Pour que ça fonctionne sur le téléphone
-            configViewModel(requireContext(), mLatitude, mLongitude);
-            setCameraOnCurrentLocation(new LatLng(mLatitude, mLongitude), mZoom);
-
+//            configViewModel(requireContext(), mLatitude, mLongitude);
+            configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(),  mCurrentLocation.getLongitude()), mZoom);
         }
     };
 
@@ -125,13 +124,13 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     }
 
-    public void saveLocation(Location pLocation) {
+/*    public void saveLocation(Location pLocation) {
         mCurrentLocation = pLocation;
 
         //TODO to active when it's for the emulator
         //configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         //setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
-    }
+    }*/
 
     private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
         Log.d(TAG_MAP, "moveCamera: ");
@@ -173,9 +172,9 @@ public class MapsFragment extends Fragment implements LocationListener {
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+            getLastLocation();
             getCurrentLocation();
         }
-
         return lView;
     }
 
@@ -194,9 +193,9 @@ public class MapsFragment extends Fragment implements LocationListener {
     public void getCurrentLocation() {
 
         try {
-            LocationManager locationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
-            if (locationManager != null) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+            mLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
+            if (mLocationManager != null) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
             }
         } catch (SecurityException securityException) {
             Log.d("TAG", "getCurrentLocation: ", securityException);
@@ -210,15 +209,35 @@ public class MapsFragment extends Fragment implements LocationListener {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
-                            getCurrentLocation();
-                            saveLocation(task.getResult());
+//                            saveLocation(task.getResult());
+                            mCurrentLocation = task.getResult();
+                            Log.d(TAG_MAP, "onComplete:currentlocation " + mCurrentLocation.getLatitude() +","+mCurrentLocation.getLongitude());
+
                         } else {
                             Log.w(TAG_MAP, "getLastLocation:exception", task.getException());
                         }
                     }
                 });
+
+        Log.d(TAG_MAP, "getLastLocation: FusedLocationClient hors oncomplete " + mCurrentLocation);
+
+        LocationManager lLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
+        if (lLocationManager != null) {
+            lLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
+            mLastLocationKnown = lLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Log.d(TAG_MAP, "getLastLocation: " + mLatitude + "," + mLongitude);
+            mLatitude = mLastLocationKnown != null ? mLastLocationKnown.getLatitude() : mLatitude;
+            mLongitude = mLastLocationKnown != null ? mLastLocationKnown.getLongitude() : mLongitude;
+            Log.d(TAG_MAP, "getLastLocation: lastknown" + mLatitude + "," + mLongitude);
+            String lText = "Initial location" + mLatitude + "," + mLongitude;
+            Toast.makeText(getContext(), lText, Toast.LENGTH_SHORT).show();
+            mCurrentLocation = mLastLocationKnown;
+            lLocationManager.removeUpdates(this);
+        }
+
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onStart() {
         super.onStart();
@@ -226,9 +245,21 @@ public class MapsFragment extends Fragment implements LocationListener {
             PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else {
-            //getLastLocation();
-            //getCurrentLocation();
+            mLastLocationKnown = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onResume() {
+        super.onResume();
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mLocationManager.removeUpdates(this);
     }
 
     /**
@@ -242,10 +273,12 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG_MAP, "onLocationChanged: ");
-        saveLocation(location);
+//        saveLocation(location);
         mCurrentLocation = location;
         mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
+        String lText = "New location " + mLatitude + "," + mLongitude;
+        Toast.makeText(getContext(), lText, Toast.LENGTH_SHORT).show();
         LatLng latLng = new LatLng(mLatitude, mLongitude);
         setCameraOnCurrentLocation(latLng, mZoom);
     }
@@ -254,6 +287,7 @@ public class MapsFragment extends Fragment implements LocationListener {
     /**
      * This callback will never be invoked and providers can be considers as always in the
      * {@link Location Provider#AVAILABLE} state.
+     *
      * @deprecated This callback will never be invoked.
      */
     @Override
@@ -287,6 +321,5 @@ public class MapsFragment extends Fragment implements LocationListener {
                 Manifest.permission.ACCESS_COARSE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
-
 
 }
