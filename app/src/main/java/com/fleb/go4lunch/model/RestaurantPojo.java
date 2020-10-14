@@ -3,13 +3,14 @@ package com.fleb.go4lunch.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 04/10/2020
  */
-public class RestaurantPojo {
+public class RestaurantPojo implements Serializable {
 
     @SerializedName("html_attributions")
     @Expose
@@ -20,6 +21,8 @@ public class RestaurantPojo {
     @SerializedName("status")
     @Expose
     private String status;
+
+    public RestaurantPojo() {}
 
     /**
      *

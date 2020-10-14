@@ -3,12 +3,13 @@ package com.fleb.go4lunch.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 06/10/2020
  */
-public class RestaurantDetailPojo {
+public class RestaurantDetailPojo implements Serializable {
     @SerializedName("html_attributions")
     @Expose
     private List<Object> htmlAttributions = null;
@@ -23,8 +24,7 @@ public class RestaurantDetailPojo {
      * No args constructor for use in serialization
      *
      */
-    public RestaurantDetailPojo() {
-    }
+    public RestaurantDetailPojo() {    }
 
     /**
      *
@@ -964,6 +964,7 @@ public class RestaurantDetailPojo {
         @Expose
         private String time;
 
+        public Close() {}
         public Integer getDay() {
             return day;
         }
@@ -991,6 +992,7 @@ public class RestaurantDetailPojo {
         @Expose
         private String time;
 
+        public Open() {}
         public Integer getDay() {
             return day;
         }
@@ -1021,6 +1023,8 @@ public class RestaurantDetailPojo {
         @SerializedName("weekday_text")
         @Expose
         private List<String> weekdayText = null;
+
+        public OpeningHours() {}
 
         public Boolean getOpenNow() {
             return openNow;
@@ -1057,6 +1061,8 @@ public class RestaurantDetailPojo {
         @SerializedName("open")
         @Expose
         private Open open;
+
+        public Period() {}
 
         public Close getClose() {
             return close;

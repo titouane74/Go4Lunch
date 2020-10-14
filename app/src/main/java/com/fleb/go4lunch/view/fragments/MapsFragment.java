@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
@@ -48,9 +49,8 @@ public class MapsFragment extends Fragment implements LocationListener {
     public static final String TAG_MAP = "TAG_MAP";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static final String TAG_GETRESTO = "TAG_GETRESTO";
-    private final int mZoom = 16;
+    private int mZoom ;
 
-    private Marker mCurrLocationMarker;
     private GoogleMap mMap;
     private double mLatitude = 48.8236549;
     private double mLongitude = 2.4102578;
@@ -99,12 +99,25 @@ public class MapsFragment extends Fragment implements LocationListener {
     };
 
     public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
-        Log.d("TAG_CONFIGVM", "configViewModel: enter");
 
         MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
 
         MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
+            @Override
+            public void onChanged(List<Restaurant> pRestaurantList) {
+                for (Restaurant pRestaurant : pRestaurantList) {
+                    lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
+                            .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
+                                @Override
+                                public void onChanged(Restaurant pRestaurant) {
+                                    lMapViewModel.saveFirestoreRestaurant(pRestaurant);
+                                }
+                            });
+                }
+                MapsFragment.this.setMapMarkers(pRestaurantList);
+            }
+        });
 
     }
 
@@ -132,8 +145,8 @@ public class MapsFragment extends Fragment implements LocationListener {
             String lName = restaurant.getRestoName();
             String lAddress = restaurant.getRestoAddress();
 
-            LatLng latLng = new LatLng(restaurant.getRestoLat(),
-                    restaurant.getRestoLng());
+            LatLng latLng = new LatLng(restaurant.getRestoLocation().getLat(),
+                    restaurant.getRestoLocation().getLng());
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(lName + " : " + lAddress)
@@ -148,6 +161,8 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        mZoom = Integer.parseInt(getString(R.string.map_zoom));
 
         if (!checkPermissions()) {
             PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
@@ -224,9 +239,6 @@ public class MapsFragment extends Fragment implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.d(TAG_MAP, "onLocationChanged: ");
         saveLocation(location);
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
         mCurrentLocation = location;
         mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
@@ -238,10 +250,6 @@ public class MapsFragment extends Fragment implements LocationListener {
     /**
      * This callback will never be invoked and providers can be considers as always in the
      * {@link Location Provider#AVAILABLE} state.
-     *
-     * @param provider
-     * @param status
-     * @param extras
      * @deprecated This callback will never be invoked.
      */
     @Override

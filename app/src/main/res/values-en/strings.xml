@@ -95,6 +95,7 @@
     <!-- MAPS -->
     <string name="proximity_radius">150</string>
     <string name="type_search">restaurant</string>
+    <string name="map_zoom">16</string>
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to enable the location.</string>
     <string name="location_permission_denied">This application requires location permission to enable the location. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>

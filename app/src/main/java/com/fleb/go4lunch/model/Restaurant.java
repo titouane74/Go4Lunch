@@ -1,11 +1,15 @@
 package com.fleb.go4lunch.model;
 
-import com.google.firebase.firestore.DocumentId;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by Florence LE BOURNOT on 16/09/2020
  */
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     private String restoPlaceId;
     private String restoName;
@@ -17,21 +21,15 @@ public class Restaurant {
     private String restoOpening;
     private double restoRating;
     private String restoPhotoUrl;
-    private Double restoLat;
-    private Double restoLng;
     private RestaurantPojo.Location restoLocation;
+    //private RestaurantDetailPojo.OpeningHours restoOpeningHours;
 
     public Restaurant () {}
 
-/*
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
                       String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoRating, String pRestoPhotoUrl,
-                      Double pRestoLat, Double pRestoLng) {
-*/
-
-    public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
-                      String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoRating, String pRestoPhotoUrl,
-                      Double pRestoLat, Double pRestoLng,RestaurantPojo.Location pRestoLocation) {
+                      RestaurantPojo.Location pRestoLocation) {
+//        RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
         restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
         restoAddress = pRestoAddress;
@@ -42,9 +40,8 @@ public class Restaurant {
         restoOpening = pRestoOpening;
         restoRating = pRestoRating;
         restoPhotoUrl = pRestoPhotoUrl;
-        restoLat = pRestoLat;
-        restoLng = pRestoLng;
         restoLocation = pRestoLocation;
+//        restoOpeningHours = pRestoOpeningHours;
     }
 
     public String getRestoPlaceId() { return restoPlaceId; }
@@ -87,15 +84,13 @@ public class Restaurant {
 
     public void setRestoPhotoUrl(String pRestoPhotoUrl) { restoPhotoUrl = pRestoPhotoUrl; }
 
-    public Double getRestoLat() { return restoLat; }
-
-    public void setRestoLat(Double pRestoLat) { restoLat = pRestoLat; }
-
-    public Double getRestoLng() { return restoLng; }
-
-    public void setRestoLng(Double pRestoLng) { restoLng = pRestoLng; }
-
     public RestaurantPojo.Location getRestoLocation() { return restoLocation; }
 
     public void setRestoLocation(RestaurantPojo.Location pRestoLocation) { restoLocation = pRestoLocation; }
+
+/*
+    public RestaurantDetailPojo.OpeningHours getRestoOpeningHours() { return restoOpeningHours; }
+
+    public void setRestoOpeningHours(RestaurantDetailPojo.OpeningHours pRestoOpeningHours) { restoOpeningHours = pRestoOpeningHours; }
+*/
 }
