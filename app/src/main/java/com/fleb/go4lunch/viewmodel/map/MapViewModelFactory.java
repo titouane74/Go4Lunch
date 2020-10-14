@@ -1,10 +1,12 @@
-package com.fleb.go4lunch.viewmodel;
+package com.fleb.go4lunch.viewmodel.map;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.fleb.go4lunch.viewmodel.map.MapViewModel;
 
 
 /**
@@ -28,8 +30,8 @@ public class MapViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MapViewModel.class))
         {
-            //return (T) new MapViewModel(mContext,mLat,mLng);
-            return null;
+            return (T) new MapViewModel(mContext,mLat,mLng);
+            //return null;
         }
         throw new IllegalArgumentException("Problem with ViewModelFactory");    }
 

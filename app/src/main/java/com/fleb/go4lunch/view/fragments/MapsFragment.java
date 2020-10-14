@@ -24,8 +24,8 @@ import android.view.ViewGroup;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
-import com.fleb.go4lunch.viewmodel.MapViewModel;
-import com.fleb.go4lunch.viewmodel.MapViewModelFactory;
+import com.fleb.go4lunch.viewmodel.map.MapViewModel;
+import com.fleb.go4lunch.viewmodel.map.MapViewModelFactory;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -100,22 +100,12 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
         Log.d("TAG_CONFIGVM", "configViewModel: enter");
-        //TODO to debug return nothing
-        MapViewModel lMapViewModel = new MapViewModel();
-        //lMapViewModel.initViewModel(pContext, pLatitude, pLongitude);
-        lMapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
-        lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), pRestaurantList -> {
-            Log.d("TAG_CONFIGVM", "configViewModel: size : " + pRestaurantList.size());
-            setMapMarkers(pRestaurantList);
-        });
 
-/*
-//V1
         MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
 
         MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
-        lMapViewModel.getRestoList().observe(getViewLifecycleOwner(), this::setMapMarkers);
-*/
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+
     }
 
     public void saveLocation(Location pLocation) {
