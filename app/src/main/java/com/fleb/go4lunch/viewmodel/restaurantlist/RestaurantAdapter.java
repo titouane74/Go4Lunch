@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.GsonHelper;
-import com.fleb.go4lunch.utils.RatingCalculation;
+import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.util.List;
@@ -31,6 +32,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
     private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private List<Restaurant> mRestoList;
+    private double mLatitude = 48.8236549;
+    private double mLongitude = 2.4102578;
 
     public void setRestoList(List<Restaurant> pRestoList) { mRestoList = pRestoList; }
 
@@ -48,10 +51,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         Context lContext = pRestoHolder.itemView.getContext();
         String lOpening;
-        String lDistance = String.valueOf(mRestoList.get(position).getRestoDistance());
+
+        //TODO à supprimer après avoir trouver la currentlocation
+        Location lFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
+        int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(lFusedLocationProvider,
+                mRestoList.get(position).getRestoLocation());
+        //String lDistance = String.valueOf(mRestoList.get(position).getRestoDistance());
+
+        String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
-        pRestoHolder.mRestoDistance.setText(lDistance);
+        pRestoHolder.mRestoDistance.setText(lNewDistance);
         pRestoHolder.mRestoAddress.setText(mRestoList.get(position).getRestoAddress());
         pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
 
@@ -66,7 +76,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             }
         }
 
-        int lnbStarToDisplay = RatingCalculation.numberStarToDisplay(lContext,
+        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(lContext,
                 mRestoList.get(position).getRestoRating());
         switch (lnbStarToDisplay) {
             case 1:

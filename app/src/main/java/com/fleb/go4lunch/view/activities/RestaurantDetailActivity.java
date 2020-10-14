@@ -8,12 +8,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.GsonHelper;
-import com.fleb.go4lunch.utils.RatingCalculation;
+import com.fleb.go4lunch.utils.Go4LunchHelper;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
 
@@ -58,7 +56,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoName.setText(pRestaurant.getRestoName());
         mRestoAddress.setText(pRestaurant.getRestoAddress());
 
-        int lnbStarToDisplay = RatingCalculation.numberStarToDisplay((getApplicationContext()),
+        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()),
                 pRestaurant.getRestoRating());
         switch (lnbStarToDisplay) {
             case 1:

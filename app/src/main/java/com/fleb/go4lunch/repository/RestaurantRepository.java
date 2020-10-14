@@ -14,6 +14,7 @@ import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
+import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -91,7 +92,7 @@ public class RestaurantRepository {
                     String lOpening;
 
                     //TODO à supprimer après avoir trouver la currentlocation
-                    setCurrentLocation(pLatitude, pLongitude);
+                    mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(pLatitude, pLongitude);
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
                         String lPlaceId = restaurantPojo.getPlaceId();
@@ -100,7 +101,7 @@ public class RestaurantRepository {
                         RestaurantPojo.Location lLocation = restaurantPojo.getGeometry().getLocation();
                         String lAddress = formatAddress(restaurantPojo.getVicinity());
                         Double lRating = restaurantPojo.getRating();
-                        String lDistance = String.valueOf(getRestaurantDistanceToCurrentLocation(
+                        String lDistance = String.valueOf(Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                                 mFusedLocationProvider, restaurantPojo.getGeometry().getLocation()));
 
                         //TODO gérer openinghours
@@ -141,20 +142,20 @@ public class RestaurantRepository {
         return pAddress.substring(0, pAddress.indexOf(","));
     }
 
-    public int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation) {
+/*    public int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation) {
         Location lRestaurantLocation = new Location("fusedLocationProvider");
 
         lRestaurantLocation.setLatitude(pRestoLocation.getLat());
         lRestaurantLocation.setLongitude(pRestoLocation.getLng());
 
         return (int) pCurrentLocation.distanceTo(lRestaurantLocation);
-    }
+    }*/
 
-    private void setCurrentLocation(Double pLat, Double pLng) {
+/*    private void setCurrentLocation(Double pLat, Double pLng) {
         mFusedLocationProvider = new Location("fusedLocationProvider");
         mFusedLocationProvider.setLatitude(pLat);
         mFusedLocationProvider.setLongitude(pLng);
-    }
+    }*/
 
     public void saveRestaurant(Restaurant pRestaurant) {
 
