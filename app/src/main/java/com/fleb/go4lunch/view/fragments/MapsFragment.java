@@ -106,6 +106,8 @@ public class MapsFragment extends Fragment implements LocationListener {
         lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
             @Override
             public void onChanged(List<Restaurant> pRestaurantList) {
+                //TODO temoprarely
+                /*
                 for (Restaurant pRestaurant : pRestaurantList) {
                     lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
                             .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
@@ -115,6 +117,7 @@ public class MapsFragment extends Fragment implements LocationListener {
                                 }
                             });
                 }
+*/
                 MapsFragment.this.setMapMarkers(pRestaurantList);
             }
         });

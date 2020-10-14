@@ -34,7 +34,7 @@
             >
 
             <ImageView
-                android:id="@+id/img_restaurant"
+                android:id="@+id/img_restaurant_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"

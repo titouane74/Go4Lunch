@@ -19,7 +19,9 @@ public class MapViewModel extends ViewModel {
     private RestaurantRepository mRepository = new RestaurantRepository();
 
     public MapViewModel(Context pContext, Double pLat, Double pLng) {
-        mLDRestoList = mRepository.getLDGoogleRestaurantList(pContext, pLat, pLng);
+        //TODO temporarely
+        //mLDRestoList = mRepository.getLDGoogleRestaurantList(pContext, pLat, pLng);
+        mLDRestoList = mRepository.getLDFirestoreRestaurantList();
     }
 
     public MapViewModel() {

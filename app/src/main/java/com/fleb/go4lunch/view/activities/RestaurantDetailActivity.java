@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.GsonHelper;
@@ -23,6 +25,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private ImageView mRestoNote1;
     private ImageView mRestoNote2;
     private ImageView mRestoNote3;
+    private ImageView mRestoImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoNote2 = findViewById(R.id.img_detail_note2);
         mRestoNote3 = findViewById(R.id.img_detail_note3);
         mRestoAddress = findViewById(R.id.text_restaurant_detail_address);
+        mRestoImage = findViewById(R.id.img_restaurant_detail);
 
         getIncomingIntent();
 
@@ -75,6 +80,16 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 mRestoNote3.setVisibility(View.INVISIBLE);
                 break;
         }
+
+/*
+        Log.d(TAG_DET_RESTO, "setInfoRestaurant: " + pRestaurant.getRestoPhotoUrl());
+        if (pRestaurant.getRestoPhotoUrl() != null ) {
+            Glide.with(this)
+                    .asBitmap()
+                    .load(pRestaurant.getRestoPhotoUrl())
+                    .into(mRestoImage);
+        }
+*/
 
     }
 }
