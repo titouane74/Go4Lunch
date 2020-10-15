@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
@@ -7,6 +8,13 @@ import android.view.View;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.RestaurantPojo;
+
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Florence LE BOURNOT on 09/10/2020
@@ -60,5 +68,44 @@ public class Go4LunchHelper {
             lNewDistance = lNewDistance.substring(1) +"." + lNewDistance.substring(2) +"km";
         }
         return lNewDistance;
+    }
+
+    public static int getCurrentDayInt() {
+        String TAG_WEEKDAY = "TAG_WEEKDAY";
+
+        String[] weekdays = new DateFormatSymbols(Locale.FRANCE).getWeekdays();
+        Calendar c = Calendar.getInstance();
+        Date date = new Date();
+        c.setTime(date);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        System.out.println(dayOfWeek);
+        System.out.println(weekdays[dayOfWeek]);
+        Log.d(TAG_WEEKDAY, "getCurrentDay: " + dayOfWeek);
+
+        return dayOfWeek;
+    }
+
+    public static String getCurrentDayText() {
+        String TAG_WEEKDAY = "TAG_WEEKDAY";
+
+        String[] weekdays = new DateFormatSymbols(Locale.FRANCE).getWeekdays();
+        Calendar c = Calendar.getInstance();
+        Date date = new Date();
+        c.setTime(date);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        System.out.println(dayOfWeek);
+        System.out.println(weekdays[dayOfWeek]);
+        Log.d(TAG_WEEKDAY, "getCurrentDay: " + weekdays[dayOfWeek]);
+
+        return weekdays[dayOfWeek];
+    }
+
+    public static int getCurrentTime() {
+        String TAG_WEEKDAY = "TAG_WEEKDAY";
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+
+        return Integer.parseInt(sdf.format(new Date()));
     }
 }
