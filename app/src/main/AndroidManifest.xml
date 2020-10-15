@@ -67,7 +67,7 @@
             android:label="@string/user_activity_label"
             android:parentActivityName=".view.activities.MainActivity"
             android:theme="@style/UserTheme" />
-        <activity android:name=".view.activities.RestaurantDetailActivity" /> <!-- PROFILE ACTIVITY -->
+        <activity android:name=".view.activities.RestaurantDetailActivity" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"

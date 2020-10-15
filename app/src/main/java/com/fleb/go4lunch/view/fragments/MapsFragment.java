@@ -113,8 +113,8 @@ public class MapsFragment extends Fragment implements LocationListener {
                     lMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
                             new Observer<Boolean>() {
                                 @Override
-                                public void onChanged(Boolean pNotExist) {
-                                    if (pNotExist) {
+                                public void onChanged(Boolean pExist) {
+                                    if (!pExist) {
                                         lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
                                                 .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
                                                     @Override

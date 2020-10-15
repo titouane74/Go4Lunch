@@ -7,11 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
 
@@ -24,12 +29,15 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private ImageView mRestoNote2;
     private ImageView mRestoNote3;
     private ImageView mRestoImage;
+    private FloatingActionButton mRestoBtnFloatFavorite;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout ;
+    private Toolbar mToolbarDetail;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_detail);
+        setContentView(R.layout.activity_restaurant);
 
         mRestoName = findViewById(R.id.text_restaurant_detail_name);
         mRestoNote1 = findViewById(R.id.img_detail_note1);
@@ -37,6 +45,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoNote3 = findViewById(R.id.img_detail_note3);
         mRestoAddress = findViewById(R.id.text_restaurant_detail_address);
         mRestoImage = findViewById(R.id.img_restaurant_detail);
+        mRestoBtnFloatFavorite = findViewById(R.id.btn_restaurant_detail_float_favorite);
+        mCollapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
+//        mToolbarDetail = findViewById(R.id.toolbar_detail);
 
         getIncomingIntent();
 
@@ -79,15 +90,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 break;
         }
 
-/*
-        Log.d(TAG_DET_RESTO, "setInfoRestaurant: " + pRestaurant.getRestoPhotoUrl());
         if (pRestaurant.getRestoPhotoUrl() != null ) {
-            Glide.with(this)
-                    .asBitmap()
+            Glide.with(RestaurantDetailActivity.this)
                     .load(pRestaurant.getRestoPhotoUrl())
+                    .apply(RequestOptions.centerCropTransform())
                     .into(mRestoImage);
         }
-*/
 
     }
 }
