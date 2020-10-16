@@ -3,7 +3,6 @@ package com.fleb.go4lunch.view.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,8 +18,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
-
-    private static final String TAG_DET_RESTO = "TAG_DET_RESTO";
 
     private Restaurant mRestaurant;
     private TextView mRestoName;
@@ -71,19 +68,15 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 pRestaurant.getRestoRating());
         switch (lnbStarToDisplay) {
             case 1:
-                Log.d(TAG_DET_RESTO, "setInfoRestaurant: 2 stars to hide : " );
                 mRestoNote2.setVisibility(View.INVISIBLE);
                 mRestoNote3.setVisibility(View.INVISIBLE);
                 break;
             case 2:
-                Log.d(TAG_DET_RESTO, "setInfoRestaurant: 1 star to hide : " );
                 mRestoNote3.setVisibility(View.INVISIBLE);
                 break;
             case 3:
-                Log.d(TAG_DET_RESTO, "setInfoRestaurant: no star to hide : " );
                 break;
             default:
-                Log.d(TAG_DET_RESTO, "setInfoRestaurant: 3 stars to hide : " );
                 mRestoNote1.setVisibility(View.INVISIBLE);
                 mRestoNote2.setVisibility(View.INVISIBLE);
                 mRestoNote3.setVisibility(View.INVISIBLE);

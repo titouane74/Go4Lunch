@@ -58,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_restaurant_address"
         android:layout_marginTop="@dimen/margin_vertical_between_item_description"
-        android:text="@string/text_resto_list_opening"
         android:textColor="@color/colorTextRestaurantInformation"
         android:textSize="@dimen/text_size_item_description"
         app:layout_constraintStart_toStartOf="parent"

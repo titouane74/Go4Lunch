@@ -81,12 +81,16 @@
     <string name="text_resto_list_address">French - 12 rue du Faubourg Poissonnière</string>
     <string name="text_resto_list_distance">12 m</string>
     <string name="text_resto_list_nb_workmate">2</string>
-    <string name="text_resto_list_opening">Open until 2.30pm</string>
     <string name="text_resto_list_clos">Clos</string>
     <string name="max_level_one_star">1.67</string>
     <string name="max_level_two_star">3.34</string>
     <string name="max_level_three_star">5</string>
     <string name="nb_star">3</string>
+    <string name="text_resto_closed">Closed</string>
+    <string name="text_resto_closed_today">Closed today</string>
+    <string name="text_resto_closed_open_at">Closed. Open at</string>
+    <string name="text_resto_open_until">Open until</string>
+
     <!-- WORKMATE LIST -->
     <string name="text_workmate_not_decided">hasn\'t decided yet</string>
     <string name="text_workmate_eating">is eating</string>

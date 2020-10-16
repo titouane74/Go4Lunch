@@ -35,9 +35,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
     private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private static final String TAG_WEEKDAY = "TAG_WEEKDAY";
+    private static final String TAG_STATUS = "TAG_STATUS";
     private List<Restaurant> mRestoList;
     private double mLatitude = 48.8236549;
     private double mLongitude = 2.4102578;
+
+    private int mOpen = 0;
+    private int mClose = 0;
+    private int mNumService = 1;
+    private DayOpeningHours.DayService mService = new DayOpeningHours.DayService();
 
     public void setRestoList(List<Restaurant> pRestoList) {
         mRestoList = pRestoList;
@@ -74,7 +80,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         if (mRestoList.get(position).getRestoOpeningHours() != null) {
 
-            DayOpeningHours lOpeningStatus = getRestaurantOpeningHoursStatus(mRestoList.get(position));
+            DayOpeningHours lOpeningStatus = getRestaurantOpeningHoursStatus(lContext, mRestoList.get(position));
             if (lOpeningStatus.isDayIsOpen()) {
                 pRestoHolder.mRestoOpening.setText(lOpeningStatus.getDayDescription());
                 pRestoHolder.mRestoOpening.setTextColor(lContext.getResources().getColor(R.color.colorTextBlack));
@@ -86,16 +92,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             }
 
         }
-/*        if (mRestoList.get(position).getRestoOpening() != null) {
-            lOpening = mRestoList.get(position).getRestoOpening();
-            pRestoHolder.mRestoOpening.setText(lOpening);
-            if (lOpening.contains(lContext.getResources().getString(R.string.text_resto_list_clos))) {
-                pRestoHolder.mRestoOpening.setTextColor(lContext.getResources().getColor(R.color.colorTextRed));
-                pRestoHolder.mRestoOpening.setTypeface(null, Typeface.BOLD);
-            } else {
-                pRestoHolder.mRestoOpening.setTypeface(null, Typeface.ITALIC);
-            }
-        }*/
 
         int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(lContext,
                 mRestoList.get(position).getRestoRating());
@@ -139,53 +135,173 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         });
     }
 
-    private DayOpeningHours getRestaurantOpeningHoursStatus(Restaurant pRestaurant) {
-        String lOpeningStatus = null;
-        RestaurantDetailPojo.OpeningHours lOpeningHours = pRestaurant.getRestoOpeningHours();
-        int lIndexDay = 0;
-        int lOpen, lClose = 0;
-        int lNumService = 1;
-        List<DayOpeningHours> lDayOpeningHours = new ArrayList<>();
+    private DayOpeningHours getRestaurantOpeningHoursStatus(Context pContext, Restaurant pRestaurant) {
+
+        int lIndexDay, lIndexNextDay = 0;
+
+        RestaurantDetailPojo.OpeningHours lRestoHoursList = pRestaurant.getRestoOpeningHours();
+        List<DayOpeningHours> lDayHourList = new ArrayList<>();
         DayOpeningHours lStatus = new DayOpeningHours();
 
         //Get the current number day
         // -1 is for corresponding to the period which start on a sunday with a 0 value
         lIndexDay = Go4LunchHelper.getCurrentDayInt() - 1;
+        lIndexNextDay = lIndexDay + 1;
 
-        int lMaxPeriod = lOpeningHours.getPeriods().size();
+        //Get the list of the opening hours of the current day and the next day
+        if(lRestoHoursList.getPeriods().size()>0) {
+            lDayHourList = getOpeningHourOfTheCurrentAndNextDay(lRestoHoursList, lIndexDay, lIndexNextDay);
+
+            lStatus.setDayIsOpen(false);
+            lStatus.setDayNumber(lIndexDay);
+
+            //Compare the current time to the opening hours to determine the status of the restaurant : open or closed
+            lStatus = getRestaurantStatusDescription(pContext, lDayHourList, lStatus);
+        }
+        return lStatus;
+    }
+
+    private List<DayOpeningHours> getOpeningHourOfTheCurrentAndNextDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
+                                                                       int pIndexDay, int pIndexNextDay) {
+        List<DayOpeningHours> lDayHourList = new ArrayList<>();
+
+        int lNumService = 1;
+        int lOpeningDay = 9;
+
+        int lMaxPeriod = pRestoHoursList.getPeriods().size();
 
         //Get the opening hours of the day and the next day
         for (int lIndexList = 0; lIndexList < lMaxPeriod; lIndexList++) {
-            if ((lOpeningHours.getPeriods().get(lIndexList).getOpen().getDay() == lIndexDay)
-                    || (lOpeningHours.getPeriods().get(lIndexList).getOpen().getDay() == lIndexDay + 1))
-            {
-                lOpen = Integer.parseInt(lOpeningHours.getPeriods().get(lIndexList).getOpen().getTime());
-                lClose = Integer.parseInt(lOpeningHours.getPeriods().get(lIndexList).getClose().getTime());
-                lDayOpeningHours.add(new DayOpeningHours(lIndexDay, lNumService, lOpen, lClose, false, null));
+            if ((pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexDay)
+                    || (pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexNextDay)
+                && lNumService<4) {
+
+                if (pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexDay) {
+                    lOpeningDay = pIndexDay;
+                } else if (pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexNextDay){
+                    lOpeningDay = pIndexNextDay;
+                }
+
+                DayOpeningHours.DayService lService = new DayOpeningHours.DayService(lNumService,
+                        Integer.parseInt(pRestoHoursList.getPeriods().get(lIndexList).getClose().getTime()),
+                        Integer.parseInt(pRestoHoursList.getPeriods().get(lIndexList).getOpen().getTime()),
+                        lOpeningDay);
+
+                lDayHourList.add(new DayOpeningHours(
+                        lOpeningDay,
+                        lNumService,
+                        lService,
+                        Integer.parseInt(pRestoHoursList.getPeriods().get(lIndexList).getOpen().getTime()),
+                        Integer.parseInt(pRestoHoursList.getPeriods().get(lIndexList).getClose().getTime()),
+                        false,
+                        null));
                 lNumService++;
             }
         }
 
+        return lDayHourList;
+    }
+
+    private DayOpeningHours getRestaurantStatusDescription(Context pContext,List<DayOpeningHours> pDayHourList, DayOpeningHours pStatus) {
+        int lTime = 0;
+        int lCase = 0;
+
+        DayOpeningHours.DayService lService1 = new DayOpeningHours.DayService();
+        DayOpeningHours.DayService lService2 = new DayOpeningHours.DayService();
+        DayOpeningHours.DayService lService3 = new DayOpeningHours.DayService();
+
         //Get the current time
         int lCurrentTime = Go4LunchHelper.getCurrentTime();
 
-        //Compare the current time to the opening hours to determine the status of the restaurant : open or closed
-        for(DayOpeningHours lDay: lDayOpeningHours) {
-            if((lDay.getDayOpenHour() < lCurrentTime) && (lCurrentTime<lDay.getDayCloseHour())) {
-                Log.d(TAG_WEEKDAY, "getRestaurantOpeningHoursStatus: Ouvert " + lDay.getDayOpenHour()
-                        +" < " + lCurrentTime +" < " + lDay.getDayCloseHour());
-                lStatus = new DayOpeningHours(lDay.getDayNumber(),
-                        lDay.getDayNumService(), lDay.getDayOpenHour(), lDay.getDayCloseHour(),
-                        true, "Ouvert");
-            } else {
-                Log.d(TAG_WEEKDAY, "getRestaurantOpeningHoursStatus: Fermé " + lDay.getDayOpenHour()
-                        +" < " + lCurrentTime +" < " + lDay.getDayCloseHour());
-                lStatus = new DayOpeningHours(lDay.getDayNumber(),
-                        lDay.getDayNumService(), lDay.getDayOpenHour(), lDay.getDayCloseHour(),
-                        false, "Fermé");            }
+        //Identificate the number of services
+        int lNbMaxService = pDayHourList.size();
+        switch (lNbMaxService) {
+            case 0:
+                lCase = 0; //Close today
+            case 1:
+                lService1 = pDayHourList.get(0).getDayService();
+                break;
+            case 2:
+                lService1 = pDayHourList.get(0).getDayService();
+                lService2 = pDayHourList.get(1).getDayService();
+                break;
+            case 3:
+                lService1 = pDayHourList.get(0).getDayService();
+                lService2 = pDayHourList.get(1).getDayService();
+                lService3 = pDayHourList.get(2).getDayService();
+                break;
+            default:
+                lCase = 0;
         }
 
-        return lStatus;
+        if (((lNbMaxService == 1) && (lService1.getCloseTime() < lCurrentTime))
+            // 1 && 2030 < 2200
+            || ((lNbMaxService == 2) && (lService2.getCloseTime() < lCurrentTime))
+            // 2 && 2145 < 2300
+        ) {
+            lCase = 1; //Closed
+        } else if ((lCurrentTime < lService1.getOpenTime())
+                // 1 && 0500 < 0700
+                // 2 && 0500 < 1200
+                // 3 && 0500 < 1200
+            ) {
+            lCase = 2; //Closed. Open at
+            lTime = lService1.getOpenTime();
+        } else if (((lNbMaxService == 2) || (lNbMaxService == 3))
+                && (lService1.getCloseTime() < lCurrentTime) && (lCurrentTime < lService2.getOpenTime())
+                // 2 && 1345 < 1500 && 1500 < 1930
+                // 3 && 1430 < 1500 && 1500 < 1900
+        ) {
+            lCase = 2; //Closed. Open at
+            lTime = lService2.getOpenTime();
+        } else if ((lNbMaxService == 3) &&
+                ((lService2.getCloseTime() < lCurrentTime) && (lService3.getOpenTime() < lService2.getCloseTime()))
+                // 3 && 2230 < 2300
+                || ((lCurrentTime < lService3.getOpenTime()) && (lService3.getOpenTime() < lService2.getCloseTime()))
+                // 3 && 0100 < 1200
+        ) {
+            lCase = 2; //Closed. Open at
+            lTime = lService3.getOpenTime();
+
+        } else if ((lService1.getOpenTime() < lCurrentTime) && (lCurrentTime < lService1.getCloseTime())
+        )  {
+            //1 && 0700 < 1200 && 1200 < 2030
+            //2 && 1200 < 1300 && 1300 < 1345
+            //3 && 1200 < 1300 && 1300 < 1430
+            lCase = 3; //Open until
+            lTime = lService1.getCloseTime();
+            pStatus.setDayIsOpen(true);
+        } else if (((lNbMaxService == 2) || (lNbMaxService == 3))
+                && (lService2.getOpenTime() < lCurrentTime) && (lCurrentTime < lService2.getCloseTime())) {
+            //2 && 1930 < 2000 && 2000 < 2145
+            //3 && 1900 < 2000 && 2000 < 2230
+            lCase = 3; //Open. Closed at
+            lTime = lService2.getCloseTime();
+            pStatus.setDayIsOpen(true);
+        } else {
+            lCase = 1; //Closed
+        }
+
+        //Determine the text description in function of the case
+        String lStringTime = Go4LunchHelper.getCurrentTimeFormatted(lTime);
+        pStatus.setDayDescription(getTextDescription(pContext, lCase, lStringTime));
+
+        return pStatus;
+    }
+
+    private String getTextDescription(Context pContext, int pCase, String pTime) {
+        switch (pCase) {
+            case 0:
+                return pContext.getResources().getString(R.string.text_resto_closed_today);
+            case 1:
+                return pContext.getResources().getString(R.string.text_resto_closed);
+            case 2:
+                return pContext.getResources().getString(R.string.text_resto_closed_open_at) + " " + pTime;
+            case 3:
+                return pContext.getResources().getString(R.string.text_resto_open_until) + " " + pTime;
+            default:
+                return "";
+        }
     }
 
     @Override

@@ -71,41 +71,26 @@ public class Go4LunchHelper {
     }
 
     public static int getCurrentDayInt() {
-        String TAG_WEEKDAY = "TAG_WEEKDAY";
-
         String[] weekdays = new DateFormatSymbols(Locale.FRANCE).getWeekdays();
         Calendar c = Calendar.getInstance();
         Date date = new Date();
         c.setTime(date);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        System.out.println(dayOfWeek);
-        System.out.println(weekdays[dayOfWeek]);
-        Log.d(TAG_WEEKDAY, "getCurrentDay: " + dayOfWeek);
 
-        return dayOfWeek;
-    }
-
-    public static String getCurrentDayText() {
-        String TAG_WEEKDAY = "TAG_WEEKDAY";
-
-        String[] weekdays = new DateFormatSymbols(Locale.FRANCE).getWeekdays();
-        Calendar c = Calendar.getInstance();
-        Date date = new Date();
-        c.setTime(date);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        System.out.println(dayOfWeek);
-        System.out.println(weekdays[dayOfWeek]);
-        Log.d(TAG_WEEKDAY, "getCurrentDay: " + weekdays[dayOfWeek]);
-
-        return weekdays[dayOfWeek];
+        return c.get(Calendar.DAY_OF_WEEK);
     }
 
     public static int getCurrentTime() {
-        String TAG_WEEKDAY = "TAG_WEEKDAY";
-
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-
         return Integer.parseInt(sdf.format(new Date()));
     }
+
+    public static String getCurrentTimeFormatted(int pTime) {
+
+        @SuppressLint("DefaultLocale")
+        String lResult = String.format("%02d:%02d", pTime / 100, pTime % 100);
+
+        return lResult;
+    }
+
 }
