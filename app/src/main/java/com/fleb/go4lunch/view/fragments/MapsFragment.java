@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.viewmodel.map.MapViewModel;
 import com.fleb.go4lunch.viewmodel.map.MapViewModelFactory;
@@ -92,9 +93,9 @@ public class MapsFragment extends Fragment implements LocationListener {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
 
-//            configViewModel(requireContext(), mLatitude, mLongitude);
-            configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(),  mCurrentLocation.getLongitude()), mZoom);
+
+// TODO PHONE to activate with phone (for each connection) and emulator (for first connection)
+            saveLocation(Go4LunchHelper.setCurrentLocation(mLatitude,mLongitude));
         }
     };
 
@@ -114,11 +115,13 @@ public class MapsFragment extends Fragment implements LocationListener {
                             new Observer<Boolean>() {
                                 @Override
                                 public void onChanged(Boolean pExist) {
+                                    Log.d(TAG_MAP, "onChanged ConfigVM: ExistInFireStore");
                                     if (!pExist) {
                                         lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
                                                 .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
                                                     @Override
                                                     public void onChanged(Restaurant pRestaurant) {
+                                                        Log.d(TAG_MAP, "onChanged ConfigVM: getGoogleRestoDetail and save to Firestore");
                                                         lMapViewModel.saveFirestoreRestaurant(pRestaurant);
                                                     }
                                                 });
@@ -133,6 +136,8 @@ public class MapsFragment extends Fragment implements LocationListener {
         });
     }
 
+//TODO point to see in mentorat session
+/*
     public void restaurantExistInFirestore(List<Restaurant> pRestaurantList) {
         if (pRestaurantList != null) {
             Log.d(TAG_MAP, "restaurantExistInFirestore " + pRestaurantList.size());
@@ -160,14 +165,14 @@ public class MapsFragment extends Fragment implements LocationListener {
                 });
 
     }
+*/
 
-/*    public void saveLocation(Location pLocation) {
+    public void saveLocation(Location pLocation) {
         mCurrentLocation = pLocation;
 
-        //TODO to active when it's for the emulator
-        //configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        //setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
-    }*/
+        configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
+    }
 
     private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
         Log.d(TAG_MAP, "moveCamera: ");
@@ -232,6 +237,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         try {
             mLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
             if (mLocationManager != null) {
+                //If timer is set to 0, the emulator is going on the onLocationChanged directly
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
             }
         } catch (SecurityException securityException) {
@@ -241,12 +247,11 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     @SuppressWarnings("MissingPermission")
     private void getLastLocation() {
-        mFusedLocationClient.getLastLocation()
+/*        mFusedLocationClient.getLastLocation()
                 .addOnCompleteListener(requireActivity(), new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
-//                            saveLocation(task.getResult());
                             mCurrentLocation = task.getResult();
                             Log.d(TAG_MAP, "onComplete:currentlocation " + mCurrentLocation.getLatitude() +","+mCurrentLocation.getLongitude());
 
@@ -257,19 +262,26 @@ public class MapsFragment extends Fragment implements LocationListener {
                 });
 
         Log.d(TAG_MAP, "getLastLocation: FusedLocationClient hors oncomplete " + mCurrentLocation);
+*/
 
-        LocationManager lLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
-        if (lLocationManager != null) {
-            lLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
-            mLastLocationKnown = lLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Log.d(TAG_MAP, "getLastLocation: " + mLatitude + "," + mLongitude);
-            mLatitude = mLastLocationKnown != null ? mLastLocationKnown.getLatitude() : mLatitude;
-            mLongitude = mLastLocationKnown != null ? mLastLocationKnown.getLongitude() : mLongitude;
-            Log.d(TAG_MAP, "getLastLocation: lastknown" + mLatitude + "," + mLongitude);
-            String lText = "Initial location" + mLatitude + "," + mLongitude;
-            Toast.makeText(getContext(), lText, Toast.LENGTH_SHORT).show();
-            mCurrentLocation = mLastLocationKnown;
-            lLocationManager.removeUpdates(this);
+        try {
+            LocationManager lLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
+            if (lLocationManager != null) {
+                //If timer is set to 0, the emulator is going on the onLocationChanged directly
+                lLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
+                mLastLocationKnown = lLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                Log.d(TAG_MAP, "getLastLocation: " + mLatitude + "," + mLongitude);
+
+                mLatitude = mLastLocationKnown != null ? mLastLocationKnown.getLatitude() : mLatitude;
+                mLongitude = mLastLocationKnown != null ? mLastLocationKnown.getLongitude() : mLongitude;
+
+                Log.d(TAG_MAP, "getLastLocation: lastknown" + mLatitude + "," + mLongitude);
+
+                mCurrentLocation = mLastLocationKnown;
+            }
+        } catch (SecurityException securityException) {
+            Log.d("TAG", "getLastLocation: ", securityException);
         }
 
     }
@@ -283,6 +295,7 @@ public class MapsFragment extends Fragment implements LocationListener {
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else {
             mLastLocationKnown = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            //getCurrentLocation();
         }
     }
 
@@ -290,13 +303,13 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public void onResume() {
         super.onResume();
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mLocationManager.removeUpdates(this);
+        //mLocationManager.removeUpdates(this);
     }
 
     /**
@@ -309,14 +322,16 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG_MAP, "onLocationChanged: ");
-//        saveLocation(location);
+
+        saveLocation(location);
         mCurrentLocation = location;
         mLatitude = location.getLatitude();
         mLongitude = location.getLongitude();
-        String lText = "New location " + mLatitude + "," + mLongitude;
-        Toast.makeText(getContext(), lText, Toast.LENGTH_SHORT).show();
-        LatLng latLng = new LatLng(mLatitude, mLongitude);
+
+        Log.d(TAG_MAP, "onLocationChanged: " + mLatitude + "," + mLongitude);
+        //String lText = "New location " + mLatitude + "," + mLongitude;
+        //Toast.makeText(getContext(), lText, Toast.LENGTH_SHORT).show();
+        LatLng latLng = new LatLng(mLatitude,mLongitude);
         setCameraOnCurrentLocation(latLng, mZoom);
     }
 
