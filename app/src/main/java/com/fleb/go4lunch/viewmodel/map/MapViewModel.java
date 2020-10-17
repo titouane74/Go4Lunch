@@ -30,8 +30,11 @@ public class MapViewModel extends ViewModel {
 
     public LiveData<List<Restaurant>> getRestaurantList() {
         Log.d("TAG_VM", "getRestoList: return list");
+        //mRepository.blabla();
         return mLDRestoList;
     }
+
+    // methode void SaveLocation -> remonte au repo
 
     public LiveData<Boolean> restaurantExistInFirestore(Restaurant pRestaurant) {
         return mRepository.restaurantExistInFirestore(pRestaurant);

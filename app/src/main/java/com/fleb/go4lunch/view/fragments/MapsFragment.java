@@ -2,8 +2,8 @@ package com.fleb.go4lunch.view.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -22,26 +22,33 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
+import com.fleb.go4lunch.viewmodel.map.MapViewModel;
+import com.fleb.go4lunch.viewmodel.map.MapViewModelFactory;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
-    public static final String TAG_MAP = "TAG_MAP";
     private static final int PERMISSION_REQUEST_CODE = 1;
     private int mZoom;
-
+    public static final String TAG_MAP = " TAG_MAP";
     private GoogleMap mMap;
     private double mLatitude;
     private double mLongitude;
@@ -63,26 +70,14 @@ public class MapsFragment extends Fragment implements LocationListener {
          */
         @SuppressLint("MissingPermission")
         @Override
-        public void onMapReady(GoogleMap googleMap) {
-
+        public void onMapReady(GoogleMap googleMap) throws Resources.NotFoundException {
             mMap = googleMap;
-            Context lContext = requireContext();
 
             if (checkPermissions()) {
                 mMap.setMyLocationEnabled(true);
             }
 
-            try {
-                boolean success = googleMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(
-                                lContext, R.raw.style_json));
-                if (!success) {
-                    Log.e(TAG_MAP, "Style parsing failed.");
-                }
-            } catch (Resources.NotFoundException e) {
-                Log.e(TAG_MAP, "Can't find style. Error: ", e);
-            }
-
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.style_json));
         }
     };
 
@@ -98,16 +93,15 @@ public class MapsFragment extends Fragment implements LocationListener {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         if (!checkPermissions()) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), ACCESS_FINE_LOCATION)) {
+            if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
                 // Display a dialog with rationale.
                 PermissionUtils.RationaleDialog.newInstance(PERMISSION_REQUEST_CODE, true)
                         .show(requireActivity().getSupportFragmentManager(), "dialog");
             } else {
                 // Location permission has not been granted yet, request it.
-                ActivityCompat.requestPermissions(requireActivity(), new String[]{ACCESS_FINE_LOCATION},
+                requestPermissions(new String[]{ACCESS_FINE_LOCATION},
                         PERMISSION_REQUEST_CODE);
             }
-
         } else {
             getCurrentLocation();
         }
@@ -123,16 +117,61 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
+    public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
+
+        MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
+
+        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
+            if (pRestaurantList != null)
+
+                for (Restaurant pRestaurant : pRestaurantList) {
+
+                    lMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
+                            pExist -> {
+                                Log.d(TAG_MAP, "onChanged ConfigVM: ExistInFireStore");
+                                if (!pExist) {
+                                    lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
+                                            .observe(getViewLifecycleOwner(), pRestaurant1 -> {
+                                                Log.d(TAG_MAP, "onChanged ConfigVM: getGoogleRestoDetail and save to Firestore");
+                                                lMapViewModel.saveFirestoreRestaurant(pRestaurant1);
+                                            });
+                                }
+                            });
+                }
+            if (pRestaurantList != null) {
+                setMapMarkers(pRestaurantList);
+            }
+        });
+    }
+
+    public void setMapMarkers(List<Restaurant> pRestaurants) {
+
+        BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+
+        Log.d("TAG_GETRESTO", "setMapMarkers: response size" + pRestaurants.size());
+
+        for (Restaurant restaurant : pRestaurants) {
+
+            String lName = restaurant.getRestoName();
+            String lAddress = restaurant.getRestoAddress();
+
+            LatLng latLng = new LatLng(restaurant.getRestoLocation().getLat(),
+                    restaurant.getRestoLocation().getLng());
+            mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(lName + " : " + lAddress)
+                    .icon(lIcon));
+        }
+    }
+
+
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
-
         Task<Location> task = mFusedLocationClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    saveLocation(location);
-                }
+        task.addOnSuccessListener(location -> {
+            if (location != null) {
+                saveLocation(location);
             }
         });
 
@@ -146,9 +185,10 @@ public class MapsFragment extends Fragment implements LocationListener {
         mCurrentLocation = pLocation;
         mLongitude = pLocation.getLongitude();
         mLatitude = pLocation.getLatitude();
-        mLatLng = new LatLng(pLocation.getLatitude(), pLocation.getLongitude());
+        mLatLng = new LatLng(mLatitude, mLongitude);
 
-        setCameraOnCurrentLocation(new LatLng(pLocation.getLatitude(), pLocation.getLongitude()), mZoom);
+        configViewModel(requireContext(), mLatitude, mLongitude);
+        setCameraOnCurrentLocation(mLatLng, mZoom);
     }
 
     private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
@@ -205,7 +245,7 @@ public class MapsFragment extends Fragment implements LocationListener {
      * Manage the permissions access for the location and the camera
      */
     private boolean checkPermissions() {
-        int lPermissionLocation = ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION);
+        int lPermissionLocation = checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION);
 
         return lPermissionLocation == PackageManager.PERMISSION_GRANTED;
     }
@@ -226,6 +266,7 @@ public class MapsFragment extends Fragment implements LocationListener {
      *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
      * @see #requestPermissions(String[], int)
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -235,19 +276,14 @@ public class MapsFragment extends Fragment implements LocationListener {
             //grantResults[0] -> Permission for the location
             if (grantResults.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
                     getCurrentLocation();
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
-                            showMessageOKCancel("You need to allow access the permission",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            requestPermissions(new String[]{ACCESS_FINE_LOCATION},
-                                                    PERMISSION_REQUEST_CODE);
-                                        }
-                                    });
-
+                            showMessageOKCancel(requireContext().getString(R.string.permission_required_toast),
+                                    (dialog, which) -> requestPermissions(new String[]{ACCESS_FINE_LOCATION},
+                                            PERMISSION_REQUEST_CODE));
                         }
                     }
                 }
@@ -262,6 +298,7 @@ public class MapsFragment extends Fragment implements LocationListener {
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
+
     }
 
 }
