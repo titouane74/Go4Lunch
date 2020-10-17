@@ -2,64 +2,54 @@ package com.fleb.go4lunch.view.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
-import com.fleb.go4lunch.viewmodel.map.MapViewModel;
-import com.fleb.go4lunch.viewmodel.map.MapViewModelFactory;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.List;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
     public static final String TAG_MAP = "TAG_MAP";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    public static final String TAG_GETRESTO = "TAG_GETRESTO";
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private int mZoom;
 
     private GoogleMap mMap;
-    private double mLatitude = 48.8236549;
-    private double mLongitude = 2.4102578;
+    private double mLatitude;
+    private double mLongitude;
+    private LatLng mLatLng;
     private Location mCurrentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Location mLastLocationKnown;
     private LocationManager mLocationManager;
-    private MapViewModel mMapViewModel;
+    private SupportMapFragment mMapFragment;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
@@ -93,111 +83,8 @@ public class MapsFragment extends Fragment implements LocationListener {
                 Log.e(TAG_MAP, "Can't find style. Error: ", e);
             }
 
-
-// TODO PHONE to activate with phone (for each connection) and emulator (for first connection)
-            saveLocation(Go4LunchHelper.setCurrentLocation(mLatitude,mLongitude));
         }
     };
-
-    public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
-
-        MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
-
-        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
-            @Override
-            public void onChanged(List<Restaurant> pRestaurantList) {
-                if (pRestaurantList != null) Log.d(TAG_MAP, "onChanged:getrestaurantlist " + pRestaurantList.size());
-
-                for (Restaurant pRestaurant : pRestaurantList) {
-
-                    lMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
-                            new Observer<Boolean>() {
-                                @Override
-                                public void onChanged(Boolean pExist) {
-                                    Log.d(TAG_MAP, "onChanged ConfigVM: ExistInFireStore");
-                                    if (!pExist) {
-                                        lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
-                                                .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
-                                                    @Override
-                                                    public void onChanged(Restaurant pRestaurant) {
-                                                        Log.d(TAG_MAP, "onChanged ConfigVM: getGoogleRestoDetail and save to Firestore");
-                                                        lMapViewModel.saveFirestoreRestaurant(pRestaurant);
-                                                    }
-                                                });
-                                    }
-                                }
-                            });
-                }
-
-//                restaurantExistInFirestore(pRestaurantList);
-                setMapMarkers(pRestaurantList);
-            }
-        });
-    }
-
-//TODO point to see in mentorat session
-/*
-    public void restaurantExistInFirestore(List<Restaurant> pRestaurantList) {
-        if (pRestaurantList != null) {
-            Log.d(TAG_MAP, "restaurantExistInFirestore " + pRestaurantList.size());
-            for (Restaurant pRestaurant : pRestaurantList) {
-                mMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
-                        new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(Boolean pNotExist) {
-                                if (pNotExist) {
-                                    getGoogleRestaurantDetail(pRestaurant);
-                                }
-                            }
-                        });
-            }
-        }
-    }
-
-    public void getGoogleRestaurantDetail(Restaurant pRestaurant) {
-        mMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
-                .observe(getViewLifecycleOwner(), new Observer<Restaurant>() {
-                    @Override
-                    public void onChanged(Restaurant pRestaurant) {
-                        mMapViewModel.saveFirestoreRestaurant(pRestaurant);
-                    }
-                });
-
-    }
-*/
-
-    public void saveLocation(Location pLocation) {
-        mCurrentLocation = pLocation;
-
-        configViewModel(requireContext(), mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        setCameraOnCurrentLocation(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()),mZoom);
-    }
-
-    private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
-        Log.d(TAG_MAP, "moveCamera: ");
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-    }
-
-    public void setMapMarkers(List<Restaurant> pRestaurants) {
-
-        BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
-
-        Log.d(TAG_GETRESTO, "setMapMarkers: response size" + pRestaurants.size());
-
-        for (Restaurant restaurant : pRestaurants) {
-
-            String lName = restaurant.getRestoName();
-            String lAddress = restaurant.getRestoAddress();
-
-            LatLng latLng = new LatLng(restaurant.getRestoLocation().getLat(),
-                    restaurant.getRestoLocation().getLng());
-            mMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title(lName + " : " + lAddress)
-                    .icon(lIcon));
-        }
-    }
 
     @SuppressLint("MissingPermission")
     @Nullable
@@ -208,13 +95,20 @@ public class MapsFragment extends Fragment implements LocationListener {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
 
         mZoom = Integer.parseInt(getString(R.string.map_zoom));
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         if (!checkPermissions()) {
-            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), ACCESS_FINE_LOCATION)) {
+                // Display a dialog with rationale.
+                PermissionUtils.RationaleDialog.newInstance(PERMISSION_REQUEST_CODE, true)
+                        .show(requireActivity().getSupportFragmentManager(), "dialog");
+            } else {
+                // Location permission has not been granted yet, request it.
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{ACCESS_FINE_LOCATION},
+                        PERMISSION_REQUEST_CODE);
+            }
+
         } else {
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-            getLastLocation();
             getCurrentLocation();
         }
         return lView;
@@ -223,93 +117,42 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
+        mMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mMapFragment != null) {
+            mMapFragment.getMapAsync(callback);
         }
     }
 
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
 
-        try {
-            mLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
-            if (mLocationManager != null) {
-                //If timer is set to 0, the emulator is going on the onLocationChanged directly
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
+        Task<Location> task = mFusedLocationClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    saveLocation(location);
+                }
             }
-        } catch (SecurityException securityException) {
-            Log.d("TAG", "getCurrentLocation: ", securityException);
+        });
+
+        mLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
+        if (mLocationManager != null) {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
         }
     }
 
-    @SuppressWarnings("MissingPermission")
-    private void getLastLocation() {
-/*        mFusedLocationClient.getLastLocation()
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            mCurrentLocation = task.getResult();
-                            Log.d(TAG_MAP, "onComplete:currentlocation " + mCurrentLocation.getLatitude() +","+mCurrentLocation.getLongitude());
+    public void saveLocation(Location pLocation) {
+        mCurrentLocation = pLocation;
+        mLongitude = pLocation.getLongitude();
+        mLatitude = pLocation.getLatitude();
+        mLatLng = new LatLng(pLocation.getLatitude(), pLocation.getLongitude());
 
-                        } else {
-                            Log.w(TAG_MAP, "getLastLocation:exception", task.getException());
-                        }
-                    }
-                });
-
-        Log.d(TAG_MAP, "getLastLocation: FusedLocationClient hors oncomplete " + mCurrentLocation);
-*/
-
-        try {
-            LocationManager lLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
-            if (lLocationManager != null) {
-                //If timer is set to 0, the emulator is going on the onLocationChanged directly
-                lLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
-                mLastLocationKnown = lLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                Log.d(TAG_MAP, "getLastLocation: " + mLatitude + "," + mLongitude);
-
-                mLatitude = mLastLocationKnown != null ? mLastLocationKnown.getLatitude() : mLatitude;
-                mLongitude = mLastLocationKnown != null ? mLastLocationKnown.getLongitude() : mLongitude;
-
-                Log.d(TAG_MAP, "getLastLocation: lastknown" + mLatitude + "," + mLongitude);
-
-                mCurrentLocation = mLastLocationKnown;
-            }
-        } catch (SecurityException securityException) {
-            Log.d("TAG", "getLastLocation: ", securityException);
-        }
-
+        setCameraOnCurrentLocation(new LatLng(pLocation.getLatitude(), pLocation.getLongitude()), mZoom);
     }
 
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!checkPermissions()) {
-            PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        } else {
-            mLastLocationKnown = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            //getCurrentLocation();
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onResume() {
-        super.onResume();
-        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //mLocationManager.removeUpdates(this);
+    private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
     /**
@@ -322,17 +165,7 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-
         saveLocation(location);
-        mCurrentLocation = location;
-        mLatitude = location.getLatitude();
-        mLongitude = location.getLongitude();
-
-        Log.d(TAG_MAP, "onLocationChanged: " + mLatitude + "," + mLongitude);
-        //String lText = "New location " + mLatitude + "," + mLongitude;
-        //Toast.makeText(getContext(), lText, Toast.LENGTH_SHORT).show();
-        LatLng latLng = new LatLng(mLatitude,mLongitude);
-        setCameraOnCurrentLocation(latLng, mZoom);
     }
 
 
@@ -368,10 +201,67 @@ public class MapsFragment extends Fragment implements LocationListener {
     public void onProviderDisabled(String provider) {
     }
 
+    /**
+     * Manage the permissions access for the location and the camera
+     */
     private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
+        int lPermissionLocation = ActivityCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION);
+
+        return lPermissionLocation == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Callback for the result from requesting permissions. This method
+     * is invoked for every call on {@link #requestPermissions(String[], int)}.
+     * <p>
+     * <strong>Note:</strong> It is possible that the permissions request interaction
+     * with the user is interrupted. In this case you will receive empty permissions
+     * and results arrays which should be treated as a cancellation.
+     * </p>
+     *
+     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
+     * @param permissions  The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
+     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
+     * @see #requestPermissions(String[], int)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            //IF PERMISSION GRANTED
+            //grantResults[0] -> Permission for the location
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getCurrentLocation();
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+                            showMessageOKCancel("You need to allow access the permission",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            requestPermissions(new String[]{ACCESS_FINE_LOCATION},
+                                                    PERMISSION_REQUEST_CODE);
+                                        }
+                                    });
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
     }
 
 }
