@@ -1,12 +1,12 @@
 package com.fleb.go4lunch.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -44,7 +44,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoImage = findViewById(R.id.img_restaurant_detail);
         mRestoBtnFloatFavorite = findViewById(R.id.btn_restaurant_detail_float_favorite);
         mCollapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
-//        mToolbarDetail = findViewById(R.id.toolbar_detail);
+        mToolbarDetail = findViewById(R.id.toolbar_detail);
 
         getIncomingIntent();
 
