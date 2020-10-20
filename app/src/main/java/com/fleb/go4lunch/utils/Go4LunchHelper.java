@@ -3,15 +3,12 @@ package com.fleb.go4lunch.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
-import android.view.View;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.RestaurantPojo;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;

@@ -24,6 +24,8 @@ import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,13 @@ import java.util.List;
  * Created by Florence LE BOURNOT on 26/09/2020
  */
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.RestaurantHolder> {
+
+    /**
+     * Firebase declarations
+     */
+    public static final String RESTO_COLLECTION = "Restaurant";
+    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+    private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
 
     private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private static final String TAG_WEEKDAY = "TAG_WEEKDAY";
@@ -62,7 +71,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     public void onBindViewHolder(@NonNull RestaurantHolder pRestoHolder, int position) {
 
         Context lContext = pRestoHolder.itemView.getContext();
-        String lOpening;
 
         //TODO à supprimer après avoir trouver la currentlocation
         Location lFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
@@ -137,7 +145,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
     private DayOpeningHours getRestaurantOpeningHoursStatus(Context pContext, Restaurant pRestaurant) {
 
-        int lIndexDay, lIndexNextDay = 0;
+        int lIndexDay = 0;
 
         RestaurantDetailPojo.OpeningHours lRestoHoursList = pRestaurant.getRestoOpeningHours();
         List<DayOpeningHours> lDayHourList = new ArrayList<>();
@@ -145,12 +153,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         //Get the current number day
         // -1 is for corresponding to the period which start on a sunday with a 0 value
-        lIndexDay = Go4LunchHelper.getCurrentDayInt() - 1;
-        lIndexNextDay = lIndexDay + 1;
+        lIndexDay = Go4LunchHelper.getCurrentDayInt() ;
 
         //Get the list of the opening hours of the current day and the next day
         if(lRestoHoursList.getPeriods().size()>0) {
-            lDayHourList = getOpeningHourOfTheCurrentAndNextDay(lRestoHoursList, lIndexDay, lIndexNextDay);
+            lDayHourList = getOpeningHourOfTheCurrentAndNextDay(lRestoHoursList, lIndexDay);
 
             lStatus.setDayIsOpen(false);
             lStatus.setDayNumber(lIndexDay);
@@ -162,24 +169,48 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     }
 
     private List<DayOpeningHours> getOpeningHourOfTheCurrentAndNextDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
-                                                                       int pIndexDay, int pIndexNextDay) {
+                                                                       int pIndexDay) {
         List<DayOpeningHours> lDayHourList = new ArrayList<>();
+        int lIndexDay;
+        int lIndexNextDay = 0;
+
+        lIndexDay = pIndexDay - 1;
+
+        if (lIndexDay < 6) {
+            lIndexNextDay = lIndexDay + 1;
+        }
 
         int lNumService = 1;
         int lOpeningDay = 9;
 
         int lMaxPeriod = pRestoHoursList.getPeriods().size();
+        int lRestoOpenDay = 0;
+        boolean isFisrtDayFound=false;
 
         //Get the opening hours of the day and the next day
         for (int lIndexList = 0; lIndexList < lMaxPeriod; lIndexList++) {
-            if ((pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexDay)
-                    || (pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexNextDay)
-                && lNumService<4) {
+            lRestoOpenDay = pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay();
+            lOpeningDay = lIndexDay;
+            if ((lRestoOpenDay == lIndexDay) || (lRestoOpenDay == lIndexNextDay) && lNumService<4) {
 
-                if (pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexDay) {
-                    lOpeningDay = pIndexDay;
-                } else if (pRestoHoursList.getPeriods().get(lIndexList).getOpen().getDay() == pIndexNextDay){
-                    lOpeningDay = pIndexNextDay;
+                if ((lRestoOpenDay == lIndexNextDay) && (isFisrtDayFound == false)) {
+                    //Insert Service for the current day is closed and next day open
+                        //Pas suffisant doit pas entré dans if 
+                        if ((lIndexList==0) && (lNumService==1)) {
+                        lDayHourList.add(new DayOpeningHours(
+                                lOpeningDay,
+                                lNumService,
+                                new DayOpeningHours.DayService(lNumService,
+                                        0,
+                                        0,
+                                        lOpeningDay),
+                                0,
+                                0,
+                                false,
+                                null));
+                        lNumService++;
+                    }
+                    lOpeningDay = lIndexNextDay;
                 }
 
                 DayOpeningHours.DayService lService = new DayOpeningHours.DayService(lNumService,
@@ -198,7 +229,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 lNumService++;
             }
         }
-
         return lDayHourList;
     }
 
@@ -214,10 +244,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         int lCurrentTime = Go4LunchHelper.getCurrentTime();
 
         //Identificate the number of services
-        int lNbMaxService = pDayHourList.size();
+        int lNbMaxService = 0;
+        if (pDayHourList.size() > 0) {
+            lNbMaxService = pDayHourList.size();
+        }
         switch (lNbMaxService) {
-            case 0:
-                lCase = 0; //Close today
             case 1:
                 lService1 = pDayHourList.get(0).getDayService();
                 break;
@@ -231,10 +262,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 lService3 = pDayHourList.get(2).getDayService();
                 break;
             default:
-                lCase = 0;
+                lCase = 0; //Close today
         }
 
-        if (((lNbMaxService == 1) && (lService1.getCloseTime() < lCurrentTime))
+        if ((lService1.getOpenTime() == 0) && (lService1.getCloseTime() == 0)) {
+            //lCase is by default at 0 in Closed today
+        } else if (((lNbMaxService == 1) && (lService1.getCloseTime() < lCurrentTime))
             // 1 && 2030 < 2200
             || ((lNbMaxService == 2) && (lService2.getCloseTime() < lCurrentTime))
             // 2 && 2145 < 2300
@@ -278,7 +311,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             lCase = 3; //Open. Closed at
             lTime = lService2.getCloseTime();
             pStatus.setDayIsOpen(true);
-        } else {
+        } else if (lNbMaxService != 0) {
             lCase = 1; //Closed
         }
 
@@ -303,6 +336,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 return "";
         }
     }
+
+/*    //private MutableLiveData<Boolean> mRestoFirestoreHours = new MutableLiveData<>();
+
+    public void getRestaurantFirestoreHours(Restaurant pRestaurant) {
+        Log.d(TAG_STATUS, "restaurantFirestoreHours " + pRestaurant.getRestoName());
+
+        mRestoRef.whereEqualTo("restoPlaceId",pRestaurant.getRestoPlaceId());
+        mRestoRef.whereArrayContainsAny("restoOpeningHours",);
+
+//        return mRestoFirestoreHours;
+    }*/
 
     @Override
     public int getItemCount() {

@@ -72,7 +72,6 @@ public class RestaurantRepository {
 
     private Date mFirestoreLastUpdate = new Date();
     private List<Restaurant> mRestoListDetail = new ArrayList<>();
-    private Restaurant mRestaurant;
 
     /*
         //meto void SaveLocation dans shared
