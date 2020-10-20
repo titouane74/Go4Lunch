@@ -75,7 +75,8 @@ public class Go4LunchHelper {
         Calendar c = Calendar.getInstance();
         Date date = new Date();
         c.setTime(date);
-
+        //TODO only for the change date
+        //c.add(Calendar.DATE,1);
         return c.get(Calendar.DAY_OF_WEEK);
     }
 

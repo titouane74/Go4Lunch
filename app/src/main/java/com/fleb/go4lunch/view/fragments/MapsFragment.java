@@ -122,27 +122,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
 
         MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
-            if (pRestaurantList != null)
-
-                for (Restaurant pRestaurant : pRestaurantList) {
-
-                    lMapViewModel.restaurantExistInFirestore(pRestaurant).observe(getViewLifecycleOwner(),
-                            pExist -> {
-                                Log.d(TAG_MAP, "onChanged ConfigVM: ExistInFireStore");
-                                if (!pExist) {
-                                    lMapViewModel.getGoogleRestaurantDetail(MapsFragment.this.getContext(), pRestaurant)
-                                            .observe(getViewLifecycleOwner(), pRestaurant1 -> {
-                                                Log.d(TAG_MAP, "onChanged ConfigVM: getGoogleRestoDetail and save to Firestore");
-                                                lMapViewModel.saveFirestoreRestaurant(pRestaurant1);
-                                            });
-                                }
-                            });
-                }
-            if (pRestaurantList != null) {
-                setMapMarkers(pRestaurantList);
-            }
-        });
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {

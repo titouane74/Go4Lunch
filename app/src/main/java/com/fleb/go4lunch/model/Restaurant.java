@@ -15,7 +15,6 @@ public class Restaurant implements Serializable {
     private String restoWebsite;
     private String restoDistance;
     private int restoNbWorkmates;
-    private String restoOpening;
     private double restoRating;
     private String restoPhotoUrl;
     private RestaurantPojo.Location restoLocation;
@@ -24,8 +23,8 @@ public class Restaurant implements Serializable {
     public Restaurant () {}
 
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
-                      String pRestoDistance, int pRestoNbWorkmates, String pRestoOpening, double pRestoRating, String pRestoPhotoUrl,
-        RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
+                      String pRestoDistance, int pRestoNbWorkmates, double pRestoRating, String pRestoPhotoUrl,
+                      RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
 
         restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
@@ -34,7 +33,7 @@ public class Restaurant implements Serializable {
         restoWebsite = pRestoWebsite;
         restoDistance = pRestoDistance;
         restoNbWorkmates = pRestoNbWorkmates;
-        restoOpening = pRestoOpening;
+
         restoRating = pRestoRating;
         restoPhotoUrl = pRestoPhotoUrl;
         restoLocation = pRestoLocation;
@@ -68,10 +67,6 @@ public class Restaurant implements Serializable {
     public int getRestoNbWorkmates() { return restoNbWorkmates; }
 
     public void setRestoNbWorkmates(int pRestoNbWorkmates) { restoNbWorkmates = pRestoNbWorkmates; }
-
-    public String getRestoOpening() { return restoOpening; }
-
-    public void setRestoOpening(String pRestoOpening) { restoOpening = pRestoOpening; }
 
     public double getRestoRating() { return restoRating; }
 
