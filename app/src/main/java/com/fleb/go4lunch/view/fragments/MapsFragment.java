@@ -25,7 +25,6 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.viewmodel.map.MapViewModel;
-import com.fleb.go4lunch.viewmodel.map.MapViewModelFactory;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -117,11 +116,12 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
-    public void configViewModel(Context pContext, Double pLatitude, Double pLongitude) {
+    public void configViewModel(Location pLocation) {
 
-        MapViewModelFactory lFactory = new MapViewModelFactory(pContext, pLatitude, pLongitude);
+        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
 
-        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity(), lFactory).get(MapViewModel.class);
+        lMapViewModel.saveLocationInSharedPreferences(pLocation);
+
         lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
     }
 
@@ -145,7 +145,6 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
-
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
         Task<Location> task = mFusedLocationClient.getLastLocation();
@@ -167,7 +166,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         mLatitude = pLocation.getLatitude();
         mLatLng = new LatLng(mLatitude, mLongitude);
 
-        configViewModel(requireContext(), mLatitude, mLongitude);
+        configViewModel(pLocation);
         setCameraOnCurrentLocation(mLatLng, mZoom);
     }
 

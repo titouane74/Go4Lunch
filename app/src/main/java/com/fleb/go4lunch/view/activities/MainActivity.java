@@ -24,12 +24,15 @@ import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.utils.PreferencesHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String WORKMATE_NAME_KEY = "workmateName";
     public static final String WORKMATE_PHOTO_URL_KEY = "workmatePhotoUrl";
     public static final String WORKMATE_COLLECTION = "Workmate";
+
+    public static final String PREF_KEY_RADIUS = "PREF_KEY_RADIUS";
+    public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
+    public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
 
     // Access a Cloud Firestore instance from your Activity
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
@@ -60,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initializeSharedPreferences();
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
@@ -79,6 +88,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void initializeSharedPreferences() {
+
+        PreferencesHelper.loadPreferences(MainActivity.this);
+        String lValueString;
+        int lValueInt;
+
+        if(mPreferences.getString(PREF_KEY_TYPE_GOOGLE_SEARCH,null) == null) {
+            lValueString = getString(R.string.type_search);
+            Log.d("TAG_PREFS", "initializeSharedPreferences: type " + lValueString);
+            PreferencesHelper.saveStringPreferences(PREF_KEY_TYPE_GOOGLE_SEARCH,lValueString);
+        }
+
+        if(mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS,null) == null) {
+            lValueString = getString(R.string.place_detail_fields);
+            Log.d("TAG_PREFS", "initializeSharedPreferences: fields " + lValueString);
+            PreferencesHelper.saveStringPreferences(PREF_KEY_PLACE_DETAIL_FIELDS,lValueString);
+        }
+
+        if(mPreferences.getInt(PREF_KEY_RADIUS,150) == 150) {
+            lValueInt = Integer.parseInt(getString(R.string.proximity_radius));
+            Log.d("TAG_PREFS", "initializeSharedPreferences: radius " + lValueInt);
+            PreferencesHelper.saveIntPreferences(PREF_KEY_RADIUS,lValueInt);
+        }
+
+    }
 
     /**
      * Suppress the super.onBackPressed because we don't want that the user can press Back

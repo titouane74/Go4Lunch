@@ -1,7 +1,6 @@
 package com.fleb.go4lunch.repository;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -9,13 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.BuildConfig;
-import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
+import com.fleb.go4lunch.utils.PreferencesHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -37,6 +36,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
+import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
+import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_PLACE_DETAIL_FIELDS;
+import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_RADIUS;
+import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_TYPE_GOOGLE_SEARCH;
 
 /**
  * Created by Florence LE BOURNOT on 13/10/2020
@@ -52,10 +55,12 @@ public class RestaurantRepository {
     public static final String RESTO_DATE_UPDATE_KEY = "restoLastUpdateList";
     public static final String RESTO_ID_LAST_UPD_COLL = "dateLastUpdateListResto";
 
+    private static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
+    private static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
+
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
     private CollectionReference mRestoLastUpdRef = mDb.collection(RESTO_LAST_UPD_COLL);
-
 
     /**
      * Google  / Retrofit declarations
@@ -69,7 +74,6 @@ public class RestaurantRepository {
     private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>();
 
     private Location mFusedLocationProvider;
-
     private Date mFirestoreLastUpdate = new Date();
     private List<Restaurant> mRestoListDetail = new ArrayList<>();
 
@@ -116,7 +120,13 @@ public class RestaurantRepository {
         //on met à jour la liste des restaurants
         //sinon ne met pas à jour la liste des restaurants
     */
-    public MutableLiveData<List<Restaurant>> getRestaurantList(Context pContext, Double pLatitude, Double pLongitude) {
+
+    public void saveLocationInSharedPreferences(Location pLocation) {
+        PreferencesHelper.saveStringPreferences(PREF_KEY_LATITUDE, String.valueOf(pLocation.getLatitude()));
+        PreferencesHelper.saveStringPreferences(PREF_KEY_LONGITUDE, String.valueOf(pLocation.getLongitude()));
+    }
+
+    public MutableLiveData<List<Restaurant>> getRestaurantList() {
         Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: enter");
 
         mRestoLastUpdRef.document(RESTO_ID_LAST_UPD_COLL)
@@ -155,8 +165,8 @@ public class RestaurantRepository {
                                     if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
                                         // 2 = Monday
                                         Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Google 1");
-                                        //getGoogleRestaurantList(pContext, pLatitude, pLongitude);
-                                        //TODO for the moment deasctivate the google call
+                                        //getGoogleRestaurantList();
+                                        //TODO for the moment deactivate the google call
                                         getFirestoreRestaurantList();
 
                                     } else {
@@ -168,7 +178,9 @@ public class RestaurantRepository {
                             } else {
                                 Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: Firestore date is null - call Google 2");
                                 //implement RestaurantList with Google
-                                getGoogleRestaurantList(pContext, pLatitude, pLongitude);
+                                //TODO for the moment deactivate the google call
+                                //getGoogleRestaurantList();
+                                getFirestoreRestaurantList();
                             }
                         } else {
                             Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: on complete - pTask not successfull - call Firestore 2");
@@ -196,16 +208,19 @@ public class RestaurantRepository {
                 });
     }
 
-    private void getGoogleRestaurantList(Context pContext, Double pLatitude, Double pLongitude) {
+    private void getGoogleRestaurantList() {
         Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: enter can update the date");
 
-        int lProximityRadius = Integer.parseInt(pContext.getResources().getString(R.string.proximity_radius));
-        String lType = pContext.getResources().getString(R.string.type_search);
+        int lProximityRadius = mPreferences.getInt(PREF_KEY_RADIUS,150);
+        String lType = mPreferences.getString(PREF_KEY_TYPE_GOOGLE_SEARCH,"restaurant");
+
+        Double lLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
+        Double lLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
         Call<RestaurantPojo> lRestaurantPojoCall = mJsonRetrofitApi.getNearByPlaces(mKey, lType,
-                pLatitude + "," + pLongitude, lProximityRadius);
+                lLatitude + "," + lLongitude, lProximityRadius);
 
         Log.d("TAG4_GET_GOOGLE", "getLDGoogleRestaurantList: before enqueue");
         lRestaurantPojoCall.enqueue(new Callback<RestaurantPojo>() {
@@ -214,15 +229,15 @@ public class RestaurantRepository {
                 if (response.isSuccessful()) {
                     List<RestaurantPojo.Result> lRestoResponse = Objects.requireNonNull(response.body()).getResults();
 
-                    //TODO à supprimer après avoir trouver la currentlocation
-                    mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(pLatitude, pLongitude);
-
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
+                        //TODO à supprimer après avoir trouver la currentlocation
+
+                        mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(lLatitude, lLongitude);
 
                         //Appel datelresto(livedata  mLDRestoList,lRestoList,pRestaurantActuel,lDetailResponse.size )
                         Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: call the GoogleDetailPlace - size list : " + lRestoResponse.size());
                         Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: call the GoogleDetailPlace - restoname : " + restaurantPojo.getName());
-                        manageRestaurantInformationsAndGetGoogleDetailRestaurant(pContext, restaurantPojo, lRestoResponse.size());
+                        manageRestaurantInformationsAndGetGoogleDetailRestaurant(restaurantPojo, lRestoResponse.size());
                     }
                 }
             }
@@ -235,10 +250,10 @@ public class RestaurantRepository {
 
     }
 
-    public void manageRestaurantInformationsAndGetGoogleDetailRestaurant(Context pContext, RestaurantPojo.Result pRestaurantList, int pResponseSize) {
+    public void manageRestaurantInformationsAndGetGoogleDetailRestaurant(RestaurantPojo.Result pRestaurantList, int pResponseSize) {
         Log.d("TAG4_MANAGE", "manageRestaurantInformationsAndGetGoogleDetailRestaurant: enter");
 
-        String lFields = pContext.getResources().getString(R.string.place_detail_fields);
+        String lFields = mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS,null);
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
