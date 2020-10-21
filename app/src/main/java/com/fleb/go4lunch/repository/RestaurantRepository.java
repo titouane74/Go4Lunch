@@ -278,7 +278,7 @@ public class RestaurantRepository {
                     }
                     RestaurantPojo.Location lLocation = pRestaurantList.getGeometry().getLocation();
                     if (pRestaurantList.getVicinity() != null) {
-                        lAddress = formatAddress(pRestaurantList.getVicinity());
+                        lAddress = pRestaurantList.getVicinity();
                     }
                     if (pRestaurantList.getRating() != null) {
                         pRestaurantList.getRating();
@@ -387,9 +387,5 @@ public class RestaurantRepository {
     public String getPhoto(String pPhotoReference, int pMaxWidth, String pKey) {
         return BASE_URL_GOOGLE + "photo?photoreference=" + pPhotoReference
                 + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
-    }
-
-    public String formatAddress(String pAddress) {
-        return pAddress.substring(0, pAddress.indexOf(","));
     }
 }

@@ -106,11 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             PreferencesHelper.saveStringPreferences(PREF_KEY_PLACE_DETAIL_FIELDS,lValueString);
         }
 
-        if(mPreferences.getInt(PREF_KEY_RADIUS,150) == 150) {
-            lValueInt = Integer.parseInt(getString(R.string.proximity_radius));
-            Log.d("TAG_PREFS", "initializeSharedPreferences: radius " + lValueInt);
-            PreferencesHelper.saveIntPreferences(PREF_KEY_RADIUS,lValueInt);
-        }
+        lValueInt = Integer.parseInt(getString(R.string.proximity_radius));
+        Log.d("TAG_PREFS", "initializeSharedPreferences: radius " + lValueInt);
+        PreferencesHelper.saveIntPreferences(PREF_KEY_RADIUS,lValueInt);
 
     }
 

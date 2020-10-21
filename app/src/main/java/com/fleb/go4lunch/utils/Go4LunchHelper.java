@@ -91,4 +91,12 @@ public class Go4LunchHelper {
         return lResult;
     }
 
+    public static String formatAddress(String pAddress) {
+        String lAddress = null;
+        if(pAddress.indexOf(",")>0) {
+            lAddress = pAddress.substring(0, pAddress.indexOf(","));
+        }
+        return lAddress;
+    }
+
 }

@@ -113,6 +113,6 @@
     <string name="location_permission_denied">L\'application nécessite une autorisation de localisation pour permettre la locatlisation . Veuillez réessayer et accorder l\'accès pour utiliser l\'emplacement. \nSi l\'autorisation a été définitivement refusée, elle peut être activée à partir des paramètres système &gt; Applications &gt; \'Go4Lunch \'.</string>
     <string name="permission_required_toast">Une autorisation de localisation est requise.</string>
 
-    <string name="place_detail_fields">name,address_components,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
+    <string name="place_detail_fields">name,address_components,adr_address,formatted_address,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
 
 </resources>

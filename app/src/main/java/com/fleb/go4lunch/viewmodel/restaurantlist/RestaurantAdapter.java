@@ -85,7 +85,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
         pRestoHolder.mRestoDistance.setText(lNewDistance);
-        pRestoHolder.mRestoAddress.setText(mRestoList.get(position).getRestoAddress());
+        pRestoHolder.mRestoAddress.setText(Go4LunchHelper.formatAddress(mRestoList.get(position).getRestoAddress()));
         pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
 
         if (mRestoList.get(position).getRestoOpeningHours() != null) {
