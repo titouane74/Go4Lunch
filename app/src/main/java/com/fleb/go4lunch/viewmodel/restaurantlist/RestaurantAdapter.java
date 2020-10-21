@@ -29,6 +29,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.fleb.go4lunch.repository.RestaurantRepository.PREF_KEY_LATITUDE;
+import static com.fleb.go4lunch.repository.RestaurantRepository.PREF_KEY_LONGITUDE;
+import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 /**
  * Created by Florence LE BOURNOT on 26/09/2020
@@ -46,12 +51,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     private static final String TAG_WEEKDAY = "TAG_WEEKDAY";
     private static final String TAG_STATUS = "TAG_STATUS";
     private List<Restaurant> mRestoList;
-    private double mLatitude = 48.8236549;
-    private double mLongitude = 2.4102578;
+    private double mLatitude;
+    private double mLongitude;
 
-    private int mOpen = 0;
-    private int mClose = 0;
-    private int mNumService = 1;
     private DayOpeningHours.DayService mService = new DayOpeningHours.DayService();
 
     public void setRestoList(List<Restaurant> pRestoList) {
@@ -72,11 +74,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         Context lContext = pRestoHolder.itemView.getContext();
 
-        //TODO à supprimer après avoir trouver la currentlocation
+        mLatitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
+        mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
+
         Location lFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
         int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(lFusedLocationProvider,
                 mRestoList.get(position).getRestoLocation());
-        //String lDistance = String.valueOf(mRestoList.get(position).getRestoDistance());
 
         String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
 
@@ -84,7 +87,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         pRestoHolder.mRestoDistance.setText(lNewDistance);
         pRestoHolder.mRestoAddress.setText(mRestoList.get(position).getRestoAddress());
         pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
-
 
         if (mRestoList.get(position).getRestoOpeningHours() != null) {
 
@@ -98,12 +100,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 pRestoHolder.mRestoOpening.setTextColor(lContext.getResources().getColor(R.color.colorTextRed));
                 pRestoHolder.mRestoOpening.setTypeface(null, Typeface.BOLD);
             }
-
         }
 
-        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(lContext,
+        int lNbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(lContext,
                 mRestoList.get(position).getRestoRating());
-        switch (lnbStarToDisplay) {
+        switch (lNbStarToDisplay) {
             case 1:
                 Log.d(TAG_LIST_RESTO, "onBindViewHolder: 2 stars to hide : ");
                 pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);

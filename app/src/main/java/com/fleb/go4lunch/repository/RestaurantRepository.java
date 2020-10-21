@@ -55,8 +55,8 @@ public class RestaurantRepository {
     public static final String RESTO_DATE_UPDATE_KEY = "restoLastUpdateList";
     public static final String RESTO_ID_LAST_UPD_COLL = "dateLastUpdateListResto";
 
-    private static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
-    private static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
+    public static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
+    public static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
@@ -295,7 +295,7 @@ public class RestaurantRepository {
 
                     Log.d("TAG4_MANAGE", "manage - onResponse: resto " + lRestoDetResponse.getName() + " - lRestaurant : " + lRestaurant.getRestoName());
                     lRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
-                    lRestaurant.setRestoWebsite(lRestoDetResponse.getWebsite());
+                    lRestaurant.setRestoWebSite(lRestoDetResponse.getWebsite());
                     lRestaurant.setRestoPhone(lRestoDetResponse.getFormattedPhoneNumber());
 
                     Log.d("TAG4_MANAGE", "manage - onResponse : add resto to list : " + lRestaurant.getRestoName());
@@ -349,7 +349,7 @@ public class RestaurantRepository {
                     lRestaurant.put("restoLocation", pRestaurant.getRestoLocation());
                     lRestaurant.put("restoNbWorkmates", pRestaurant.getRestoNbWorkmates());
                     lRestaurant.put("restoOpeningHours", pRestaurant.getRestoOpeningHours());
-                    lRestaurant.put("restoWebSite", pRestaurant.getRestoWebsite());
+                    lRestaurant.put("restoWebSite", pRestaurant.getRestoWebSite());
                     lRestaurant.put("restoPhone", pRestaurant.getRestoPhone());
 
                     mRestoRef.document(pRestaurant.getRestoPlaceId())

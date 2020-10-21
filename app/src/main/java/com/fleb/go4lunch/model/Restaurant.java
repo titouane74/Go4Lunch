@@ -12,7 +12,7 @@ public class Restaurant implements Serializable {
     private String restoName;
     private String restoAddress;
     private String restoPhone;
-    private String restoWebsite;
+    private String restoWebSite;
     private String restoDistance;
     private int restoNbWorkmates;
     private double restoRating;
@@ -22,7 +22,7 @@ public class Restaurant implements Serializable {
 
     public Restaurant () {}
 
-    public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebsite,
+    public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebSite,
                       String pRestoDistance, int pRestoNbWorkmates, double pRestoRating, String pRestoPhotoUrl,
                       RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
 
@@ -30,7 +30,7 @@ public class Restaurant implements Serializable {
         restoName = pRestoName;
         restoAddress = pRestoAddress;
         restoPhone = pRestoPhone;
-        restoWebsite = pRestoWebsite;
+        restoWebSite = pRestoWebSite;
         restoDistance = pRestoDistance;
         restoNbWorkmates = pRestoNbWorkmates;
 
@@ -56,9 +56,9 @@ public class Restaurant implements Serializable {
 
     public void setRestoPhone(String pRestoPhone) { restoPhone = pRestoPhone; }
 
-    public String getRestoWebsite() { return restoWebsite; }
+    public String getRestoWebSite() { return restoWebSite; }
 
-    public void setRestoWebsite(String pRestoWebsite) { restoWebsite = pRestoWebsite; }
+    public void setRestoWebSite(String pRestoWebSite) { restoWebSite = pRestoWebSite; }
 
     public String getRestoDistance() { return restoDistance; }
 
