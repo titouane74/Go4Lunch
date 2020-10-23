@@ -1,62 +1,52 @@
 package com.fleb.go4lunch.model;
 
-import java.util.List;
-
 /**
  * Created by Florence LE BOURNOT on 15/10/2020
  */
 public class DayOpeningHours {
 
-    private int dayNumber;
-    private int dayNumService;
-    private DayService dayService;
-    private int dayOpenHour;
+    private int dayCurrentOpenDay;
+    private int dayCase;
+    private int dayNextOpenHour;
     private int dayCloseHour;
     private boolean dayIsOpen;
     private String dayDescription;
+    private int dayNextOpenDay;
 
     public DayOpeningHours() {}
 
-    public DayOpeningHours(int pDayNumber, int pDayNumService,DayService pDayService, int pDayOpenHour, int pDayCloseHour, boolean pDayIsOpen, String pDayDescription) {
-        dayNumber = pDayNumber;
-        dayNumService = pDayNumService;
-        dayService = pDayService;
-        dayOpenHour = pDayOpenHour;
+    public DayOpeningHours(int pDayCurrentOpenDay, int pDayCase, int pDayNextOpenHour, int pDayCloseHour, boolean pDayIsOpen, String pDayDescription, int pDayNextOpenDay) {
+        dayCurrentOpenDay = pDayCurrentOpenDay;
+        dayCase = pDayCase;
+        dayNextOpenHour = pDayNextOpenHour;
         dayCloseHour = pDayCloseHour;
         dayIsOpen = pDayIsOpen;
         dayDescription = pDayDescription;
+        dayNextOpenDay = pDayNextOpenDay;
     }
 
-    public int getDayNumber() {
-        return dayNumber;
+    public int getDayCurrentOpenDay() {
+        return dayCurrentOpenDay;
     }
 
-    public void setDayNumber(int pDayNumber) {
-        dayNumber = pDayNumber;
+    public void setDayCurrentOpenDay(int pDayCurrentOpenDay) {
+        dayCurrentOpenDay = pDayCurrentOpenDay;
     }
 
-    public int getDayNumService() {
-        return dayNumService;
+    public int getDayCase() {
+        return dayCase;
     }
 
-    public void setDayNumService(int pDayNumService) {
-        dayNumService = pDayNumService;
+    public void setDayCase(int pDayCase) {
+        dayCase = pDayCase;
     }
 
-    public DayService getDayService() {
-        return dayService;
+    public int getDayNextOpenHour() {
+        return dayNextOpenHour;
     }
 
-    public void setPeriods(DayService pDayService) {
-        dayService = pDayService;
-    }
-
-    public int getDayOpenHour() {
-        return dayOpenHour;
-    }
-
-    public void setDayOpenHour(int pDayOpenHour) {
-        dayOpenHour = pDayOpenHour;
+    public void setDayNextOpenHour(int pDayNextOpenHour) {
+        dayNextOpenHour = pDayNextOpenHour;
     }
 
     public int getDayCloseHour() {
@@ -83,54 +73,11 @@ public class DayOpeningHours {
         dayDescription = pDayDescription;
     }
 
-    public static class DayService {
-
-        private int numService;
-        private int closeTime;
-        private int openTime;
-        private int dayService;
-
-        public DayService() {}
-
-        public DayService(int pNumService, int pCloseTime, int pOpenTime, int pDayService) {
-            numService = pNumService;
-            closeTime = pCloseTime;
-            openTime = pOpenTime;
-            dayService = pDayService;
-        }
-
-        public int getNumService() {
-            return numService;
-        }
-
-        public void setNumService(int pNumService) {
-            numService = pNumService;
-        }
-
-        public int getCloseTime() {
-            return closeTime;
-        }
-
-        public void setCloseTime(int pCloseTime) {
-            closeTime = pCloseTime;
-        }
-
-        public int getOpenTime() {
-            return openTime;
-        }
-
-        public void setOpenTime(int pOpenTime) {
-            openTime = pOpenTime;
-        }
-
-        public int getDayService() {
-            return dayService;
-        }
-
-        public void setDayService(int pDayService) {
-            dayService = pDayService;
-        }
-
+    public int getDayNextOpenDay() {
+        return dayNextOpenDay;
     }
 
+    public void setDayNextOpenDay(int pDayNextOpenDay) {
+        dayNextOpenDay = pDayNextOpenDay;
+    }
 }

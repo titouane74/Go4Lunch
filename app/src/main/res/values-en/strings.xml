@@ -87,9 +87,11 @@
     <string name="max_level_three_star">5</string>
     <string name="nb_star">3</string>
     <string name="text_resto_closed">Closed</string>
-    <string name="text_resto_closed_today">Closed today</string>
+    <string name="text_resto_closed_today">Closed today. Open at</string>
     <string name="text_resto_closed_open_at">Closed. Open at</string>
+    <string name="text_resto_closed_open_at_on">on</string>
     <string name="text_resto_open_until">Open until</string>
+    <string name="text_resto_closing_soon">Closing soon</string>
 
     <!-- WORKMATE LIST -->
     <string name="text_workmate_not_decided">hasn\'t decided yet</string>

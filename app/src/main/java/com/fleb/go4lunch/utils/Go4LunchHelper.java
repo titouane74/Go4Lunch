@@ -3,6 +3,7 @@ package com.fleb.go4lunch.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.RestaurantPojo;
@@ -68,7 +69,6 @@ public class Go4LunchHelper {
     }
 
     public static int getCurrentDayInt() {
-        String[] weekdays = new DateFormatSymbols(Locale.FRANCE).getWeekdays();
         Calendar c = Calendar.getInstance();
         Date date = new Date();
         c.setTime(date);
@@ -77,6 +77,18 @@ public class Go4LunchHelper {
         return c.get(Calendar.DAY_OF_WEEK);
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static String getDayString(int pDay) {
+        String[] lShortWeekDay = new DateFormatSymbols().getShortWeekdays();
+        String lStringDay = "";
+
+        for(int lIndex = 1; lIndex < lShortWeekDay.length; lIndex++) {
+            if (lIndex == pDay+1) {
+                lStringDay = lShortWeekDay[lIndex];
+            }
+        }
+        return lStringDay;
+    }
     public static int getCurrentTime() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
