@@ -72,11 +72,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
 
-/*
-        if ((mRestoList.get(position).getRestoName().equals("Le Family 26"))
+        //"Le Family 26"
+
+        //if ((mRestoList.get(position).getRestoName().equals("Le Bistrot De Charenton"))
 //                || (mRestoList.get(position).getRestoName().equals("En-lai."))
-        ) {
-*/
+        //) {
+
 
             pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
             pRestoHolder.mRestoDistance.setText(lNewDistance);
@@ -139,7 +140,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 }
             });
 
-//        }
+        //}
 
     }
 
@@ -180,30 +181,29 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                         lAddDay++;
                         lStatusOpening = searchNextOpenDay(lRestoHoursList, lStatusOpening, lNextDay);
                         Log.d(TAG, " NOD : " + lStatusOpening.getDayNextOpenDay() + " lNextDay " + lNextDay);
-                        //TODO réinitialisation pose un problème mais résoud le setCase = 2 ci-dessou
-                        //Cas 21 du family 26 les case devrait resté à 1
-                        //jour pas sur la bonne journée
-                        if ((lStatusOpening.getDayCase() == 2) && (lAddDay > 1)) {
-                            lStatusOpening.setDayCase(1);  //closed at end of the day and next opening isn't tomorrow
-                            Log.d(TAG, "searchNextOpenDay: setCase = 1");
+
+                        if (lAddDay > 1) {
+                            if (lStatusOpening.getDayCase() == 2) {
+                                lStatusOpening.setDayCase(1);  //closed at end of the day and next opening isn't tomorrow
+                                Log.d(TAG, "searchNextOpenDay: setCase = 1");
+                            } else {
+                                //closed today next opening day isn't tomorrow
+                                lStatusOpening.setDayCase(5);
+                                Log.d(TAG, "searchNextOpenDay: setCase = 5");
+                            }
                         } else if ((lAddDay == 1) && (lStatusOpening.getDayCase() == 1)) {
                             lStatusOpening.setDayCase(2);  //next opening is tomorrow
                             Log.d(TAG, "searchNextOpenDay: setCase = 2");
-                        } else if ((lAddDay > 1) && (lStatusOpening.getDayCase() != 2)) {
-                            //closed today next opening day isn't tomorrow
+                        } else if ((lStatusOpening.getDayNextOpenDay() - lNextDay) != 0) {
                             lStatusOpening.setDayCase(5);
-                            Log.d(TAG, "searchNextOpenDay: setCase = 5");
                         }
-
                     }
 
                 }
 
 
                 //Closed. Open on an other day than tomorrow
-                if (lAddDay > 1) {
-                    lStringNextOpenDay = Go4LunchHelper.getDayString(lStatusOpening.getDayNextOpenDay());
-                }
+                lStringNextOpenDay = Go4LunchHelper.getDayString(lStatusOpening.getDayNextOpenDay());
                 //Closed. Open tomorrow or an other day - get the next opening hour
                 if ((lStatusOpening.getDayCase() < 3) || (lStatusOpening.getDayCase() == 5)) {
                     lStringTime = Go4LunchHelper.getCurrentTimeFormatted(lStatusOpening.getDayNextOpenHour());
