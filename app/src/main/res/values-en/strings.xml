@@ -90,8 +90,10 @@
     <string name="text_resto_closed_today">Closed today. Open at</string>
     <string name="text_resto_closed_open_at">Closed. Open at</string>
     <string name="text_resto_closed_open_at_on">on</string>
-    <string name="text_resto_open_until">Open until</string>
     <string name="text_resto_closing_soon">Closing soon</string>
+    <string name="text_resto_open_until">Open until</string>
+    <string name="text_resto_open_247">Open 24/7</string>
+    <string name="text_resto_on">on</string>
 
     <!-- WORKMATE LIST -->
     <string name="text_workmate_not_decided">hasn\'t decided yet</string>

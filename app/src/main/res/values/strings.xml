@@ -97,8 +97,10 @@
     <string name="text_resto_closed_open_at_on">le</string>
     <string name="text_resto_closed_today">Fermé aujourd\'hui. Ouvre à</string>
     <string name="text_resto_closed_open_at">Fermé. Ouvre à</string>
-    <string name="text_resto_open_until">Ouvert jusqu\'à</string>
     <string name="text_resto_closing_soon">Ferme bientôt</string>
+    <string name="text_resto_open_until">Ouvert jusqu\'à</string>
+    <string name="text_resto_open_247">Ouvert 24/7</string>
+    <string name="text_resto_on">le</string>
 
 
     <!-- WORKMATE LIST -->
