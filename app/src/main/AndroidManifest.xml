@@ -35,20 +35,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_api_key" />
 
-        <!--
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="BuildConfig.MAPS_API_KEY" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY_FOR_MANIFEST}" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/MAPS_API_KEY" />
-
-        -->
         <activity
             android:name=".view.activities.StartActivity"
             android:theme="@style/StartTheme" />
