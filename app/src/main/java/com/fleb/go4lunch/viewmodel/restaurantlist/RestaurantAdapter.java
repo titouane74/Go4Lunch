@@ -73,10 +73,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
 
         //"Le Family 26"
-
-        //if ((mRestoList.get(position).getRestoName().equals("Le Bistrot De Charenton"))
+//"Le Bistrot De Charenton"
+//        if ((mRestoList.get(position).getRestoName().equals("Le Family 26")
+//        )
 //                || (mRestoList.get(position).getRestoName().equals("En-lai."))
-        //) {
+//        )) {
 
 
             pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
@@ -140,7 +141,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 }
             });
 
-        //}
+  //      }
 
     }
 
@@ -170,7 +171,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 lStatusOpening = getServiceDay(lStatusOpening, lRestoHoursList, lCurrentDay);
 
                 //Next opening on an other day
-                if (lStatusOpening.getDayCase() < 2) {
+                if ((lStatusOpening.getDayCase() < 2) || (lStatusOpening.getDayCase() == 7)) {
                     int lNextDay = lCurrentDay;
                     while (lStatusOpening.getDayNextOpenDay() == 9) {
                         if (lNextDay == 6) {
@@ -196,11 +197,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                             Log.d(TAG, "searchNextOpenDay: setCase = 2");
                         } else if ((lStatusOpening.getDayNextOpenDay() - lNextDay) != 0) {
                             lStatusOpening.setDayCase(5);
+/*
+                        } else {
+                            lStatusOpening.setDayCase(2);
+                            Log.d(TAG, "getRestaurantOpeningHoursStatus: A L'ARRACHE");
+*/
                         }
                     }
 
                 }
-
 
                 //Closed. Open on an other day than tomorrow
                 lStringNextOpenDay = Go4LunchHelper.getDayString(lStatusOpening.getDayNextOpenDay());
@@ -246,16 +251,18 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         //Get the current time
         int lCurrentTime = Go4LunchHelper.getCurrentTime();
 
-        //First service has been checked, verify that the current hour is between the 2 services
-        if ((pStatus.getDayCase() == 1) && (pService1CloseTime < lCurrentTime) && (lCurrentTime < pOpenTime)) {
-            Log.d(TAG, "defineCase: 2eme Service : case 2 : closed. open at");
-            Log.d(TAG, "defineCase: 2eme Service : case 2 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
+        if ((pStatus.getDayCase() == 1) && ((pService1CloseTime < lCurrentTime) && (lCurrentTime < pOpenTime))) {
+            Log.d(TAG, "defineCase: case 2 : Service 2 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
             pStatus.setDayCase(2); // Closed. Open at
-            Log.d(TAG, "defineCase: setCase = 2");
             pStatus.setDayNextOpenHour(pOpenTime);
+            Log.d(TAG, "defineCase: setCase = 2");
+        } else if ((pStatus.getDayCase() == 1) &&  (lCurrentTime == pCloseTime)) {
+            Log.d(TAG, "defineCase: case 2 : Service 2 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
+            pStatus.setDayCase(2); // Closed. Open at
+            pStatus.setDayNextOpenHour(pOpenTime);
+            Log.d(TAG, "defineCase: setCase = 2");
         } else if (lCurrentTime < pOpenTime) {
-            Log.d(TAG, "defineCase: case 2 : closed. open at");
-            Log.d(TAG, "defineCase: case 2 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
+            Log.d(TAG, "defineCase: case 2 Service 1 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
             pStatus.setDayCase(2); // Closed. Open at
             pStatus.setDayNextOpenHour(pOpenTime);
             Log.d(TAG, "defineCase: setCase = 2");
@@ -272,7 +279,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 Log.d(TAG, "defineCase: case 3 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
             }
             pStatus.setDayCloseHour(pCloseTime);
-        } else if (pCloseTime < lCurrentTime) {
+        } else if (pCloseTime <= lCurrentTime) {
             Log.d(TAG, "defineCase: case 1 : closed. open at on");
             Log.d(TAG, "defineCase: case 1 : closed " + pCloseTime + " currentime " + lCurrentTime);
             pStatus.setDayCase(1);  //Closed
@@ -295,7 +302,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 Log.d(TAG, "searchNextOpenDay: " + lNextOpenDay + " jour début recherche suivant " + pDay);
                 return searchNextServices(pRestoHoursList, lIndex, lNextOpenDay, pStatus);
             }
-            lIndex++;
         }
         return pStatus;
     }
