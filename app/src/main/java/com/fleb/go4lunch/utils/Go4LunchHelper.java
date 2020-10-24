@@ -103,6 +103,11 @@ public class Go4LunchHelper {
         return lResult;
     }
 
+    public static int convertTimeInMinutes(int pTime) {
+        int lHourIntoMin = (pTime/100)*60;
+        int lMinutes = pTime % 100;
+        return (lHourIntoMin + lMinutes);
+    }
     public static String formatAddress(String pAddress) {
         String lAddress = null;
         if(pAddress.indexOf(",")>0) {

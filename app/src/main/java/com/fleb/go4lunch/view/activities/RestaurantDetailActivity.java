@@ -36,6 +36,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private Toolbar mToolbarDetail;
     private ImageView mRestoImgCall;
     private ImageView mRestoImgWebSite;
+    private ImageView mRestoLike;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mToolbarDetail = findViewById(R.id.toolbar_detail);
         mRestoImgCall = findViewById(R.id.img_call);
         mRestoImgWebSite = findViewById(R.id.img_website);
+        mRestoLike = findViewById(R.id.img_like);
+
         getIncomingIntent();
 
     }
@@ -122,5 +125,15 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mRestoLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: " + getString(R.string.to_do));
+                Toast.makeText(RestaurantDetailActivity.this, getString(R.string.to_do), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 }
