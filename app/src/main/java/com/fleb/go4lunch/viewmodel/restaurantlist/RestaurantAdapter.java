@@ -39,11 +39,9 @@ import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
  */
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.RestaurantHolder> {
 
-    private static final String TAG_LIST_RESTO = "TAG_LIST_RESTO";
     private static final String TAG = "TAG_STATUS";
     private List<Restaurant> mRestoList;
-    private double mLatitude;
-    private double mLongitude;
+    private DayOpeningHours mStatus;
 
     public void setRestoList(List<Restaurant> pRestoList) {
         mRestoList = pRestoList;
@@ -63,22 +61,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         Context lContext = pRestoHolder.itemView.getContext();
 
-        mLatitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
-        mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
+        double lLatitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
+        double lLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
 
-        Location lFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
+        Location lFusedLocationProvider = Go4LunchHelper.setCurrentLocation(lLatitude, lLongitude);
         int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(lFusedLocationProvider,
                 mRestoList.get(position).getRestoLocation());
 
         String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
-
-        //"Le Family 26"
-//"Le Bistrot De Charenton"
-        if ((mRestoList.get(position).getRestoName().equals("Pizza Costa")
-//        )
-//                || (mRestoList.get(position).getRestoName().equals("En-lai."))
-        )) {
-
 
             pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
             pRestoHolder.mRestoDistance.setText(lNewDistance);
@@ -86,7 +76,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
 
             if (mRestoList.get(position).getRestoOpeningHours() != null) {
-                Log.d(TAG, "resto name : " + mRestoList.get(position).getRestoName());
 
                 DayOpeningHours lOpeningStatus = getRestaurantOpeningHoursStatus(lContext, mRestoList.get(position));
                 if (lOpeningStatus.isDayIsOpen()) {
@@ -104,19 +93,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                     mRestoList.get(position).getRestoRating());
             switch (lNbStarToDisplay) {
                 case 1:
-                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: 2 stars to hide : ");
                     pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
                     pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
                     break;
                 case 2:
-                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: 1 star to hide : ");
                     pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
                     break;
                 case 3:
-                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: no star to hide : ");
                     break;
                 default:
-                    Log.d(TAG_LIST_RESTO, "onBindViewHolder: 3 stars to hide : ");
                     pRestoHolder.mRestoNote1.setVisibility(View.INVISIBLE);
                     pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
                     pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
@@ -130,29 +115,22 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                         .into(pRestoHolder.mRestoImage);
             }
 
-            pRestoHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-                    String lJsonRestaurant = GsonHelper.getGsonString(mRestoList.get(position));
-                    lIntentRestoDetail.putExtra("placeid", mRestoList.get(position).getRestoPlaceId());
-                    lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
-                    lContext.startActivity(lIntentRestoDetail);
-                }
+            pRestoHolder.itemView.setOnClickListener(v -> {
+                Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
+                String lJsonRestaurant = GsonHelper.getGsonString(mRestoList.get(position));
+                lIntentRestoDetail.putExtra("placeid", mRestoList.get(position).getRestoPlaceId());
+                lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
+                lContext.startActivity(lIntentRestoDetail);
             });
-
-        }
-
     }
 
     private DayOpeningHours getRestaurantOpeningHoursStatus(Context pContext, Restaurant pRestaurant) {
         String lStringNextOpenDay = null;
         String lStringTime = null;
-        int lCurrentDay = 0;
-        int lAddDay = 0;
+        int lCurrentDay;
 
         RestaurantDetailPojo.OpeningHours lRestoHoursList = pRestaurant.getRestoOpeningHours();
-        DayOpeningHours lStatusOpening = new DayOpeningHours(9, 0, 9, 9, false, null, 9);
+        mStatus = new DayOpeningHours(9, 0, 9, 9, false, null, 9, 9);
 
         //Get the current number day
         // -1 is for corresponding to the period which start on a sunday with a 0 value
@@ -160,197 +138,204 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         //Get the list of the opening hours of the current day and the next day
         if (lRestoHoursList.getPeriods().size() > 0) {
-            lStatusOpening.setDayCurrentOpenDay(lCurrentDay);
+            mStatus.setDayCurrentOpenDay(lCurrentDay);
 
             if (lRestoHoursList.getPeriods().get(0).getClose() == null) {
-                lStatusOpening.setDayCase(6);
-                Log.d(TAG, "getRestaurantOpeningHoursStatus: SetCase = 6");
-                lStatusOpening.setDayIsOpen(true);
-
+                mStatus.setDayCase(6);
+                mStatus.setDayIsOpen(true);
             } else {
-                lStatusOpening = getServiceDay(lStatusOpening, lRestoHoursList, lCurrentDay);
+                getServiceDay(lRestoHoursList, lCurrentDay);
 
                 //Next opening on an other day
-                if (lStatusOpening.getDayCase() < 2) {
-                    int lSearchDay = lCurrentDay;
-                    while (lStatusOpening.getDayNextOpenDay() == 9) {
-                        if (lSearchDay == 6) {
-                            lSearchDay = 0;
-                        } else {
-                            lSearchDay++;
-                        }
-                        lAddDay++;
-
-                        lStatusOpening = searchNextOpenDay(lRestoHoursList, lStatusOpening, lSearchDay);
-                        Log.d(TAG, " NOD : " + lStatusOpening.getDayNextOpenDay() + " lSearchDay " + lSearchDay);
-
-                        if (lAddDay > 1) {
-                            if (lStatusOpening.getDayCase() == 2) {
-                                lStatusOpening.setDayCase(1);  //closed at end of the day and next opening isn't tomorrow
-                                Log.d(TAG, "searchNextOpenDay: setCase = 1");
-                            } else if (lStatusOpening.getDayCase() != 7) {
-                                //closed today next opening day isn't tomorrow
-                                lStatusOpening.setDayCase(5);
-                                Log.d(TAG, "searchNextOpenDay: setCase = 5");
-                            }
-                        } else if ((lAddDay == 1) && (lStatusOpening.getDayCase() == 1)) {
-                            lStatusOpening.setDayCase(2);  //next opening is tomorrow
-                            Log.d(TAG, "searchNextOpenDay: setCase = 2");
-                        } else if (((lStatusOpening.getDayNextOpenDay() - lSearchDay) != 0) && (lStatusOpening.getDayCase() != 7)) {
-                            lStatusOpening.setDayCase(5);
-                        }
-                    }
-
-                } else if (lStatusOpening.getDayCase() == 7) {
-                    //Get the closing hour from the previous day
-
+                if (mStatus.getDayCase() < 2) {  // Search next opening day
+                    searchNextOpenDay(lRestoHoursList, lCurrentDay);
                 }
                 //Closed. Open on an other day than tomorrow
-                lStringNextOpenDay = Go4LunchHelper.getDayString(lStatusOpening.getDayNextOpenDay());
+                lStringNextOpenDay = Go4LunchHelper.getDayString(mStatus.getDayNextOpenDay());
                 //Closed. Open tomorrow or an other day - get the next opening hour
-                if ((lStatusOpening.getDayCase() < 3) || (lStatusOpening.getDayCase() == 5)) {
-                    lStringTime = Go4LunchHelper.getCurrentTimeFormatted(lStatusOpening.getDayNextOpenHour());
+                if ((mStatus.getDayCase() < 3) || (mStatus.getDayCase() == 5)) {
+                    lStringTime = Go4LunchHelper.getCurrentTimeFormatted(mStatus.getDayNextOpenHour());
                 }
                 //Open. Closed at
-                if ((lStatusOpening.getDayCase() == 3) || (lStatusOpening.getDayCase() == 7)) {
-                    lStringTime = Go4LunchHelper.getCurrentTimeFormatted(lStatusOpening.getDayCloseHour());
+                if ((mStatus.getDayCase() == 3) || (mStatus.getDayCase() == 7)) {
+                    lStringTime = Go4LunchHelper.getCurrentTimeFormatted(mStatus.getDayCloseHour());
                 }
             }
-            lStatusOpening.setDayDescription(getTextDescription(pContext, lStatusOpening.getDayCase(), lStringTime, lStringNextOpenDay));
-            Log.d(TAG, "getTextDescription : " + getTextDescription(pContext, lStatusOpening.getDayCase(), lStringTime, lStringNextOpenDay));
+            mStatus.setDayDescription(getTextDescription(pContext, mStatus.getDayCase(), lStringTime, lStringNextOpenDay));
         }
-        return lStatusOpening;
+        return mStatus;
     }
 
-    private DayOpeningHours getServiceDay(DayOpeningHours pStatus,
-                                          RestaurantDetailPojo.OpeningHours pRestoHoursList,
-                                          int pDay) {
+    private void searchNextOpenDay(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pCurrentDay) {
+        int lAddDay = 0;
+        int lSearchDay = pCurrentDay;
+
+        while (mStatus.getDayNextOpenDay() == 9) {
+            if (lSearchDay == 6) {
+                lSearchDay = 0;
+            } else {
+                lSearchDay++;
+            }
+            lAddDay++;
+            mStatus = getNextOpenDay(pRestoHoursList, mStatus, lSearchDay);
+            if (lAddDay > 1) {
+                if (mStatus.getDayCase() == 2) {
+                    mStatus.setDayCase(1);  //closed at end of the day and next opening isn't tomorrow
+                } else if (mStatus.getDayCase() != 7) {
+                    //closed today next opening day isn't tomorrow
+                    mStatus.setDayCase(5);
+                }
+            } else if ((lAddDay == 1) && (mStatus.getDayCase() == 1)) {
+                mStatus.setDayCase(2);  //next opening is tomorrow
+            } else if (((mStatus.getDayNextOpenDay() - lSearchDay) != 0) && (mStatus.getDayCase() != 7)) {
+                mStatus.setDayCase(5);
+            }
+        }
+    }
+
+    private void getServiceDay(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pDay) {
         int lNumService = 0;
         int lService1CloseTime = 0;
+        int lPreviousDay;
         for (int lIndex = 0; lIndex < pRestoHoursList.getPeriods().size(); lIndex++) {
             int lOpenDay = pRestoHoursList.getPeriods().get(lIndex).getOpen().getDay();
+            int lCloseDay = pRestoHoursList.getPeriods().get(lIndex).getClose().getDay();
             if (lOpenDay == pDay) {
                 lNumService++;
                 int lOpenTime = Integer.parseInt(pRestoHoursList.getPeriods().get(lIndex).getOpen().getTime());
                 int lCloseTime = Integer.parseInt(pRestoHoursList.getPeriods().get(lIndex).getClose().getTime());
-                pStatus.setDayCurrentOpenDay(pDay);
+                mStatus.setDayCurrentOpenDay(pDay);
                 if (lNumService == 2) {
                     lService1CloseTime = Integer.parseInt(pRestoHoursList.getPeriods().get(lIndex - 1).getClose().getTime());
                 }
-                if (pStatus.getDayCase() < 2) {
-                    pStatus = defineCase(pStatus, lOpenTime, lCloseTime, lService1CloseTime);
+                if (pDay == 0) {
+                    lPreviousDay = 6;
+                } else {
+                    lPreviousDay = pDay - 1;
+                }
+                if (lOpenDay != lCloseDay) {
+                    mStatus.setDayLastCloseHour(searchPreviousDay(pRestoHoursList, lPreviousDay));
+                }
+
+                if (mStatus.getDayCase() < 2) {
+                    defineCase(lOpenTime, lCloseTime, lService1CloseTime);
                 }
             }
         }
-        return pStatus;
     }
 
-    private DayOpeningHours defineCase(DayOpeningHours pStatus, int pOpenTime, int pCloseTime, int pService1CloseTime) {
-        //Get the current time
+    private void defineCase(int pOpenTime, int pCloseTime, int pService1CloseTime) {
+        boolean lIsCloseSoon;
         int lCurrentTime = Go4LunchHelper.getCurrentTime();
 
-        if ((pStatus.getDayCase() == 1) && ((pService1CloseTime < lCurrentTime) && (lCurrentTime < pOpenTime))) {
-            Log.d(TAG, "defineCase: case 2 : Service 2 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
-            pStatus.setDayCase(2); // Closed. Open at
-            pStatus.setDayNextOpenHour(pOpenTime);
-            Log.d(TAG, "defineCase: setCase = 2");
-        } else if ((pStatus.getDayCase() == 1) && (lCurrentTime == pCloseTime)) {
-            Log.d(TAG, "defineCase: case 2 : Service 2 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
-            pStatus.setDayCase(2); // Closed. Open at
-            pStatus.setDayNextOpenHour(pOpenTime);
-            Log.d(TAG, "defineCase: setCase = 2");
-
-        } else if ((pCloseTime < pOpenTime) && (lCurrentTime < pOpenTime)) {
-            Log.d(TAG, "defineCase: case 7 : open until 01:00 ");
-            pStatus.setDayCase(7);
-            pStatus.setDayCloseHour(pCloseTime);
+        if ((mStatus.getDayCase() == 1) && ((pService1CloseTime < lCurrentTime) && (lCurrentTime < pOpenTime))) {
+            mStatus.setDayCase(2); // Closed. Open at
+            mStatus.setDayNextOpenHour(pOpenTime);
+        } else if ((mStatus.getDayCase() == 1) && (lCurrentTime == pCloseTime)) {
+            mStatus.setDayCase(2); // Closed. Open at
+            mStatus.setDayNextOpenHour(pOpenTime);
         } else if (lCurrentTime < pOpenTime) {
-            Log.d(TAG, "defineCase: case 2 Service 1 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
-            pStatus.setDayCase(2); // Closed. Open at
-            pStatus.setDayNextOpenHour(pOpenTime);
-            Log.d(TAG, "defineCase: setCase = 2");
-        } else if (((pOpenTime <= lCurrentTime) && (lCurrentTime < pCloseTime))
-                || ((pCloseTime < pOpenTime) && (lCurrentTime > pOpenTime))
-//            || ((pCloseTime < pOpenTime) && (lCurrentTime < pCloseTime))
-        ) {
-            // 3 - Open until or 4 - Open. Closing soon
-            pStatus.setDayCase(verifyClosingSoonCase(pCloseTime, lCurrentTime));
-            if (pStatus.getDayCase() == 4) {
-                pStatus.setDayIsOpen(false);
-                Log.d(TAG, "defineCase: case 4 : open : " + pOpenTime + " currenttime " + lCurrentTime);
-                Log.d(TAG, "defineCase: case 4 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
+            if ((mStatus.getDayLastCloseHour() < pOpenTime) && (lCurrentTime < mStatus.getDayLastCloseHour())) {
+                lIsCloseSoon = verifyClosingSoonCase(mStatus.getDayLastCloseHour(), lCurrentTime);
+                if (lIsCloseSoon) {
+                    mStatus.setDayCase(4);
+                } else {
+                    mStatus.setDayCase(7);
+                    mStatus.setDayCloseHour(mStatus.getDayLastCloseHour());
+                }
+            } else if ((mStatus.getDayLastCloseHour() < pOpenTime) && (lCurrentTime > mStatus.getDayLastCloseHour())) {
+                mStatus.setDayCase(2);
+                mStatus.setDayNextOpenHour(pOpenTime);
+            } else if ((pCloseTime < pOpenTime) && (lCurrentTime >= pCloseTime)) {
+                mStatus.setDayCase(2);
+                mStatus.setDayNextOpenHour(pOpenTime);
+            } else if (pCloseTime < pOpenTime) {
+                lIsCloseSoon = verifyClosingSoonCase(pCloseTime, lCurrentTime);
+                if (lIsCloseSoon) {
+                    mStatus.setDayCase(4);
+                } else {
+                    mStatus.setDayCase(3);
+                    mStatus.setDayCloseHour(pCloseTime);
+                }
             } else {
-                pStatus.setDayIsOpen(true);
-                Log.d(TAG, "defineCase: case 3 : open : " + pOpenTime + " currenttime " + lCurrentTime);
-                Log.d(TAG, "defineCase: case 3 : closed : " + pCloseTime + " currenttime " + lCurrentTime);
+                mStatus.setDayCase(2); // Closed. Open at
+                mStatus.setDayNextOpenHour(pOpenTime);
             }
-            pStatus.setDayCloseHour(pCloseTime);
+        } else if (((pOpenTime <= lCurrentTime) && (lCurrentTime < pCloseTime))
+                || ((pCloseTime < pOpenTime) && (lCurrentTime > pOpenTime))) {
+            // 3 - Open until or 4 - Open. Closing soon
+            lIsCloseSoon = verifyClosingSoonCase(pCloseTime, lCurrentTime);
+            if (lIsCloseSoon) {
+                mStatus.setDayCase(4);
+            } else {
+                mStatus.setDayCase(3);
+            }
+            mStatus.setDayCloseHour(pCloseTime);
         } else if (pCloseTime <= lCurrentTime) {
-            Log.d(TAG, "defineCase: case 1 : closed. open at on");
-            Log.d(TAG, "defineCase: case 1 : closed " + pCloseTime + " currentime " + lCurrentTime);
-            pStatus.setDayCase(1);  //Closed
-            Log.d(TAG, "defineCase: setCase = 1");
+            mStatus.setDayCase(1);  //Closed
         } else {
             Log.d(TAG, "defineCase: nothing changed ");
         }
-        return pStatus;
     }
 
-
-    private DayOpeningHours searchNextOpenDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
-                                              DayOpeningHours pStatus,
-                                              int pDay) {
+    private DayOpeningHours getNextOpenDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
+                                           DayOpeningHours mStatus,
+                                           int pDay) {
         int lMaxPeriod = pRestoHoursList.getPeriods().size();
         for (int lIndex = 0; lIndex < lMaxPeriod; lIndex++) {
             int lNextOpenDay = pRestoHoursList.getPeriods().get(lIndex).getOpen().getDay();
             if (lNextOpenDay >= pDay) {
-                pStatus.setDayNextOpenDay(lNextOpenDay);
-                Log.d(TAG, "searchNextOpenDay: " + lNextOpenDay + " jour début recherche suivant " + pDay);
-                return searchNextServices(pRestoHoursList, lIndex, lNextOpenDay, pStatus);
+                mStatus.setDayNextOpenDay(lNextOpenDay);
+                return searchServices(pRestoHoursList, lIndex, lNextOpenDay);
             }
         }
-        return pStatus;
+        return mStatus;
     }
 
-    private DayOpeningHours searchNextServices(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pIndex, int pOpenDay,
-                                               DayOpeningHours pStatus) {
+    private int searchPreviousDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
+                                  int pDay) {
+        int lMaxPeriod = pRestoHoursList.getPeriods().size();
+
+        for (int lIndex = lMaxPeriod - 1; lIndex >= 0; lIndex--) {
+            int lPreviousDay = pRestoHoursList.getPeriods().get(lIndex).getOpen().getDay();
+            if (lPreviousDay == pDay) {
+                return (Integer.parseInt(pRestoHoursList.getPeriods().get(lIndex).getClose().getTime()));
+            }
+        }
+        return 9;
+    }
+
+    private DayOpeningHours searchServices(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pIndex, int pOpenDay) {
 
         //Find the next service which is not on the same day
         if (pOpenDay == 6) {  //next service on a sunday => index = 0
-            Log.d(TAG, "prochain service est un dimanche: index = 0");
             pIndex = 0;
-        } else {      //next service is not on a sunday => no change to the index
-            Log.d(TAG, "prochain service n'est pas un dimanche");
         }
         if (pRestoHoursList.getPeriods().size() <= pIndex) {
-            Log.d(TAG, "searchNextServices: last day in table isn't sunday  pass index to 0");
             pIndex = 0;
         }
-        if (pStatus.getDayCase() == 7) { // next closing hour
-            pStatus.setDayCloseHour(Integer.parseInt(pRestoHoursList.getPeriods().get(pIndex).getClose().getTime()));
+        if (mStatus.getDayCase() == 7) { // next closing hour
+            mStatus.setDayCloseHour(Integer.parseInt(pRestoHoursList.getPeriods().get(pIndex).getClose().getTime()));
         } else {  // next opening hour
-            pStatus.setDayNextOpenHour(Integer.parseInt(pRestoHoursList.getPeriods().get(pIndex).getOpen().getTime()));
+            mStatus.setDayNextOpenHour(Integer.parseInt(pRestoHoursList.getPeriods().get(pIndex).getOpen().getTime()));
         }
-        pStatus.setDayNextOpenDay(pRestoHoursList.getPeriods().get(pIndex).getOpen().getDay());
-        Log.d(TAG, "searchNextServices: NOD " + pStatus.getDayNextOpenDay());
+        mStatus.setDayNextOpenDay(pRestoHoursList.getPeriods().get(pIndex).getOpen().getDay());
 
-        return pStatus;
+        return mStatus;
     }
 
-    private int verifyClosingSoonCase(int pCloseTime, int pCurrentTime) {
+    private boolean verifyClosingSoonCase(int pCloseTime, int pCurrentTime) {
 
         pCloseTime = Go4LunchHelper.convertTimeInMinutes(pCloseTime);
         int lCloseTimeSoon = pCloseTime - 30;
         pCurrentTime = Go4LunchHelper.convertTimeInMinutes(pCurrentTime);
 
         if ((pCurrentTime >= lCloseTimeSoon) && (pCurrentTime < pCloseTime)) {
-            Log.d(TAG, "verifyClosingSoonCase: case 4 : closing soon");
-            Log.d(TAG, "verifyClosingSoonCase: setCase = 4");
-            return 4;
+            mStatus.setDayIsOpen(false);
+            return true;
         } else {
-            Log.d(TAG, "verifyClosingSoonCase: case 3 : closed at");
-            Log.d(TAG, "verifyClosingSoonCase: setCase = 3");
-            return 3;
+            mStatus.setDayIsOpen(true);
+            return false;
         }
     }
 

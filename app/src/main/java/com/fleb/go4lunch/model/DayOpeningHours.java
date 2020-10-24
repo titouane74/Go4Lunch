@@ -12,10 +12,12 @@ public class DayOpeningHours {
     private boolean dayIsOpen;
     private String dayDescription;
     private int dayNextOpenDay;
+    private int dayLastCloseHour;
 
     public DayOpeningHours() {}
 
-    public DayOpeningHours(int pDayCurrentOpenDay, int pDayCase, int pDayNextOpenHour, int pDayCloseHour, boolean pDayIsOpen, String pDayDescription, int pDayNextOpenDay) {
+    public DayOpeningHours(int pDayCurrentOpenDay, int pDayCase, int pDayNextOpenHour, int pDayCloseHour,
+                           boolean pDayIsOpen, String pDayDescription, int pDayNextOpenDay, int pDayLastCloseHour) {
         dayCurrentOpenDay = pDayCurrentOpenDay;
         dayCase = pDayCase;
         dayNextOpenHour = pDayNextOpenHour;
@@ -23,6 +25,7 @@ public class DayOpeningHours {
         dayIsOpen = pDayIsOpen;
         dayDescription = pDayDescription;
         dayNextOpenDay = pDayNextOpenDay;
+        dayLastCloseHour = pDayLastCloseHour;
     }
 
     public int getDayCurrentOpenDay() {
@@ -79,5 +82,13 @@ public class DayOpeningHours {
 
     public void setDayNextOpenDay(int pDayNextOpenDay) {
         dayNextOpenDay = pDayNextOpenDay;
+    }
+
+    public int getDayLastCloseHour() {
+        return dayLastCloseHour;
+    }
+
+    public void setDayLastCloseHour(int pDayLastCloseHour) {
+        dayLastCloseHour = pDayLastCloseHour;
     }
 }
