@@ -71,17 +71,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         Context lContext = pRestoHolder.itemView.getContext();
 
-        double lLatitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
-        double lLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
-
-        Location lFusedLocationProvider = Go4LunchHelper.setCurrentLocation(lLatitude, lLongitude);
-        int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(lFusedLocationProvider,
-                mRestoList.get(position).getRestoLocation());
-
-        String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
-
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
-        pRestoHolder.mRestoDistance.setText(lNewDistance);
+        pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistance());
         pRestoHolder.mRestoAddress.setText(Go4LunchHelper.formatAddress(mRestoList.get(position).getRestoAddress()));
         pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
 

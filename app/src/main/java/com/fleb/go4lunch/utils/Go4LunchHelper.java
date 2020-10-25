@@ -8,7 +8,9 @@ import android.util.Log;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.RestaurantPojo;
 
+import java.math.RoundingMode;
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,7 +20,7 @@ import java.util.Locale;
  * Created by Florence LE BOURNOT on 09/10/2020
  */
 public class Go4LunchHelper {
-
+public static final String TAG = "TAG_DISTANCE";
     public static int ratingNumberOfStarToDisplay(Context pContext, double pNote) {
 
         int lMaxNote = Integer.parseInt(pContext.getResources().getString(R.string.max_level_three_star));
@@ -44,10 +46,8 @@ public class Go4LunchHelper {
 
     public static int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation) {
         Location lRestaurantLocation = new Location("fusedLocationProvider");
-
         lRestaurantLocation.setLatitude(pRestoLocation.getLat());
         lRestaurantLocation.setLongitude(pRestoLocation.getLng());
-
         return (int) pCurrentLocation.distanceTo(lRestaurantLocation);
     }
 
@@ -60,11 +60,17 @@ public class Go4LunchHelper {
 
     public static String convertDistance(int pDistance) {
         String lNewDistance = String.valueOf(pDistance);
+        double lDistance = pDistance*0.001;
+
+        DecimalFormat lDecimalFormat = new DecimalFormat("##.#");
+        lDecimalFormat.setRoundingMode(RoundingMode.UP);
+
         if(pDistance<1000) {
             lNewDistance = lNewDistance + "m";
         } else {
-            lNewDistance = lNewDistance.substring(1) +"." + lNewDistance.substring(2) +"km";
+            lNewDistance = lDecimalFormat.format(lDistance) + "km";
         }
+
         return lNewDistance;
     }
 

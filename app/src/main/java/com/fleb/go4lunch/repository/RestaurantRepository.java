@@ -77,6 +77,9 @@ public class RestaurantRepository {
     private Date mFirestoreLastUpdate = new Date();
     private List<Restaurant> mRestoListDetail = new ArrayList<>();
 
+    private Double mLatitude;
+    private Double mLongitude;
+
     /*
         //meto void SaveLocation dans shared
         // Attention on récupère avant pour si besoin de test de différence de distance
@@ -128,6 +131,10 @@ public class RestaurantRepository {
 
     public MutableLiveData<List<Restaurant>> getRestaurantList() {
         Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: enter");
+
+        mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
+        mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
+        mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
 
         mRestoLastUpdRef.document(RESTO_ID_LAST_UPD_COLL)
                 .get()
@@ -214,13 +221,10 @@ public class RestaurantRepository {
         int lProximityRadius = mPreferences.getInt(PREF_KEY_RADIUS,150);
         String lType = mPreferences.getString(PREF_KEY_TYPE_GOOGLE_SEARCH,"restaurant");
 
-        Double lLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
-        Double lLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
-
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
         Call<RestaurantPojo> lRestaurantPojoCall = mJsonRetrofitApi.getNearByPlaces(mKey, lType,
-                lLatitude + "," + lLongitude, lProximityRadius);
+                mLatitude + "," + mLongitude, lProximityRadius);
 
         Log.d("TAG4_GET_GOOGLE", "getLDGoogleRestaurantList: before enqueue");
         lRestaurantPojoCall.enqueue(new Callback<RestaurantPojo>() {
@@ -230,11 +234,7 @@ public class RestaurantRepository {
                     List<RestaurantPojo.Result> lRestoResponse = Objects.requireNonNull(response.body()).getResults();
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
-                        //TODO à supprimer après avoir trouver la currentlocation
-
-                        mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(lLatitude, lLongitude);
-
-                        //Appel datelresto(livedata  mLDRestoList,lRestoList,pRestaurantActuel,lDetailResponse.size )
+                       //Appel datelresto(livedata  mLDRestoList,lRestoList,pRestaurantActuel,lDetailResponse.size )
                         Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: call the GoogleDetailPlace - size list : " + lRestoResponse.size());
                         Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: call the GoogleDetailPlace - restoname : " + restaurantPojo.getName());
                         manageRestaurantInformationsAndGetGoogleDetailRestaurant(restaurantPojo, lRestoResponse.size());
@@ -366,9 +366,23 @@ public class RestaurantRepository {
     }
 
     public void sendRestoListToLiveData(List<Restaurant> pRestaurantList) {
-        Log.d("TAG4_SEND_LIVEDATA", "saveRestoList: size : " + pRestaurantList.size());
-        Log.d("TAG4_SEND_LIVEDATA", "saveRestoList: renvoi le livedata quand liste prête");
-        mLDRestoList.setValue(pRestaurantList);
+        //Update the distance in the livedata
+        List<Restaurant> lRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
+
+        mLDRestoList.setValue(lRestaurantList);
+    }
+
+    private List<Restaurant> updateDistanceInLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
+        for(Restaurant lRestaurant : pRestaurantList) {
+
+            int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
+                    mFusedLocationProvider, lRestaurant.getRestoLocation());
+
+            String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
+
+            lRestaurant.setRestoDistance(lNewDistance);
+        }
+        return pRestaurantList;
     }
 
     private void updateDateOfRestaurantLastUpdateInFirestore() {
