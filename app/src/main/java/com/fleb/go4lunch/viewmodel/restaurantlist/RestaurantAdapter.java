@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +27,6 @@ import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.util.List;
-import java.util.Objects;
-
-import static com.fleb.go4lunch.repository.RestaurantRepository.PREF_KEY_LATITUDE;
-import static com.fleb.go4lunch.repository.RestaurantRepository.PREF_KEY_LONGITUDE;
-import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 /**
  * Created by Florence LE BOURNOT on 26/09/2020
@@ -72,7 +66,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         Context lContext = pRestoHolder.itemView.getContext();
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
-        pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistance());
+        pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistanceText());
         pRestoHolder.mRestoAddress.setText(Go4LunchHelper.formatAddress(mRestoList.get(position).getRestoAddress()));
         pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
 

@@ -6,38 +6,40 @@ import java.io.Serializable;
 /**
  * Created by Florence LE BOURNOT on 16/09/2020
  */
-public class Restaurant implements Serializable {
+public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     private String restoPlaceId;
     private String restoName;
     private String restoAddress;
     private String restoPhone;
     private String restoWebSite;
-    private String restoDistance;
+    private String restoDistanceText;
     private int restoNbWorkmates;
     private double restoRating;
     private String restoPhotoUrl;
     private RestaurantPojo.Location restoLocation;
     private RestaurantDetailPojo.OpeningHours restoOpeningHours;
+    private int restoDistance;
 
     public Restaurant () {}
 
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebSite,
-                      String pRestoDistance, int pRestoNbWorkmates, double pRestoRating, String pRestoPhotoUrl,
-                      RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours) {
+                      String pRestoDistanceText, int pRestoNbWorkmates, double pRestoRating, String pRestoPhotoUrl,
+                      RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours,
+                      int pRestoDistance) {
 
         restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
         restoAddress = pRestoAddress;
         restoPhone = pRestoPhone;
         restoWebSite = pRestoWebSite;
-        restoDistance = pRestoDistance;
+        restoDistanceText = pRestoDistanceText;
         restoNbWorkmates = pRestoNbWorkmates;
-
         restoRating = pRestoRating;
         restoPhotoUrl = pRestoPhotoUrl;
         restoLocation = pRestoLocation;
         restoOpeningHours = pRestoOpeningHours;
+        restoDistance = pRestoDistance;
     }
 
     public String getRestoPlaceId() { return restoPlaceId; }
@@ -60,9 +62,9 @@ public class Restaurant implements Serializable {
 
     public void setRestoWebSite(String pRestoWebSite) { restoWebSite = pRestoWebSite; }
 
-    public String getRestoDistance() { return restoDistance; }
+    public String getRestoDistanceText() { return restoDistanceText; }
 
-    public void setRestoDistance(String pRestoDistance) { restoDistance = pRestoDistance; }
+    public void setRestoDistanceText(String pRestoDistanceText) { restoDistanceText = pRestoDistanceText; }
 
     public int getRestoNbWorkmates() { return restoNbWorkmates; }
 
@@ -83,4 +85,13 @@ public class Restaurant implements Serializable {
     public RestaurantDetailPojo.OpeningHours getRestoOpeningHours() { return restoOpeningHours; }
 
     public void setRestoOpeningHours(RestaurantDetailPojo.OpeningHours pRestoOpeningHours) { restoOpeningHours = pRestoOpeningHours; }
+
+    public int getRestoDistance() { return restoDistance; }
+
+    public void setRestoDistance(int pRestoDistance) { restoDistance = pRestoDistance; }
+
+    @Override
+    public int compareTo(Restaurant pRestaurant) {
+        return pRestaurant.restoDistance - this.restoDistance;
+    }
 }

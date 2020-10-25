@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -208,7 +209,7 @@ public class RestaurantRepository {
                         Log.d("TAG4_GET_FIRESTORE", "getLDFirestoreRestaurantList: isSuccessfull ");
                         List<Restaurant> lRestoList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
                         Log.d("TAG4_GET_FIRESTORE", "getLDFirestoreRestaurantList: call saveRestoList");
-                        sendRestoListToLiveData(lRestoList);
+                        prepareAndSendRestoListForDisplay(lRestoList);
                     } else {
                         Log.d("TAG4_GET_FIRESTORE", "Error : " + pTask.getException());
                     }
@@ -290,7 +291,7 @@ public class RestaurantRepository {
                     Log.d("TAG4_MANAGE", "manage: create resto : " + lName);
                     Restaurant lRestaurant = new Restaurant(
                             lPlaceId, lName, lAddress, null, null, lDistance, 0,
-                            lRating, lPhoto, lLocation, null
+                            lRating, lPhoto, lLocation, null,0
                     );
 
                     Log.d("TAG4_MANAGE", "manage - onResponse: resto " + lRestoDetResponse.getName() + " - lRestaurant : " + lRestaurant.getRestoName());
@@ -329,7 +330,7 @@ public class RestaurantRepository {
 
             Log.d("TAG4_BACKUP", "backupDataInFirestore: call saveRestoList to send the livedata");
             //renvoi le livedata quand il est prêt
-            sendRestoListToLiveData(mRestoListDetail);
+            prepareAndSendRestoListForDisplay(mRestoListDetail);
         }
     }
 
@@ -365,11 +366,19 @@ public class RestaurantRepository {
                 .addOnFailureListener(pE -> Log.d("TAG4_SAVE_RESTO", "onFailure Save: Document not saved", pE));
     }
 
-    public void sendRestoListToLiveData(List<Restaurant> pRestaurantList) {
+    private void prepareAndSendRestoListForDisplay(List<Restaurant> pRestaurantList) {
         //Update the distance in the livedata
         List<Restaurant> lRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
+        //Sort restaurant by distance
+        Collections.sort(lRestaurantList);
+        Collections.reverse(lRestaurantList);
 
-        mLDRestoList.setValue(lRestaurantList);
+        sendRestoListToLiveData(lRestaurantList);
+    }
+
+    public void sendRestoListToLiveData(List<Restaurant> pRestaurantList) {
+
+        mLDRestoList.setValue(pRestaurantList);
     }
 
     private List<Restaurant> updateDistanceInLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
@@ -379,8 +388,8 @@ public class RestaurantRepository {
                     mFusedLocationProvider, lRestaurant.getRestoLocation());
 
             String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
-
-            lRestaurant.setRestoDistance(lNewDistance);
+            lRestaurant.setRestoDistance(lDistance);
+            lRestaurant.setRestoDistanceText(lNewDistance);
         }
         return pRestaurantList;
     }

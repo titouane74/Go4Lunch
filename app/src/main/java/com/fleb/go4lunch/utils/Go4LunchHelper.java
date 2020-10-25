@@ -3,9 +3,9 @@ package com.fleb.go4lunch.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantPojo;
 
 import java.math.RoundingMode;
@@ -13,8 +13,10 @@ import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 09/10/2020
