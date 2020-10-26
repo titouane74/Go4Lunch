@@ -127,9 +127,9 @@ public class RestaurantRepository {
                                 if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
                                     // 2 = Monday
                                     Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Google 1");
-                                    //getGoogleRestaurantList();
+                                    getGoogleRestaurantList();
                                     //TODO for the moment deactivate the google call
-                                    getFirestoreRestaurantList();
+                                    //getFirestoreRestaurantList();
 
                                 } else {
                                     //implements RestaurantList with Firestore
@@ -141,8 +141,8 @@ public class RestaurantRepository {
                             Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: Firestore date is null - call Google 2");
                             //implement RestaurantList with Google
                             //TODO for the moment deactivate the google call
-                            //getGoogleRestaurantList();
-                            getFirestoreRestaurantList();
+                            getGoogleRestaurantList();
+                            //getFirestoreRestaurantList();
                         }
                     } else {
                         Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: on complete - pTask not successfull - call Firestore 2");
@@ -235,7 +235,7 @@ public class RestaurantRepository {
                         lAddress = pRestaurantList.getVicinity();
                     }
                     if (pRestaurantList.getRating() != null) {
-                        pRestaurantList.getRating();
+                        lRating = pRestaurantList.getRating();
                     }
 
                     String lDistance = String.valueOf(Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
@@ -294,20 +294,9 @@ public class RestaurantRepository {
                 .addOnSuccessListener(pVoid -> {
                     //in all case we save the data
                     Log.d("TAG4_SAVE_RESTO", "saveRestaurantInFirestore: create / save restaurant " + pRestaurant.getRestoName());
-                    Map<String, Object> lRestaurant = new HashMap<>();
-                    lRestaurant.put("restoPlaceId", pRestaurant.getRestoPlaceId());
-                    lRestaurant.put("restoName", pRestaurant.getRestoName());
-                    lRestaurant.put("restoAddress", pRestaurant.getRestoAddress());
-                    lRestaurant.put("restoRating", pRestaurant.getRestoRating());
-                    lRestaurant.put("restoPhotoUrl", pRestaurant.getRestoPhotoUrl());
-                    lRestaurant.put("restoLocation", pRestaurant.getRestoLocation());
-                    lRestaurant.put("restoNbWorkmates", pRestaurant.getRestoNbWorkmates());
-                    lRestaurant.put("restoOpeningHours", pRestaurant.getRestoOpeningHours());
-                    lRestaurant.put("restoWebSite", pRestaurant.getRestoWebSite());
-                    lRestaurant.put("restoPhone", pRestaurant.getRestoPhone());
 
                     mRestoRef.document(pRestaurant.getRestoPlaceId())
-                            .set(lRestaurant)
+                            .set(pRestaurant)
                             .addOnSuccessListener(pDocumentReference ->
                                     Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
                             .addOnFailureListener(pE ->
