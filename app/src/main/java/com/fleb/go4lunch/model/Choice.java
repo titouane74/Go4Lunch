@@ -47,4 +47,14 @@ public class Choice {
     public Timestamp getChChoiceDate() { return chChoiceDate; }
 
     public void setChChoiceDate(Timestamp pChChoiceDate) { chChoiceDate = pChChoiceDate; }
+
+    public enum Fields {
+        Choice,
+        chWorkmateId,
+        chWorkmateName,
+        chRestoPlaceId,
+        chRestoName,
+        chCreateDate,
+        chChoiceDate;
+    }
 }

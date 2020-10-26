@@ -105,6 +105,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     .into(mRestoImage);
         }
 
+        //TODO display the right icon for the choice
+        //call repo Choice to find in list if the current user has already choosed a restaurant for today
+        //if the user has choosed a resto and it's an other on then changeStatusChoice = false else true
+        //changeStatutChoice(boolean);
+
         mRestoImgCall.setOnClickListener(v -> openDialer(pRestaurant.getRestoPhone()));
 
         mRestoImgWebSite.setOnClickListener(v -> openWebSite(pRestaurant.getRestoWebSite()));
@@ -115,9 +120,20 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void saveChooseRestaurant(Restaurant pRestaurant) {
-
+        //TODO faire comme pour les likes
 
     }
+
+    private void changeStatutChoice(boolean pIsChoosed) {
+        if (pIsChoosed) {
+            mRestoBtnFloatChecked.setImageResource(R.drawable.ic_check_circle);
+            mRestoBtnFloatChecked.setTag(ActionStatus.IS_CHOOSED);
+        } else {
+            mRestoBtnFloatChecked.setImageResource(R.drawable.ic_uncheck_circle);
+            mRestoBtnFloatChecked.setTag(ActionStatus.NOT_CHOOSED);
+        }
+    }
+
     private void saveLikeRestaurant(Restaurant pRestaurant) {
         mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
                 .observe(this, pSaveMessage -> {

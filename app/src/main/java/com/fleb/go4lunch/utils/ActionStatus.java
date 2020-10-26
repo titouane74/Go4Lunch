@@ -7,5 +7,7 @@ public enum ActionStatus {
     ADDED,
     REMOVED,
     SAVED,
-    SAVED_FAILED;
+    SAVED_FAILED,
+    IS_CHOOSED,
+    NOT_CHOOSED;
 }
