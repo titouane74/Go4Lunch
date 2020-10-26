@@ -37,36 +37,22 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_COLLECTION;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_EMAIL_KEY;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_NAME_KEY;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_PHOTO_URL_KEY;
-
 
 public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_AUTHENTICATION = "TAG_AUTHENTICATION";
-    private static final String TAG_AUTH_SAVE = "TAG_AUTH_SAVE";
-    private static final String TAG_AUTH_EXIST = "TAG_AUTH_EXIST";
 
     public static final int RC_SIGN_IN = 123;
     public static final int RC_SIGN_IN_GOOGLE = 456;
 
+    private Go4LunchApi mApi;
+
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
-
-    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
-
 
     Button mBtnLoginGoogle, mBtnLoginFacebook, mBtnLoginEmail, mBtnLoginTwitter;
     FirebaseUser mCurrentUser;
@@ -77,6 +63,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
+        mApi = DI.getGo4LunchApiService();
 
         mBtnLoginGoogle = findViewById(R.id.btn_start_login_google);
         mBtnLoginFacebook = findViewById(R.id.btn_start_login_facebook);
@@ -289,6 +276,8 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getEmail());
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getPhotoUrl());
 
+            mApi.saveWorkmateId(pCurrentUser);
+
             saveWorkmateIfNotExist(pCurrentUser);
 
             finish();
@@ -305,51 +294,13 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
 
-        //TODO call to VM  + add VM auth which call the  workmateRepository
         AuthenticationViewModel lAuthViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
         lAuthViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
-            if(pWorkmateSaved == "SAVED") {
+            if(pWorkmateSaved.equals("SAVED")) {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_created, Toast.LENGTH_SHORT).show();
             }
         });
-/*
-        mWorkmateRef.document(pCurrentWorkmate.getUid())
-                .get()
-                .addOnSuccessListener(pVoid -> {
-                    if (!pVoid.exists()) {
 
-                        Map<String, Object> lWorkmate = new HashMap<>();
-                        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
-                        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
-                        if (pCurrentWorkmate.getPhotoUrl() != null) {
-                            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
-                        }
-                        mWorkmateRef.document(pCurrentWorkmate.getUid())
-                                .set(lWorkmate)
-                                .addOnSuccessListener(pDocumentReference ->
-                                        Log.d(TAG_AUTH_SAVE, "onSuccess : Document saved "))
-                                .addOnFailureListener(pE ->
-                                        Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE));
-                        Toast.makeText(AuthenticationActivity.this, R.string.auth_account_created, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(pE -> Log.d(TAG_AUTH_EXIST, "onFailure Save: Document not saved", pE));
-*/
-    }
-
-    public void saveWorkmate(FirebaseUser pCurrentWorkmate) {
-
-        Map<String, Object> lWorkmate = new HashMap<>();
-        lWorkmate.put(WORKMATE_EMAIL_KEY, pCurrentWorkmate.getEmail());
-        lWorkmate.put(WORKMATE_NAME_KEY, pCurrentWorkmate.getDisplayName());
-        if (pCurrentWorkmate.getPhotoUrl() != null) {
-            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pCurrentWorkmate.getPhotoUrl()).toString());
-        }
-
-        mWorkmateRef.document(pCurrentWorkmate.getUid())
-                .set(lWorkmate)
-                .addOnSuccessListener(pDocumentReference -> Log.d(TAG_AUTH_SAVE, "onSuccess SAVEWORKMATE: Document saved "))
-                .addOnFailureListener(pE -> Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE));
     }
 
 }

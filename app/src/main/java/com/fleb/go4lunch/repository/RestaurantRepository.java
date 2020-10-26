@@ -127,9 +127,9 @@ public class RestaurantRepository {
                                 if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
                                     // 2 = Monday
                                     Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Google 1");
-                                    getGoogleRestaurantList();
+                                    //getGoogleRestaurantList();
                                     //TODO for the moment deactivate the google call
-                                    //getFirestoreRestaurantList();
+                                    getFirestoreRestaurantList();
 
                                 } else {
                                     //implements RestaurantList with Firestore
@@ -141,8 +141,8 @@ public class RestaurantRepository {
                             Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: Firestore date is null - call Google 2");
                             //implement RestaurantList with Google
                             //TODO for the moment deactivate the google call
-                            getGoogleRestaurantList();
-                            //getFirestoreRestaurantList();
+                            //getGoogleRestaurantList();
+                            getFirestoreRestaurantList();
                         }
                     } else {
                         Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: on complete - pTask not successfull - call Firestore 2");
