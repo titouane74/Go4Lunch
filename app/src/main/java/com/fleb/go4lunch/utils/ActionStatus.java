@@ -3,8 +3,9 @@ package com.fleb.go4lunch.utils;
 /**
  * Created by Florence LE BOURNOT on 26/10/2020
  */
-public enum LikeStatus {
+public enum ActionStatus {
     ADDED,
     REMOVED,
+    SAVED,
     SAVED_FAILED;
 }
