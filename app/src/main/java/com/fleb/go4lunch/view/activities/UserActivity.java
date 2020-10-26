@@ -32,10 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_COLLECTION;
-//import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_EMAIL_KEY;
-import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_NAME_KEY;
-//import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_PHOTO_URL_KEY;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_COLLECTION;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_NAME_KEY;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG_USER = "TAG_USER";

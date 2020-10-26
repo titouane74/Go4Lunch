@@ -2,6 +2,7 @@ package com.fleb.go4lunch.model;
 
 import androidx.annotation.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -9,26 +10,29 @@ import java.util.Objects;
  */
 public class Workmate {
 
+    private String workmateId;
     private String workmateName;
     private String workmateEmail;
     private String workmatePhotoUrl;
     private String workmateRestoChoosed;
-    private String workmateRestoId;
-    private Boolean workmateLike;
+    private List<Likes> workmateLikes;
 
 
-
-    public Workmate( String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                String pWorkmateRestoChoosed, String pWorkmateRestoId, Boolean pWorkmateLike ) {
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
+                String pWorkmateRestoChoosed ) {
+        this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
         this.workmateRestoChoosed = pWorkmateRestoChoosed;
-        this.workmateRestoId = pWorkmateRestoId;
-        this.workmateLike = pWorkmateLike;
     }
 
-    public Workmate( String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
+    public Workmate(String pWorkmateId, List<Likes> pWorkmateLikes) {
+        workmateId = pWorkmateId;
+        workmateLikes = pWorkmateLikes;
+    }
+
+    public Workmate(String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
@@ -53,13 +57,13 @@ public class Workmate {
 
     public void setWorkmateRestoChoosed(String pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
 
-    public String getWorkmateRestoId() { return workmateRestoId; }
+    public String getWorkmateId() { return workmateId; }
 
-    public void setWorkmateRestoId(String pWorkmateRestoId) { workmateRestoId = pWorkmateRestoId; }
+    public void setWorkmateId(String pWorkmateId) { workmateId = pWorkmateId; }
 
-    public Boolean getWorkmateLike() { return workmateLike; }
+    public List<Likes> getWorkmateLikes() { return workmateLikes; }
 
-    public void setWorkmateLike(Boolean pWorkmateLike) { workmateLike = pWorkmateLike; }
+    public void setWorkmateLikes(List<Likes> pWorkmateLikes) { workmateLikes = pWorkmateLikes; }
 
     @Override
     public boolean equals(Object pObj) {
@@ -71,6 +75,27 @@ public class Workmate {
     @Override
     public int hashCode() {
         return Objects.hash(getWorkmateEmail());
+    }
+
+
+    public static class Likes {
+        public String restoId;
+        public String restoName;
+
+        public Likes() {}
+
+        public Likes(String pRestoId, String pRestoName) {
+            restoId = pRestoId;
+            restoName = pRestoName;
+        }
+
+        public String getRestoId() { return restoId; }
+
+        public void setRestoId(String pRestoId) { restoId = pRestoId; }
+
+        public String getRestoName() { return restoName; }
+
+        public void setRestoName(String pRestoName) { restoName = pRestoName; }
     }
 
 }

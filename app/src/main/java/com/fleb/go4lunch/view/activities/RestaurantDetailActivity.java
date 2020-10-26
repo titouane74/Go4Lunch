@@ -1,7 +1,7 @@
 package com.fleb.go4lunch.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,11 +15,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.fleb.go4lunch.utils.LikeStatus;
+import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
+import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViweModelFactory;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
 
@@ -31,17 +35,19 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private ImageView mRestoNote2;
     private ImageView mRestoNote3;
     private ImageView mRestoImage;
-    private FloatingActionButton mRestoBtnFloatFavorite;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private Toolbar mToolbarDetail;
     private ImageView mRestoImgCall;
     private ImageView mRestoImgWebSite;
     private ImageView mRestoLike;
+
+    private RestaurantDetailViewModel mRestaurantDetailViewModel;
+    private Workmate mWorkmate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
+
+        Go4LunchApi lApi = DI.getGo4LunchApiService();
 
         mRestoName = findViewById(R.id.text_restaurant_detail_name);
         mRestoNote1 = findViewById(R.id.img_detail_note1);
@@ -49,15 +55,19 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoNote3 = findViewById(R.id.img_detail_note3);
         mRestoAddress = findViewById(R.id.text_restaurant_detail_address);
         mRestoImage = findViewById(R.id.img_restaurant_detail);
-        mRestoBtnFloatFavorite = findViewById(R.id.btn_restaurant_detail_float_favorite);
-        mCollapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
-        mToolbarDetail = findViewById(R.id.toolbar_detail);
+/*
+        FloatingActionButton lRestoBtnFloatFavorite = findViewById(R.id.btn_restaurant_detail_float_favorite);
+        CollapsingToolbarLayout lCollapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
+        Toolbar lToolbarDetail = findViewById(R.id.toolbar_detail);
+*/
         mRestoImgCall = findViewById(R.id.img_call);
         mRestoImgWebSite = findViewById(R.id.img_website);
         mRestoLike = findViewById(R.id.img_like);
 
-        getIncomingIntent();
+        mWorkmate = lApi.getWorkmate();
 
+        getIncomingIntent();
+        configureViewModel();
     }
 
     private void getIncomingIntent() {
@@ -67,6 +77,21 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             setInfoRestaurant(mRestaurant);
         }
     }
+
+    private void configureViewModel() {
+
+        RestaurantDetailViweModelFactory lFactory = new RestaurantDetailViweModelFactory(mRestaurant);
+        mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
+
+        mRestaurantDetailViewModel.getWorkmateComingInRestaurant().observe(this,pChoicesList ->
+        {
+            //TODO envoyé les données de retour à l'adapter
+            //TODO mettre en place le recyclerview
+            Log.d(TAG, "configureViewModel: call liste workmate coming in restaurant size : " + pChoicesList.size());
+        });
+
+    }
+
 
     private void setInfoRestaurant(Restaurant pRestaurant) {
 
@@ -99,41 +124,41 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     .into(mRestoImage);
         }
 
-        mRestoImgCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String lPhone = pRestaurant.getRestoPhone();
-                if((lPhone != null) && (lPhone.trim().length()>0)) {
-                    Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ Uri.encode(lPhone)));
-                    startActivity(lIntent);
-                } else {
-                    Toast.makeText(RestaurantDetailActivity.this, "No phone number", Toast.LENGTH_SHORT).show();
-                }
+        mRestoImgCall.setOnClickListener(v -> {
+            String lPhone = pRestaurant.getRestoPhone();
+            if((lPhone != null) && (lPhone.trim().length()>0)) {
+                Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ Uri.encode(lPhone)));
+                startActivity(lIntent);
+            } else {
+                Toast.makeText(RestaurantDetailActivity.this, "No phone number", Toast.LENGTH_SHORT).show();
             }
         });
 
-        mRestoImgWebSite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String lWebSite = pRestaurant.getRestoWebSite();
+        mRestoImgWebSite.setOnClickListener(v -> {
+            String lWebSite = pRestaurant.getRestoWebSite();
 
-                if (lWebSite != null) {
-                    Intent lIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(lWebSite));
-                    startActivity(lIntent);
-                } else {
-                    Toast.makeText(RestaurantDetailActivity.this, "No web site", Toast.LENGTH_SHORT).show();
-                }
+            if (lWebSite != null) {
+                Intent lIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(lWebSite));
+                startActivity(lIntent);
+            } else {
+                Toast.makeText(RestaurantDetailActivity.this, "No web site", Toast.LENGTH_SHORT).show();
             }
         });
 
-        mRestoLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: " + getString(R.string.to_do));
-                Toast.makeText(RestaurantDetailActivity.this, getString(R.string.to_do), Toast.LENGTH_SHORT).show();
-            }
-        });
+        mRestoLike.setOnClickListener(v -> saveLikeRestaurant(pRestaurant));
+    }
 
-
+    private void saveLikeRestaurant(Restaurant pRestaurant) {
+        mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
+                .observe(this, pSaveMessage -> {
+                    if(pSaveMessage.equals(LikeStatus.ADDED)) {
+                        Toast.makeText(RestaurantDetailActivity.this, "Restaurant ajouté à vos favoris", Toast.LENGTH_SHORT).show();
+                    } else if (pSaveMessage.equals(LikeStatus.REMOVED)) {
+                        Toast.makeText(RestaurantDetailActivity.this, "Restaurant retiré de vos favoris", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "saveLike: NOT saved");
+                        Toast.makeText(RestaurantDetailActivity.this, String.valueOf(pSaveMessage), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

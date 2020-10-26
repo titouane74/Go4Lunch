@@ -46,7 +46,7 @@ import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_TYPE_GOOGL
  * Created by Florence LE BOURNOT on 13/10/2020
  */
 public class RestaurantRepository {
-    public static final String TAG = "TAG4_REPO";
+    //public static final String TAG = "TAG4_REPO";
 
     /**
      * Firebase declarations
@@ -81,50 +81,6 @@ public class RestaurantRepository {
     private Double mLatitude;
     private Double mLongitude;
 
-    /*
-        //meto void SaveLocation dans shared
-        // Attention on récupère avant pour si besoin de test de différence de distance
-
-        //meto getLocation from Shared
-
-    //    mutable blabla() {
-    //        livedata initilise descendre dans les void
-    //        testfirestore collection miseajour day = day
-    //        if firestore à jour
-    //            soit  void getLDFirestoreRestaurantList
-    //        sinon
-    //            soit void getLDGoogleRestaurantList
-    //
-            //return mutableLiveData liste resto
-
-    //POUR GESTION DU DETAIL
-        //Appel datelresto(livedata  mLDRestoList,lRestoList,pRestaurantActuel,lDetailResponse.size )
-        // 1 récup détail resto actuel
-        // 2                         Restaurant lRestaurant = new Restaurant(
-        //                                lPlaceId, lName, lAddress, null, null, lDistance, 0,
-        //                                lOpening, lRating, lPhoto, lLocation
-        //                                , null
-        //                        );
-        //
-        //  3                      lRestoList.add(lRestaurant);
-    //4 si lrestoList.size = lDetailResponse.size
-        // liste rempli entièrement donc
-        // sauvegarde au niveau de firestore
-    //                    mLDRestoList.setValue(lRestoList);
-
-    //POUR GESTION APPEL BONNE METHODE EN FONCTION DE LA MISE A JOUR
-        //définir la date/heure du jour
-        //si date du jour est un lundi on vérifie si la liste à été mise à jour
-        //récupère la date/heure de la dernière mise à jour
-        //si getRestaurantListLastFirestoreUpdate ne retourne rien
-        // on ajoute la date/heure
-        //si getRestaurantListLastFirestoreUpdate retourne une valeur
-        //on compare la date/heure retournée avec celle du jour
-        //si date firestore  < date jour
-        //on met à jour la liste des restaurants
-        //sinon ne met pas à jour la liste des restaurants
-    */
-
     public void saveLocationInSharedPreferences(Location pLocation) {
         PreferencesHelper.saveStringPreferences(PREF_KEY_LATITUDE, String.valueOf(pLocation.getLatitude()));
         PreferencesHelper.saveStringPreferences(PREF_KEY_LONGITUDE, String.valueOf(pLocation.getLongitude()));
@@ -139,63 +95,60 @@ public class RestaurantRepository {
 
         mRestoLastUpdRef.document(RESTO_ID_LAST_UPD_COLL)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> pTask) {
-                        if (pTask.isSuccessful()) {
-                            Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: oncomplete exist");
-                            DocumentSnapshot lResult = pTask.getResult();
-                            Timestamp lTimestamp;
-                            if (lResult.getData() != null) {
-                                lTimestamp = (Timestamp) lResult.getData().get(RESTO_DATE_UPDATE_KEY);
-                                if (lTimestamp != null) {
-                                    Date lDate = new Date();
-                                    //TODO just for the test at day + 1
-                                    Calendar lCal = Calendar.getInstance();
-                                    lCal.setTime(lDate);
-                                    //lCal.add(Calendar.DATE, 1);
-                                    lDate = lCal.getTime();
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: oncomplete exist");
+                        DocumentSnapshot lResult = pTask.getResult();
+                        Timestamp lTimestamp;
+                        if (lResult.getData() != null) {
+                            lTimestamp = (Timestamp) lResult.getData().get(RESTO_DATE_UPDATE_KEY);
+                            if (lTimestamp != null) {
+                                Date lDate = new Date();
+                                //TODO just for the test at day + 1
+                                Calendar lCal = Calendar.getInstance();
+                                lCal.setTime(lDate);
+                                //lCal.add(Calendar.DATE, 1);
+                                lDate = lCal.getTime();
 
-                                    mFirestoreLastUpdate = lTimestamp.toDate();
+                                mFirestoreLastUpdate = lTimestamp.toDate();
 
-                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: mFirestoreLastUpdate " + mFirestoreLastUpdate);
+                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: mFirestoreLastUpdate " + mFirestoreLastUpdate);
 
-                                    //Compare the only dates (today and firestore date)
-                                    @SuppressLint("SimpleDateFormat")
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                                //Compare the only dates (today and firestore date)
+                                @SuppressLint("SimpleDateFormat")
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: DayFirestore : " + sdf.format(mFirestoreLastUpdate));
-                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: DayToday : " + sdf.format(lDate) + " day of week " + lCal.get(Calendar.DAY_OF_WEEK));
-                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: currentDay " + Go4LunchHelper.getCurrentDayInt());
+                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: DayFirestore : " + sdf.format(mFirestoreLastUpdate));
+                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: DayToday : " + sdf.format(lDate) + " day of week " + lCal.get(Calendar.DAY_OF_WEEK));
+                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: currentDay " + Go4LunchHelper.getCurrentDayInt());
 
-                                    // The dates are different and we are on a monday we retieve informations from Google
-                                    //implement RestaurantList with Google
-                                    if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
-                                        // 2 = Monday
-                                        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Google 1");
-                                        //getGoogleRestaurantList();
-                                        //TODO for the moment deactivate the google call
-                                        getFirestoreRestaurantList();
-
-                                    } else {
-                                        //implements RestaurantList with Firestore
-                                        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Firestore 1");
-                                        getFirestoreRestaurantList();
-                                    }
-                                }
-                            } else {
-                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: Firestore date is null - call Google 2");
+                                // The dates are different and we are on a monday we retieve informations from Google
                                 //implement RestaurantList with Google
-                                //TODO for the moment deactivate the google call
-                                //getGoogleRestaurantList();
-                                getFirestoreRestaurantList();
+                                if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
+                                    // 2 = Monday
+                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Google 1");
+                                    //getGoogleRestaurantList();
+                                    //TODO for the moment deactivate the google call
+                                    getFirestoreRestaurantList();
+
+                                } else {
+                                    //implements RestaurantList with Firestore
+                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Firestore 1");
+                                    getFirestoreRestaurantList();
+                                }
                             }
                         } else {
-                            Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: on complete - pTask not successfull - call Firestore 2");
-                            mFirestoreLastUpdate = null;
-                            //implements RestaurantList with Firestore
+                            Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: Firestore date is null - call Google 2");
+                            //implement RestaurantList with Google
+                            //TODO for the moment deactivate the google call
+                            //getGoogleRestaurantList();
                             getFirestoreRestaurantList();
                         }
+                    } else {
+                        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: on complete - pTask not successfull - call Firestore 2");
+                        mFirestoreLastUpdate = null;
+                        //implements RestaurantList with Firestore
+                        getFirestoreRestaurantList();
                     }
                 });
         return mLDRestoList;
@@ -355,10 +308,8 @@ public class RestaurantRepository {
 
                     mRestoRef.document(pRestaurant.getRestoPlaceId())
                             .set(lRestaurant)
-                            .addOnSuccessListener(pDocumentReference -> {
-                                Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved ");
-
-                            })
+                            .addOnSuccessListener(pDocumentReference ->
+                                    Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
                             .addOnFailureListener(pE ->
                                     Log.d("TAG4_SAVE_RESTO", "onFailure: Document not saved", pE));
 
@@ -411,4 +362,5 @@ public class RestaurantRepository {
         return BASE_URL_GOOGLE + "photo?photoreference=" + pPhotoReference
                 + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
     }
+
 }

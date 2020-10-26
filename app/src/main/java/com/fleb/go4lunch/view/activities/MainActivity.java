@@ -23,8 +23,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.PreferencesHelper;
+import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +35,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_COLLECTION;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_EMAIL_KEY;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_NAME_KEY;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_PHOTO_URL_KEY;
 import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 
@@ -40,12 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private static final String TAG_MAIN = "TAG_MAIN";
-
-    public static final String WORKMATE_EMAIL_KEY = "workmateEmail";
-    public static final String WORKMATE_NAME_KEY = "workmateName";
-    public static final String WORKMATE_PHOTO_URL_KEY = "workmatePhotoUrl";
-    public static final String WORKMATE_COLLECTION = "Workmate";
+    private static final String TAG = "TAG_MAIN";
 
     public static final String PREF_KEY_RADIUS = "PREF_KEY_RADIUS";
     public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // Access a Cloud Firestore instance from your Activity
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
+
+    private Go4LunchApi mApi;
 
     private NavController mNavController;
 
@@ -69,9 +73,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initializeSharedPreferences();
+        mApi = DI.getGo4LunchApiService();
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
+
+        mApi.saveWorkmateId(mCurrentUser);
+        Log.d(TAG, "onCreate: saveWorkmateID : " + mCurrentUser.getDisplayName() + " - " + mCurrentUser.getUid());
+        configureViewModel();
 
         configureToolBar();
 
@@ -86,6 +95,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //When drawer and bottomnav are identical
         NavigationUI.setupWithNavController(lBottomNav, mNavController);
 
+    }
+
+    private void configureViewModel() {
+        Log.d(TAG, "configureViewModel: enter");
+        MainActivityViewModel lMainActivityViewModel = new MainActivityViewModel();
+        lMainActivityViewModel.getWorkmateInfos(mApi.getWorkmateId()).observe(this,pWorkmate ->
+        {
+            Log.d(TAG, "configureViewModel: return from repo save workmate in Api : " + pWorkmate.getWorkmateName());
+            mApi.setWorkmate(pWorkmate);
+        });
     }
 
     private void initializeSharedPreferences() {
@@ -158,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void configureDrawerLayoutNavigationView() {
+
         mDrawerLayout = findViewById(R.id.main_activity_drawer_layout);
         mNavigationView = findViewById(R.id.nav_view);
         View lHeaderView = mNavigationView.getHeaderView(0);
@@ -206,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         displayDrawerData(lWorkmate.getWorkmateEmail(), lWorkmate.getWorkmateName(), lWorkmate.getWorkmatePhotoUrl());
                     }
                 })
-                .addOnFailureListener(pE -> Log.d(TAG_MAIN, "displayWorkmateData: " + pE.getMessage()));
+                .addOnFailureListener(pE -> Log.d(TAG, "displayWorkmateData: " + pE.getMessage()));
     }
 
     private void displayDrawerData(String pEmail, String pName, String pPhotoUrl) {

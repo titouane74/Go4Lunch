@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -20,6 +21,9 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 
+import com.fleb.go4lunch.di.DI;
+import com.fleb.go4lunch.service.Go4LunchApi;
+import com.fleb.go4lunch.viewmodel.AuthenticationViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -42,10 +46,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_COLLECTION;
-import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_EMAIL_KEY;
-import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_NAME_KEY;
-import static com.fleb.go4lunch.view.activities.MainActivity.WORKMATE_PHOTO_URL_KEY;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_COLLECTION;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_EMAIL_KEY;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_NAME_KEY;
+import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_PHOTO_URL_KEY;
+
 
 public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -62,6 +67,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
 
+
     Button mBtnLoginGoogle, mBtnLoginFacebook, mBtnLoginEmail, mBtnLoginTwitter;
     FirebaseUser mCurrentUser;
     CallbackManager mCallbackManager;
@@ -70,6 +76,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
+
 
         mBtnLoginGoogle = findViewById(R.id.btn_start_login_google);
         mBtnLoginFacebook = findViewById(R.id.btn_start_login_facebook);
@@ -298,6 +305,14 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
 
+        //TODO call to VM  + add VM auth which call the  workmateRepository
+        AuthenticationViewModel lAuthViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
+        lAuthViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
+            if(pWorkmateSaved == "SAVED") {
+                Toast.makeText(AuthenticationActivity.this, R.string.auth_account_created, Toast.LENGTH_SHORT).show();
+            }
+        });
+/*
         mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pVoid -> {
@@ -319,7 +334,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                     }
                 })
                 .addOnFailureListener(pE -> Log.d(TAG_AUTH_EXIST, "onFailure Save: Document not saved", pE));
-
+*/
     }
 
     public void saveWorkmate(FirebaseUser pCurrentWorkmate) {

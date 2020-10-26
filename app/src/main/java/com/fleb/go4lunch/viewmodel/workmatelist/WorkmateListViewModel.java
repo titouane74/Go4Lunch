@@ -17,7 +17,7 @@ public class WorkmateListViewModel extends ViewModel {
     private WorkmateRepository mRepository = new WorkmateRepository();
 
     public WorkmateListViewModel() {
-        mLDWorkmateList = mRepository.getLDWorkmateData();
+        mLDWorkmateList = mRepository.getLDWorkmateListData();
     }
     public LiveData<List<Workmate>> getWorkmateList() {
         return mLDWorkmateList;
