@@ -11,7 +11,7 @@ import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.ChoiceRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
-import com.fleb.go4lunch.utils.LikeStatus;
+import com.fleb.go4lunch.utils.ActionStatus;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class RestaurantDetailViewModel extends ViewModel {
         mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant.getRestoPlaceId());
     }
 
-    public LiveData<LikeStatus> saveLikeRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
+    public LiveData<ActionStatus> saveLikeRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
         return mWorkmateRepo.saveLikeRestaurant(pWorkmate, pRestaurant);
     }
 

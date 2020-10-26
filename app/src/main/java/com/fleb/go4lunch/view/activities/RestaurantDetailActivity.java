@@ -21,7 +21,7 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
-import com.fleb.go4lunch.utils.LikeStatus;
+import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViweModelFactory;
 
@@ -151,9 +151,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void saveLikeRestaurant(Restaurant pRestaurant) {
         mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
                 .observe(this, pSaveMessage -> {
-                    if(pSaveMessage.equals(LikeStatus.ADDED)) {
+                    if(pSaveMessage.equals(ActionStatus.ADDED)) {
                         Toast.makeText(RestaurantDetailActivity.this, "Restaurant ajouté à vos favoris", Toast.LENGTH_SHORT).show();
-                    } else if (pSaveMessage.equals(LikeStatus.REMOVED)) {
+                    } else if (pSaveMessage.equals(ActionStatus.REMOVED)) {
                         Toast.makeText(RestaurantDetailActivity.this, "Restaurant retiré de vos favoris", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d(TAG, "saveLike: NOT saved");

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fleb.go4lunch.repository.WorkmateRepository;
+import com.fleb.go4lunch.utils.ActionStatus;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
@@ -15,7 +16,7 @@ public class AuthenticationViewModel extends ViewModel {
 
     public AuthenticationViewModel() { }
 
-    public LiveData<String> saveWorkmateFirebaseProfile(FirebaseUser pUser) {
+    public LiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pUser) {
 
         return mWorkmateRepo.saveWorkmateFirebaseProfile(pUser);
     }

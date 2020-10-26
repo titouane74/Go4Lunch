@@ -73,7 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initializeSharedPreferences();
-        mApi = DI.getGo4LunchApiService();
+        if(mApi == null) {
+            mApi = DI.getGo4LunchApiService();
+        }
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();

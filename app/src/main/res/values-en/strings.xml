@@ -61,6 +61,7 @@
     <string name="desc_logo_email">Email</string>
     <string name="desc_logo_twitter">Twitter</string>
     <string name="auth_account_created">Account created</string>
+    <string name="auth_account_not_created">Failed to create account</string>
     <string name="auth_msg_sign_in_to_continue">Please sign in to continue.</string>
 
 

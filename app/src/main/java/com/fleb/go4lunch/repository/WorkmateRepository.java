@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 
-import com.fleb.go4lunch.utils.LikeStatus;
+import com.fleb.go4lunch.utils.ActionStatus;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -44,8 +44,8 @@ public class WorkmateRepository {
 
     private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
     private MutableLiveData<Workmate> mLDWorkmate = new MutableLiveData<>();
-    private MutableLiveData<String> mLDWorkmateSaved = new MutableLiveData<>();
-    private MutableLiveData<LikeStatus> mLDLikeSaved = new MutableLiveData<>();
+    private MutableLiveData<ActionStatus> mLDWorkmateSaved = new MutableLiveData<>();
+    private MutableLiveData<ActionStatus> mLDLikeSaved = new MutableLiveData<>();
 
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
         mWorkmateRef
@@ -60,8 +60,7 @@ public class WorkmateRepository {
         return mLDWorkmateList;
     }
 
-    //TODO add the add user to Firestore called by the auth
-    public MutableLiveData<String> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
+    public MutableLiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
         mWorkmateRef.document(pWorkmate.getUid())
                 .get()
                 .addOnSuccessListener(pVoid -> {
@@ -77,11 +76,11 @@ public class WorkmateRepository {
                                 .set(lWorkmate)
                                 .addOnSuccessListener(pDocumentReference -> {
                                     Log.d(TAG_AUTH_SAVE, "onSuccess : Document saved ");
-                                    mLDWorkmateSaved.setValue("SAVED");
+                                    mLDWorkmateSaved.setValue(ActionStatus.SAVED);
                                 })
                                 .addOnFailureListener(pE -> {
                                     Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE);
-                                    mLDWorkmateSaved.setValue(String.valueOf(pE));
+                                    mLDWorkmateSaved.setValue(ActionStatus.SAVED_FAILED);
                                 })
                         ;
 
@@ -107,8 +106,8 @@ public class WorkmateRepository {
         return mLDWorkmate;
     }
 
-    public MutableLiveData<LikeStatus> saveLikeRestaurant(Workmate pWorkmate,
-                                                          Restaurant pRestaurant) {
+    public MutableLiveData<ActionStatus> saveLikeRestaurant(Workmate pWorkmate,
+                                                            Restaurant pRestaurant) {
 
         mWorkmateDocRef = mWorkmateRef.document(pWorkmate.getWorkmateId());
 
@@ -150,11 +149,11 @@ public class WorkmateRepository {
         mWorkmateDocRef.update("workmateLikes", FieldValue.arrayUnion(pRestaurant))
                 .addOnSuccessListener(pDocumentReference -> {
                     Log.d(TAG_AUTH_SAVE, "onSuccess : Document saved ");
-                    mLDLikeSaved.setValue(LikeStatus.ADDED);
+                    mLDLikeSaved.setValue(ActionStatus.ADDED);
                 })
                 .addOnFailureListener(pE -> {
                     Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE);
-                    mLDLikeSaved.setValue(LikeStatus.SAVED_FAILED);
+                    mLDLikeSaved.setValue(ActionStatus.SAVED_FAILED);
                 });
     }
 
@@ -163,11 +162,11 @@ public class WorkmateRepository {
         mWorkmateDocRef.update("workmateLikes", FieldValue.arrayRemove(pRestaurant))
                 .addOnSuccessListener(pDocumentReference -> {
                     Log.d(TAG_AUTH_SAVE, "onSuccess : Document saved ");
-                    mLDLikeSaved.setValue(LikeStatus.REMOVED);
+                    mLDLikeSaved.setValue(ActionStatus.REMOVED);
                 })
                 .addOnFailureListener(pE -> {
                     Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE);
-                    mLDLikeSaved.setValue(LikeStatus.SAVED_FAILED);
+                    mLDLikeSaved.setValue(ActionStatus.SAVED_FAILED);
                 });
     }
 }
