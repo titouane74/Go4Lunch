@@ -53,10 +53,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
     public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
 
-    // Access a Cloud Firestore instance from your Activity
-    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
-
     private Go4LunchApi mApi;
 
     private NavController mNavController;
@@ -100,12 +96,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void configureViewModel() {
-        Log.d(TAG, "configureViewModel: enter");
         MainActivityViewModel lMainActivityViewModel = new MainActivityViewModel();
         lMainActivityViewModel.getWorkmateInfos(mApi.getWorkmateId()).observe(this,pWorkmate ->
         {
             Log.d(TAG, "configureViewModel: return from repo save workmate in Api : " + pWorkmate.getWorkmateName());
             mApi.setWorkmate(pWorkmate);
+            displayDrawerData(pWorkmate);
         });
     }
 
@@ -195,10 +191,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setOpenableLayout(mDrawerLayout)
                 .build();
 
-        if (mCurrentUser != null) {
+/*        if (mCurrentUser != null) {
             displayWorkmateData(mCurrentUser);
-        }
-
+        }*/
         mImgUser.setOnClickListener(this);
     }
 
@@ -210,33 +205,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
+    private void displayDrawerData(Workmate pWorkmate) {
 
-        mWorkmateRef.document(pCurrentWorkmate.getUid())
-                .get()
-                .addOnSuccessListener(pDocumentSnapshot -> {
-                    if (pDocumentSnapshot.exists()) {
-                        displayDrawerData(pDocumentSnapshot.getString(WORKMATE_EMAIL_KEY),
-                                pDocumentSnapshot.getString(WORKMATE_NAME_KEY),
-                                pDocumentSnapshot.getString(WORKMATE_PHOTO_URL_KEY));
-                    } else {
-                        String lUrl = null;
-                        if (pCurrentWorkmate.getPhotoUrl() != null) {
-                            lUrl = pCurrentWorkmate.getPhotoUrl().toString();
-                        }
-                        Workmate lWorkmate = new Workmate(pCurrentWorkmate.getDisplayName(), pCurrentWorkmate.getEmail(), lUrl);
-                        displayDrawerData(lWorkmate.getWorkmateEmail(), lWorkmate.getWorkmateName(), lWorkmate.getWorkmatePhotoUrl());
-                    }
-                })
-                .addOnFailureListener(pE -> Log.d(TAG, "displayWorkmateData: " + pE.getMessage()));
-    }
-
-    private void displayDrawerData(String pEmail, String pName, String pPhotoUrl) {
-        if (pPhotoUrl != null) {
-            Glide.with(MainActivity.this).load(pPhotoUrl).apply(RequestOptions.circleCropTransform()).into(mImgUser);
+        if (pWorkmate.getWorkmatePhotoUrl() != null) {
+            Glide.with(MainActivity.this).load(pWorkmate.getWorkmatePhotoUrl())
+                    .apply(RequestOptions.circleCropTransform()).into(mImgUser);
         }
-        mTxtName.setText(pName);
-        mTxtEmail.setText(pEmail);
+        mTxtName.setText(pWorkmate.getWorkmateName());
+        mTxtEmail.setText(pWorkmate.getWorkmateEmail());
     }
 
 }

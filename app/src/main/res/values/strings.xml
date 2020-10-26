@@ -83,6 +83,10 @@
     <string name="text_call">APPELER</string>
     <string name="text_like">LIKE</string>
     <string name="text_website">SITE WEB</string>
+    <string name="text_no_web_site">Pas de site web</string>
+    <string name="text_no_phone_number">Pas de numéro de téléphone</string>
+    <string name="text_resto_added_to_favorite">Restaurant ajouté à vos favoris</string>
+    <string name="text_resto_removed_from_favorite">Restaurant retiré de vos favoris</string>
 
     <!-- RESTAURANT LIST -->
     <string name="text_resto_list_name">Le Zinc</string>

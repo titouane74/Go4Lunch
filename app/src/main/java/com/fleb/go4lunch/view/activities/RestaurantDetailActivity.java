@@ -24,6 +24,7 @@ import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViweModelFactory;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
 
@@ -38,6 +39,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private ImageView mRestoImgCall;
     private ImageView mRestoImgWebSite;
     private ImageView mRestoLike;
+    private FloatingActionButton mRestoBtnFloatChecked;
 
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
     private Workmate mWorkmate;
@@ -55,11 +57,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoNote3 = findViewById(R.id.img_detail_note3);
         mRestoAddress = findViewById(R.id.text_restaurant_detail_address);
         mRestoImage = findViewById(R.id.img_restaurant_detail);
-/*
-        FloatingActionButton lRestoBtnFloatFavorite = findViewById(R.id.btn_restaurant_detail_float_favorite);
-        CollapsingToolbarLayout lCollapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
-        Toolbar lToolbarDetail = findViewById(R.id.toolbar_detail);
-*/
+        mRestoBtnFloatChecked = findViewById(R.id.btn_restaurant_detail_float_favorite);
         mRestoImgCall = findViewById(R.id.img_call);
         mRestoImgWebSite = findViewById(R.id.img_website);
         mRestoLike = findViewById(R.id.img_like);
@@ -68,6 +66,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         getIncomingIntent();
         configureViewModel();
+
     }
 
     private void getIncomingIntent() {
@@ -92,14 +91,68 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     }
 
-
     private void setInfoRestaurant(Restaurant pRestaurant) {
 
         mRestoName.setText(pRestaurant.getRestoName());
         mRestoAddress.setText(pRestaurant.getRestoAddress());
 
-        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()),
-                pRestaurant.getRestoRating());
+        displayRating(pRestaurant.getRestoRating());
+
+        if (pRestaurant.getRestoPhotoUrl() != null) {
+            Glide.with(RestaurantDetailActivity.this)
+                    .load(pRestaurant.getRestoPhotoUrl())
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(mRestoImage);
+        }
+
+        mRestoImgCall.setOnClickListener(v -> openDialer(pRestaurant.getRestoPhone()));
+
+        mRestoImgWebSite.setOnClickListener(v -> openWebSite(pRestaurant.getRestoWebSite()));
+
+        mRestoLike.setOnClickListener(v -> saveLikeRestaurant(pRestaurant));
+
+        mRestoBtnFloatChecked.setOnClickListener(v -> saveChooseRestaurant(pRestaurant));
+    }
+
+    private void saveChooseRestaurant(Restaurant pRestaurant) {
+
+
+    }
+    private void saveLikeRestaurant(Restaurant pRestaurant) {
+        mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
+                .observe(this, pSaveMessage -> {
+                    if(pSaveMessage.equals(ActionStatus.ADDED)) {
+                        Toast.makeText(RestaurantDetailActivity.this,
+                                getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
+                    } else if (pSaveMessage.equals(ActionStatus.REMOVED)) {
+                        Toast.makeText(RestaurantDetailActivity.this,
+                                getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(RestaurantDetailActivity.this, String.valueOf(pSaveMessage), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void openWebSite(String pWebSite) {
+        if (pWebSite != null) {
+            Intent lIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pWebSite));
+            startActivity(lIntent);
+        } else {
+            Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_no_web_site), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openDialer(String pPhone) {
+        if((pPhone != null) && (pPhone.trim().length()>0)) {
+            Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ Uri.encode(pPhone)));
+            startActivity(lIntent);
+        } else {
+            Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_no_phone_number), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void displayRating(double pRating) {
+        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()),pRating);
         switch (lnbStarToDisplay) {
             case 1:
                 mRestoNote2.setVisibility(View.INVISIBLE);
@@ -116,49 +169,5 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 mRestoNote3.setVisibility(View.INVISIBLE);
                 break;
         }
-
-        if (pRestaurant.getRestoPhotoUrl() != null) {
-            Glide.with(RestaurantDetailActivity.this)
-                    .load(pRestaurant.getRestoPhotoUrl())
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(mRestoImage);
-        }
-
-        mRestoImgCall.setOnClickListener(v -> {
-            String lPhone = pRestaurant.getRestoPhone();
-            if((lPhone != null) && (lPhone.trim().length()>0)) {
-                Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ Uri.encode(lPhone)));
-                startActivity(lIntent);
-            } else {
-                Toast.makeText(RestaurantDetailActivity.this, "No phone number", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mRestoImgWebSite.setOnClickListener(v -> {
-            String lWebSite = pRestaurant.getRestoWebSite();
-
-            if (lWebSite != null) {
-                Intent lIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(lWebSite));
-                startActivity(lIntent);
-            } else {
-                Toast.makeText(RestaurantDetailActivity.this, "No web site", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mRestoLike.setOnClickListener(v -> saveLikeRestaurant(pRestaurant));
-    }
-
-    private void saveLikeRestaurant(Restaurant pRestaurant) {
-        mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
-                .observe(this, pSaveMessage -> {
-                    if(pSaveMessage.equals(ActionStatus.ADDED)) {
-                        Toast.makeText(RestaurantDetailActivity.this, "Restaurant ajouté à vos favoris", Toast.LENGTH_SHORT).show();
-                    } else if (pSaveMessage.equals(ActionStatus.REMOVED)) {
-                        Toast.makeText(RestaurantDetailActivity.this, "Restaurant retiré de vos favoris", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.d(TAG, "saveLike: NOT saved");
-                        Toast.makeText(RestaurantDetailActivity.this, String.valueOf(pSaveMessage), Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 }
