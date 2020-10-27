@@ -98,6 +98,7 @@ public class Workmate {
         public void setRestoName(String pRestoName) { restoName = pRestoName; }
     }
     public enum Fields {
+        Workmate,
         workmateId,
         workmateName,
         workmateEmail,

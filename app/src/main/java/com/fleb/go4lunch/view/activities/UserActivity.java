@@ -32,15 +32,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_COLLECTION;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_NAME_KEY;
-
 public class UserActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG_USER = "TAG_USER";
     private FirebaseUser mCurrentUser;
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
+    private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
 
     private ImageView mImgUser;
     private TextView mTxtEmail;
@@ -130,7 +127,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         String lWorkmateName = mTxtName.getText().toString();
 
         Map<String, Object> lWorkmate = new HashMap<>();
-        lWorkmate.put(WORKMATE_NAME_KEY, lWorkmateName);
+        lWorkmate.put(String.valueOf(Workmate.Fields.workmateName), lWorkmateName);
 
         mWorkmateRef.document( pCurrentWorkmate.getUid())
                 .update(lWorkmate)

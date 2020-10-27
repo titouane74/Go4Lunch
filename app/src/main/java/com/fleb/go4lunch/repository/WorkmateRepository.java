@@ -18,27 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
 /**
  * Created by Florence LE BOURNOT on 22/09/2020
  */
 public class WorkmateRepository {
 
-    public static final String WORKMATE_EMAIL_KEY = "workmateEmail";
-    public static final String WORKMATE_NAME_KEY = "workmateName";
-    public static final String WORKMATE_PHOTO_URL_KEY = "workmatePhotoUrl";
-    public static final String WORKMATE_COLLECTION = "Workmate";
-    public static final String WORKMATE_ID_KEY = "workmateId";
-    //public static final String WORKMATE_LIKES_KEY = "workmateLikes";
-
     private static final String TAG_AUTH_SAVE = "TAG_AUTH_SAVE";
 
-    //public static final String TAG = "TAG_WORKMATE_REPO";
     /**
      * Firebase declarations
      */
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mWorkmateRef = mDb.collection(WORKMATE_COLLECTION);
+    private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
     private DocumentReference mWorkmateDocRef;
 
     private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
@@ -65,11 +56,11 @@ public class WorkmateRepository {
                 .addOnSuccessListener(pVoid -> {
                     if (!pVoid.exists()) {
                         Map<String, Object> lWorkmate = new HashMap<>();
-                        lWorkmate.put(WORKMATE_EMAIL_KEY, pWorkmate.getEmail());
-                        lWorkmate.put(WORKMATE_NAME_KEY, pWorkmate.getDisplayName());
-                        lWorkmate.put(WORKMATE_ID_KEY, pWorkmate.getUid());
+                        lWorkmate.put(String.valueOf(Workmate.Fields.workmateEmail), pWorkmate.getEmail());
+                        lWorkmate.put(String.valueOf(Workmate.Fields.workmateName), pWorkmate.getDisplayName());
+                        lWorkmate.put(String.valueOf(Workmate.Fields.workmateId), pWorkmate.getUid());
                         if (pWorkmate.getPhotoUrl() != null) {
-                            lWorkmate.put(WORKMATE_PHOTO_URL_KEY, Objects.requireNonNull(pWorkmate.getPhotoUrl()).toString());
+                            lWorkmate.put(String.valueOf(Workmate.Fields.workmatePhotoUrl), Objects.requireNonNull(pWorkmate.getPhotoUrl()).toString());
                         }
                         mWorkmateRef.document(pWorkmate.getUid())
                                 .set(lWorkmate)

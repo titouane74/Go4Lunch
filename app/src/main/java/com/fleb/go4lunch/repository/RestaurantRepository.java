@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.BuildConfig;
+import com.fleb.go4lunch.model.FirestoreUpdateFields;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.model.RestaurantPojo;
@@ -48,20 +49,12 @@ import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_TYPE_GOOGL
 public class RestaurantRepository {
     //public static final String TAG = "TAG4_REPO";
 
-    /**
-     * Firebase declarations
-     */
-    public static final String RESTO_COLLECTION = "Restaurant";
-    public static final String RESTO_LAST_UPD_COLL = "RestaurantLastUpdate";
-    public static final String RESTO_DATE_UPDATE_KEY = "restoLastUpdateList";
-    public static final String RESTO_ID_LAST_UPD_COLL = "dateLastUpdateListResto";
-
     public static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
     public static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mRestoRef = mDb.collection(RESTO_COLLECTION);
-    private CollectionReference mRestoLastUpdRef = mDb.collection(RESTO_LAST_UPD_COLL);
+    private CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
+    private CollectionReference mRestoLastUpdRef = mDb.collection(String.valueOf(FirestoreUpdateFields.RestaurantLastUpdate));
 
     /**
      * Google  / Retrofit declarations
@@ -93,7 +86,7 @@ public class RestaurantRepository {
         mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
 
-        mRestoLastUpdRef.document(RESTO_ID_LAST_UPD_COLL)
+        mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
@@ -101,7 +94,7 @@ public class RestaurantRepository {
                         DocumentSnapshot lResult = pTask.getResult();
                         Timestamp lTimestamp;
                         if (lResult.getData() != null) {
-                            lTimestamp = (Timestamp) lResult.getData().get(RESTO_DATE_UPDATE_KEY);
+                            lTimestamp = (Timestamp) lResult.getData().get(String.valueOf(FirestoreUpdateFields.restoLastUpdateList));
                             if (lTimestamp != null) {
                                 Date lDate = new Date();
                                 //TODO just for the test at day + 1
@@ -338,8 +331,8 @@ public class RestaurantRepository {
 
         Date lDate = new Date();
         Map<String, Object> lLastUpdate = new HashMap<>();
-        lLastUpdate.put(RESTO_DATE_UPDATE_KEY, lDate);
-        mRestoLastUpdRef.document(RESTO_ID_LAST_UPD_COLL)
+        lLastUpdate.put(String.valueOf(FirestoreUpdateFields.restoLastUpdateList), lDate);
+        mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))
                 .set(lLastUpdate)
                 .addOnSuccessListener(pDocumentReference ->
                         Log.d("TAG4_SAVE_DATE", "onSuccess : update date "))

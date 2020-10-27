@@ -94,4 +94,20 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
     public int compareTo(Restaurant pRestaurant) {
         return pRestaurant.restoDistance - this.restoDistance;
     }
+
+    public enum Fields{
+        Restaurant,
+        restoPlaceId,
+        restoName,
+        restoAddress,
+        restoPhone,
+        restoWebSite,
+        restoDistanceText,
+        restoNbWorkmates,
+        restoRating,
+        restoPhotoUrl,
+        restoLocation,
+        restoOpeningHours,
+        restoDistance;
+    }
 }
