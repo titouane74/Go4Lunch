@@ -1,18 +1,22 @@
 package com.fleb.go4lunch.repository;
 
+import android.drm.DrmStore;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 
 import com.fleb.go4lunch.utils.ActionStatus;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +49,7 @@ public class WorkmateRepository {
     private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
     private MutableLiveData<Workmate> mLDWorkmate = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDWorkmateSaved = new MutableLiveData<>();
-    private MutableLiveData<ActionStatus> mLDLikeSaved = new MutableLiveData<>();
+    private MutableLiveData<ActionStatus> mLDLikeStatus = new MutableLiveData<>();
 
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
         mWorkmateRef
@@ -91,8 +95,7 @@ public class WorkmateRepository {
     }
 
     public MutableLiveData<Workmate> getWorkmate(String pWorkmateId) {
-        mWorkmateRef
-                .document(pWorkmateId)
+        mWorkmateRef.document(pWorkmateId)
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
@@ -106,6 +109,22 @@ public class WorkmateRepository {
         return mLDWorkmate;
     }
 
+    public MutableLiveData<ActionStatus> getWorkmateLikeForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
+        mWorkmateRef
+                .document(pWorkmateId)
+                .get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
+                        findRestaurantInLikes(lWorkmate, pRestaurant, ActionStatus.TO_SEARCH);
+                    } else {
+                        Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
+                        mLDLikeStatus.setValue(ActionStatus.ERROR);
+                    }
+                });
+        return mLDLikeStatus;
+    }
+
     public MutableLiveData<ActionStatus> saveLikeRestaurant(Workmate pWorkmate,
                                                             Restaurant pRestaurant) {
 
@@ -116,32 +135,47 @@ public class WorkmateRepository {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         if (lWorkmate != null) {
-                            findRestaurantInLikes(lWorkmate, pRestaurant);
+                            findRestaurantInLikes(lWorkmate, pRestaurant, ActionStatus.TO_SAVE);
                         }
                     } else {
                         Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
+                        mLDLikeStatus.setValue(ActionStatus.ERROR);
                     }
                 });
-        return mLDLikeSaved;
+        return mLDLikeStatus;
     }
 
-    private void findRestaurantInLikes(Workmate pWorkmate, Restaurant pRestaurant) {
+    private void findRestaurantInLikes(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
         boolean lIsFound = false;
         Workmate.Likes lRestaurant = new Workmate.Likes(pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName());
 
-        for (Workmate.Likes lLikes : pWorkmate.getWorkmateLikes()) {
-            if (lLikes.restoId.equals(pRestaurant.getRestoPlaceId())) {
-                lIsFound = true;
-                break;
+        if (pWorkmate.getWorkmateLikes() != null) {
+            for (Workmate.Likes lLikes : pWorkmate.getWorkmateLikes()) {
+                if (lLikes.restoId.equals(pRestaurant.getRestoPlaceId())) {
+                    lIsFound = true;
+                    break;
+                }
             }
         }
 
-        if (lIsFound) {
-            removeRestaurantFromLikes(lRestaurant);
-        } else {
-            addRestaurantToLikes(lRestaurant);
+        switch (pActionStatus) {
+            case TO_SAVE:
+                if (lIsFound) {
+                    removeRestaurantFromLikes(lRestaurant);
+                } else {
+                    addRestaurantToLikes(lRestaurant);
+                }
+                break;
+            case TO_SEARCH:
+                if (lIsFound) {
+                    mLDLikeStatus.setValue(ActionStatus.IS_CHOOSED);
+                } else {
+                    mLDLikeStatus.setValue(ActionStatus.NOT_CHOOSED);
+                }
+                break;
+            default:
+                mLDLikeStatus.setValue(ActionStatus.ERROR);
         }
-
     }
 
     private void addRestaurantToLikes(Workmate.Likes pRestaurant) {
@@ -149,11 +183,11 @@ public class WorkmateRepository {
         mWorkmateDocRef.update("workmateLikes", FieldValue.arrayUnion(pRestaurant))
                 .addOnSuccessListener(pDocumentReference -> {
                     Log.d(TAG_AUTH_SAVE, "onSuccess : Document saved ");
-                    mLDLikeSaved.setValue(ActionStatus.ADDED);
+                    mLDLikeStatus.setValue(ActionStatus.ADDED);
                 })
                 .addOnFailureListener(pE -> {
                     Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE);
-                    mLDLikeSaved.setValue(ActionStatus.SAVED_FAILED);
+                    mLDLikeStatus.setValue(ActionStatus.SAVED_FAILED);
                 });
     }
 
@@ -162,11 +196,11 @@ public class WorkmateRepository {
         mWorkmateDocRef.update("workmateLikes", FieldValue.arrayRemove(pRestaurant))
                 .addOnSuccessListener(pDocumentReference -> {
                     Log.d(TAG_AUTH_SAVE, "onSuccess : Document saved ");
-                    mLDLikeSaved.setValue(ActionStatus.REMOVED);
+                    mLDLikeStatus.setValue(ActionStatus.REMOVED);
                 })
                 .addOnFailureListener(pE -> {
                     Log.d(TAG_AUTH_SAVE, "onFailure: Document not saved", pE);
-                    mLDLikeSaved.setValue(ActionStatus.SAVED_FAILED);
+                    mLDLikeStatus.setValue(ActionStatus.SAVED_FAILED);
                 });
     }
 }

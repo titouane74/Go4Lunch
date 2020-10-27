@@ -20,6 +20,7 @@
     <color name="colorTextBlack">#000000</color>
 
     <color name="colorPinGreen">#69F0AE</color>
+    <color name="colorIconUnavailable">#909090</color>
 
 
     <!--AUTHENTICATION-->

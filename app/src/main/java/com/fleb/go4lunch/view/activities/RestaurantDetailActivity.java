@@ -65,6 +65,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mWorkmate = lApi.getWorkmate();
 
         getIncomingIntent();
+
         configureViewModel();
 
     }
@@ -79,16 +80,23 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void configureViewModel() {
 
-        RestaurantDetailViweModelFactory lFactory = new RestaurantDetailViweModelFactory(mRestaurant);
-        mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
+        initializeViewModel();
 
-        mRestaurantDetailViewModel.getWorkmateComingInRestaurant().observe(this,pChoicesList ->
+        displayChoiceStatus(mRestaurant);
+        displayLikeStatus(mRestaurant);
+
+        mRestaurantDetailViewModel.getWorkmateComingInRestaurant().observe(this, pChoicesList ->
         {
             //TODO envoyé les données de retour à l'adapter
             //TODO mettre en place le recyclerview
             Log.d(TAG, "configureViewModel: call liste workmate coming in restaurant size : " + pChoicesList.size());
         });
 
+    }
+
+    private void initializeViewModel() {
+        RestaurantDetailViweModelFactory lFactory = new RestaurantDetailViweModelFactory(mRestaurant);
+        mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
     }
 
     private void setInfoRestaurant(Restaurant pRestaurant) {
@@ -105,10 +113,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     .into(mRestoImage);
         }
 
-        //TODO display the right icon for the choice
-        //call repo Choice to find in list if the current user has already choosed a restaurant for today
-        //if the user has choosed a resto and it's an other on then changeStatusChoice = false else true
-        //changeStatutChoice(boolean);
+        displayChoiceStatus(pRestaurant);
 
         mRestoImgCall.setOnClickListener(v -> openDialer(pRestaurant.getRestoPhone()));
 
@@ -121,10 +126,25 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void saveChooseRestaurant(Restaurant pRestaurant) {
         //TODO faire comme pour les likes
+    }
+
+    private void displayChoiceStatus(Restaurant pRestaurant) {
+        if (mRestaurantDetailViewModel == null) {
+            initializeViewModel();
+        }
+        mRestaurantDetailViewModel.getWorkmateChoiceForRestaurant(mWorkmate.getWorkmateId(), pRestaurant)
+                .observe(this, pActionStation -> {
+                    if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
+                        changeChoiceStatus(true);
+                    } else {
+                        changeChoiceStatus(false);
+                    }
+                });
 
     }
 
-    private void changeStatutChoice(boolean pIsChoosed) {
+    private void changeChoiceStatus(boolean pIsChoosed) {
+        Log.d(TAG, "changeChoiceStatus: ");
         if (pIsChoosed) {
             mRestoBtnFloatChecked.setImageResource(R.drawable.ic_check_circle);
             mRestoBtnFloatChecked.setTag(ActionStatus.IS_CHOOSED);
@@ -134,19 +154,43 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void displayLikeStatus(Restaurant pRestaurant) {
+        if (mRestaurantDetailViewModel == null) {
+            initializeViewModel();
+        }
+        mRestaurantDetailViewModel.getWorkmateLikeForRestaurant(mWorkmate.getWorkmateId(), pRestaurant)
+                .observe(this, pActionStation -> {
+                    if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
+                        changeLikeStatus(true);
+                    } else {
+                        changeLikeStatus(false);
+                    }
+                });
+    }
+
     private void saveLikeRestaurant(Restaurant pRestaurant) {
         mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
                 .observe(this, pSaveMessage -> {
-                    if(pSaveMessage.equals(ActionStatus.ADDED)) {
-                        Toast.makeText(RestaurantDetailActivity.this,
-                                getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
+                    if (pSaveMessage.equals(ActionStatus.ADDED)) {
+//                        Toast.makeText(RestaurantDetailActivity.this,getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
+                        changeLikeStatus(true);
                     } else if (pSaveMessage.equals(ActionStatus.REMOVED)) {
-                        Toast.makeText(RestaurantDetailActivity.this,
-                                getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(RestaurantDetailActivity.this, String.valueOf(pSaveMessage), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RestaurantDetailActivity.this,getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
+                        changeLikeStatus(false);
+                    } else if (pSaveMessage.equals(ActionStatus.ERROR)){
+                        Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void changeLikeStatus(boolean pIsChoosed) {
+        if (pIsChoosed) {
+            mRestoLike.setImageResource(R.drawable.ic_like);
+            mRestoLike.setTag(ActionStatus.IS_CHOOSED);
+        } else {
+            mRestoLike.setImageResource(R.drawable.ic_not_like);
+            mRestoLike.setTag(ActionStatus.NOT_CHOOSED);
+        }
     }
 
     private void openWebSite(String pWebSite) {
@@ -159,8 +203,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void openDialer(String pPhone) {
-        if((pPhone != null) && (pPhone.trim().length()>0)) {
-            Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ Uri.encode(pPhone)));
+        if ((pPhone != null) && (pPhone.trim().length() > 0)) {
+            Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(pPhone)));
             startActivity(lIntent);
         } else {
             Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_no_phone_number), Toast.LENGTH_SHORT).show();
@@ -168,7 +212,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void displayRating(double pRating) {
-        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()),pRating);
+        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()), pRating);
         switch (lnbStarToDisplay) {
             case 1:
                 mRestoNote2.setVisibility(View.INVISIBLE);

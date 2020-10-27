@@ -9,5 +9,8 @@ public enum ActionStatus {
     SAVED,
     SAVED_FAILED,
     IS_CHOOSED,
-    NOT_CHOOSED;
+    NOT_CHOOSED,
+    TO_SAVE,
+    TO_SEARCH,
+    ERROR;
 }

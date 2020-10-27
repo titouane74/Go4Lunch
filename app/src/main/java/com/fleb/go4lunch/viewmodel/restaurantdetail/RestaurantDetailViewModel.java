@@ -41,6 +41,14 @@ public class RestaurantDetailViewModel extends ViewModel {
         return mLDChoiceList;
     }
 
+    public MutableLiveData<ActionStatus> getWorkmateChoiceForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
+       return mChoiceRepo.getWorkmateChoiceForRestaurant(pWorkmateId, pRestaurant);
+    }
+
+    public MutableLiveData<ActionStatus> getWorkmateLikeForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
+        return mWorkmateRepo.getWorkmateLikeForRestaurant(pWorkmateId, pRestaurant);
+    }
+
     public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
         return mWorkmateRepo.getWorkmate(pWorkmateId);
     }

@@ -131,7 +131,7 @@
                 app:layout_constraintStart_toEndOf="@+id/text_call"
                 app:layout_constraintStart_toStartOf="@+id/text_like"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_like"
+                app:srcCompat="@drawable/ic_not_like"
                 android:clickable="true"
                 android:focusable="true"/>
 

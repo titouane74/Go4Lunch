@@ -22,6 +22,8 @@ import java.util.Objects;
  */
 public class ChoiceRepository {
 
+    public static final String TAG = "TAG_CHOICE";
+
     /**
      * Firebase declarations
      */
@@ -46,12 +48,17 @@ public class ChoiceRepository {
                         if(!pQueryDocumentSnapshots.isEmpty()) {
                             //Vérifier qu'il n'y a un seul enregistrement
                             //pQueryDocumentSnapshots.getDocuments();
+                            Log.d(TAG, "onSuccess: il y a des données");
+                            mLDChoice.setValue(ActionStatus.IS_CHOOSED);
+                        } else {
+                            Log.d(TAG, "onSuccess: pas de données");
+                            mLDChoice.setValue(ActionStatus.NOT_CHOOSED);
                         }
                     }
                 });
-
         return mLDChoice;
     }
+
 
     public MutableLiveData<List<Choice>> getWorkmateComingInRestaurant (String pRestoId) {
         //TODO get avec whereEqualsTo(restoId=pRestoId)
