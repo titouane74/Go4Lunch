@@ -1,18 +1,24 @@
 package com.fleb.go4lunch.repository;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+
+import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
-
 import com.fleb.go4lunch.utils.ActionStatus;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,24 +36,53 @@ public class WorkmateRepository {
      */
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
+    private CollectionReference mChoiceRef = mDb.collection(String.valueOf(Choice.Fields.Choice));
     private DocumentReference mWorkmateDocRef;
 
     private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
     private MutableLiveData<Workmate> mLDWorkmate = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDWorkmateSaved = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDLikeStatus = new MutableLiveData<>();
+    private List<Workmate> mWorkmateList = new ArrayList<>();
 
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
         mWorkmateRef
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        mLDWorkmateList.setValue(Objects.requireNonNull(pTask.getResult()).toObjects(Workmate.class));
+                        mWorkmateList = Objects.requireNonNull(pTask.getResult()).toObjects(Workmate.class);
+                        getRestaurantChoice();
                     } else {
                         Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
                     }
                 });
         return mLDWorkmateList;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private void getRestaurantChoice() {
+        Date lDate = new Date();
+        SimpleDateFormat lSdf = new SimpleDateFormat("yyyyMMdd");
+        String lDateChoice = lSdf.format(lDate);
+
+        for (Workmate lWorkmate : mWorkmateList) {
+            mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), lWorkmate.getWorkmateId())
+                    .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), lDateChoice);
+            mChoiceRef.get()
+                    .addOnCompleteListener(pTask -> {
+                        if (pTask.isSuccessful()) {
+                            List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
+                            for (Choice lChoice : lChoiceList) {
+                                if ((lChoice.getChChoiceDate().equals(lDateChoice))
+                                        && (lChoice.getChWorkmateId().equals(lWorkmate.getWorkmateId()))) {
+                                    lWorkmate.setWorkmateRestoChoosed(lChoice.getChRestoName());
+                                }
+                            }
+                        }
+
+                    });
+        }
+        mLDWorkmateList.setValue(mWorkmateList);
     }
 
     public MutableLiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
@@ -111,7 +146,7 @@ public class WorkmateRepository {
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
-                        if(lWorkmate!= null) {
+                        if (lWorkmate != null) {
                             findRestaurantInLikes(lWorkmate, pRestaurant, pActionStatus);
                         } else {
                             Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
@@ -134,7 +169,8 @@ public class WorkmateRepository {
                             findRestaurantInLikes(lWorkmate, pRestaurant, pActionStatus);
                         } else {
                             Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
-                            mLDLikeStatus.setValue(ActionStatus.ERROR);                        }
+                            mLDLikeStatus.setValue(ActionStatus.ERROR);
+                        }
                     } else {
                         Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
                         mLDLikeStatus.setValue(ActionStatus.ERROR);

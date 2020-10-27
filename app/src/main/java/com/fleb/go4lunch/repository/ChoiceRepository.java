@@ -137,8 +137,6 @@ public class ChoiceRepository {
 
     @SuppressLint("SimpleDateFormat")
     public MutableLiveData<List<Workmate>> getWorkmateComingInRestaurant(Restaurant pRestaurant) {
-        //TODO get avec whereEqualsTo(restoId=pRestoId)
-        //call firestore to get the list of the workmate coming in the restaurant
         Date lDate = new Date();
         SimpleDateFormat lSdf = new SimpleDateFormat("yyyyMMdd");
         String lDateChoice = lSdf.format(lDate);
