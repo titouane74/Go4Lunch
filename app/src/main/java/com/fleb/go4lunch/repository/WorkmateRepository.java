@@ -1,22 +1,17 @@
 package com.fleb.go4lunch.repository;
 
-import android.drm.DrmStore;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
-
-import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -109,40 +104,51 @@ public class WorkmateRepository {
         return mLDWorkmate;
     }
 
-    public MutableLiveData<ActionStatus> getWorkmateLikeForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
+        if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
+            getWorkmateLikeForRestaurant(pWorkmate, pRestaurant, pActionStatus);
+        } else {
+            saveLikeRestaurant(pWorkmate, pRestaurant, pActionStatus);
+        }
+        return mLDLikeStatus;
+    }
+
+    public void getWorkmateLikeForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
         mWorkmateRef
-                .document(pWorkmateId)
+                .document(pWorkmate.getWorkmateId())
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
-                        findRestaurantInLikes(lWorkmate, pRestaurant, ActionStatus.TO_SEARCH);
+                        if(lWorkmate!= null) {
+                            findRestaurantInLikes(lWorkmate, pRestaurant, pActionStatus);
+                        } else {
+                            Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
+                            mLDLikeStatus.setValue(ActionStatus.ERROR);
+                        }
                     } else {
                         Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
                         mLDLikeStatus.setValue(ActionStatus.ERROR);
                     }
                 });
-        return mLDLikeStatus;
     }
 
-    public MutableLiveData<ActionStatus> saveLikeRestaurant(Workmate pWorkmate,
-                                                            Restaurant pRestaurant) {
-
+    public void saveLikeRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
         mWorkmateDocRef = mWorkmateRef.document(pWorkmate.getWorkmateId());
-
         mWorkmateDocRef.get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         if (lWorkmate != null) {
-                            findRestaurantInLikes(lWorkmate, pRestaurant, ActionStatus.TO_SAVE);
-                        }
+                            findRestaurantInLikes(lWorkmate, pRestaurant, pActionStatus);
+                        } else {
+                            Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
+                            mLDLikeStatus.setValue(ActionStatus.ERROR);                        }
                     } else {
                         Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
                         mLDLikeStatus.setValue(ActionStatus.ERROR);
                     }
                 });
-        return mLDLikeStatus;
     }
 
     private void findRestaurantInLikes(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {

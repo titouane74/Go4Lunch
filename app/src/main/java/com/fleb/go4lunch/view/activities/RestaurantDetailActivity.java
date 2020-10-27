@@ -121,18 +121,33 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         mRestoLike.setOnClickListener(v -> saveLikeRestaurant(pRestaurant));
 
-        mRestoBtnFloatChecked.setOnClickListener(v -> saveChooseRestaurant(pRestaurant));
+        mRestoBtnFloatChecked.setOnClickListener(v -> saveChoiceRestaurant(pRestaurant));
     }
 
-    private void saveChooseRestaurant(Restaurant pRestaurant) {
-        //TODO faire comme pour les likes
+    private void saveChoiceRestaurant(Restaurant pRestaurant) {
+        Log.d(TAG, "saveChoiceRestaurant: name : " + pRestaurant.getRestoName());
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mWorkmate, pRestaurant, ActionStatus.SAVED)
+                .observe(this, pActionStatus -> {
+                    switch (pActionStatus) {
+                        case ADDED:
+                            changeChoiceStatus(true);
+                            break;
+                        case REMOVED:
+                            changeChoiceStatus(false);
+                            break;
+                        case ERROR:
+                            Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                    }
+                });
     }
 
     private void displayChoiceStatus(Restaurant pRestaurant) {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getWorkmateChoiceForRestaurant(mWorkmate.getWorkmateId(), pRestaurant)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mWorkmate, pRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
                         changeChoiceStatus(true);
@@ -158,7 +173,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getWorkmateLikeForRestaurant(mWorkmate.getWorkmateId(), pRestaurant)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mWorkmate, pRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
                         changeLikeStatus(true);
@@ -169,15 +184,15 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void saveLikeRestaurant(Restaurant pRestaurant) {
-        mRestaurantDetailViewModel.saveLikeRestaurant(mWorkmate, pRestaurant)
-                .observe(this, pSaveMessage -> {
-                    if (pSaveMessage.equals(ActionStatus.ADDED)) {
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mWorkmate, pRestaurant, ActionStatus.TO_SAVE)
+                .observe(this, pActionStatus -> {
+                    if (pActionStatus.equals(ActionStatus.ADDED)) {
 //                        Toast.makeText(RestaurantDetailActivity.this,getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
                         changeLikeStatus(true);
-                    } else if (pSaveMessage.equals(ActionStatus.REMOVED)) {
+                    } else if (pActionStatus.equals(ActionStatus.REMOVED)) {
 //                        Toast.makeText(RestaurantDetailActivity.this,getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
                         changeLikeStatus(false);
-                    } else if (pSaveMessage.equals(ActionStatus.ERROR)){
+                    } else if (pActionStatus.equals(ActionStatus.ERROR)){
                         Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                     }
                 });

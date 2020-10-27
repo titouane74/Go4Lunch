@@ -1,12 +1,15 @@
 package com.fleb.go4lunch.model;
 
-import java.sql.Timestamp;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.Timestamp;
 
 /**
  * Created by Florence LE BOURNOT on 25/10/2020
  */
 public class Choice {
 
+    private String chChoiceId;
     private String chWorkmateId;
     private String chWorkmateName;
     private String chRestoPlaceId;
@@ -14,8 +17,11 @@ public class Choice {
     private Timestamp chCreateDate;
     private Timestamp chChoiceDate;
 
-    public Choice(String pChWorkmateId, String pChWorkmateName, String pChRestoPlaceId,
-                  String pChRestoName, Timestamp pChCreateDate, Timestamp pChChoiceDate) {
+    public Choice () {}
+
+    public Choice(String pChChoiceId, String pChWorkmateId, @Nullable String pChWorkmateName, String pChRestoPlaceId,
+                  @Nullable String pChRestoName, Timestamp pChCreateDate, Timestamp pChChoiceDate) {
+        chChoiceId =pChChoiceId;
         chWorkmateId = pChWorkmateId;
         chWorkmateName = pChWorkmateName;
         chRestoPlaceId = pChRestoPlaceId;
@@ -23,6 +29,10 @@ public class Choice {
         chCreateDate = pChCreateDate;
         chChoiceDate = pChChoiceDate;
     }
+
+    public String getChChoiceId() { return chChoiceId; }
+
+    public void setChChoiceId(String pChChoiceId) { chChoiceId = pChChoiceId; }
 
     public String getChWorkmateId() { return chWorkmateId; }
 
@@ -50,6 +60,7 @@ public class Choice {
 
     public enum Fields {
         Choice,
+        chChoiceId,
         chWorkmateId,
         chWorkmateName,
         chRestoPlaceId,

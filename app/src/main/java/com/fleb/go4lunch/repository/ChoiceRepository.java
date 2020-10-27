@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.repository;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -8,14 +9,14 @@ import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Florence LE BOURNOT on 25/10/2020
@@ -32,37 +33,104 @@ public class ChoiceRepository {
     private DocumentReference mChoiceDocRef;
 
     private MutableLiveData<List<Choice>> mLDListWorkmateComing = new MutableLiveData<>();
-    private MutableLiveData<ActionStatus> mLDChoice = new MutableLiveData<>();
+    private MutableLiveData<ActionStatus> mLDChoiceStatus = new MutableLiveData<>();
 
+    @SuppressLint("SimpleDateFormat")
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
 
-    public MutableLiveData<ActionStatus> getWorkmateChoiceForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
-        //TODO
-        //call firestore
-        mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId) , pWorkmateId)
-                .whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), pRestaurant.getRestoPlaceId());
-        //TODO add timestamp quand fonctionnera avec les 2 premiers chammps
-        mChoiceRef.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot pQueryDocumentSnapshots) {
-                        if(!pQueryDocumentSnapshots.isEmpty()) {
-                            //Vérifier qu'il n'y a un seul enregistrement
-                            //pQueryDocumentSnapshots.getDocuments();
-                            Log.d(TAG, "onSuccess: il y a des données");
-                            mLDChoice.setValue(ActionStatus.IS_CHOOSED);
-                        } else {
-                            Log.d(TAG, "onSuccess: pas de données");
-                            mLDChoice.setValue(ActionStatus.NOT_CHOOSED);
-                        }
-                    }
-                });
-        return mLDChoice;
+        Date lDate = new Date();
+        SimpleDateFormat lSdf = new SimpleDateFormat("yyyyMMdd");
+        String lIdDoc = pWorkmate.getWorkmateId() + pRestaurant.getRestoPlaceId() + lSdf.format(lDate);
+
+        if(pActionStatus.equals(ActionStatus.TO_SEARCH)) {
+            getWorkmateChoiceForRestaurant(lIdDoc);
+        } else {
+            saveChoiceWorkmateRestaurant(lIdDoc, pWorkmate, pRestaurant);
+        }
+
+        return mLDChoiceStatus;
     }
 
+    private void getWorkmateChoiceForRestaurant(String pIdDoc) {
+        mChoiceRef.document(pIdDoc)
+                .get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        if(pTask.getResult().toObject(Choice.class) != null) {
+                            mLDChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
+                        } else {
+                            mLDChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);
+                        }
+                    } else {
+                        Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
+                        mLDChoiceStatus.setValue(ActionStatus.ERROR);
+                    }
+                });
 
-    public MutableLiveData<List<Choice>> getWorkmateComingInRestaurant (String pRestoId) {
+    }
+
+    public MutableLiveData<List<Choice>> getWorkmateComingInRestaurant(String pRestoId) {
         //TODO get avec whereEqualsTo(restoId=pRestoId)
         //call firestore to get the list of the workmate coming in the restaurant
         return mLDListWorkmateComing;
     }
+
+    @SuppressLint("SimpleDateFormat")
+    public void saveChoiceWorkmateRestaurant(String pIdDoc,Workmate pWorkmate,
+                                                                      Restaurant pRestaurant) {
+        Log.d(TAG, "saveChoiceWorkmateRestaurant: " + pRestaurant.getRestoName());
+        mChoiceRef.document(pIdDoc)
+                .get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        Choice lChoice = pTask.getResult().toObject(Choice.class);
+                        if (lChoice != null) {
+                            removeRestaurantToChoice(lChoice);
+                        } else {
+                            addRestaurantToChoice(pIdDoc,pWorkmate, pRestaurant);
+                        }
+                    } else {
+                        Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
+                        mLDChoiceStatus.setValue(ActionStatus.ERROR);
+                    }
+                });
+    }
+
+    private void addRestaurantToChoice(String pIdDoc, Workmate pWorkmate, Restaurant pRestaurant) {
+        Timestamp lTimestamp = Timestamp.now();
+        Log.d(TAG, "addRestaurantToChoice: timestamp : " + lTimestamp);
+
+        Choice lChoice = new Choice(pIdDoc, pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(),
+                pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName(), lTimestamp, lTimestamp);
+
+        Log.d(TAG, "addRestaurantToChoice: lIdDoc " + pIdDoc);
+        mChoiceRef.document(pIdDoc)
+                .set(lChoice)
+                .addOnSuccessListener(pDocumentReference -> {
+                    Log.d("TAG_CHOICE", "onSuccess : Document saved ");
+                    mLDChoiceStatus.setValue(ActionStatus.ADDED);
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d("TAG_CHOICE", "onFailure: Document not saved", pE);
+                    mLDChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
+                });
+    }
+
+    private void removeRestaurantToChoice(Choice pChoice) {
+
+        String lIdDoc = pChoice.getChChoiceId();
+        Log.d(TAG, "removeRestaurantToChoice:  choiceID : " + lIdDoc);
+
+        mChoiceRef.document(lIdDoc)
+                .delete()
+                .addOnSuccessListener(pDocumentReference -> {
+                    Log.d("TAG_CHOICE", "onSuccess : Document saved ");
+                    mLDChoiceStatus.setValue(ActionStatus.REMOVED);
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d("TAG_CHOICE", "onFailure: Document not saved", pE);
+                    mLDChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
+                });
+    }
+
 }

@@ -31,9 +31,9 @@ public class RestaurantDetailViewModel extends ViewModel {
         mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant.getRestoPlaceId());
     }
 
-    public LiveData<ActionStatus> saveLikeRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
-        return mWorkmateRepo.saveLikeRestaurant(pWorkmate, pRestaurant);
-    }
+    /**
+     * Access to ChoiceRepository
+     */
 
     //TODO retourne la liste des workmates ayant choisi le resto
     public LiveData<List<Choice>> getWorkmateComingInRestaurant() {
@@ -41,12 +41,15 @@ public class RestaurantDetailViewModel extends ViewModel {
         return mLDChoiceList;
     }
 
-    public MutableLiveData<ActionStatus> getWorkmateChoiceForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
-       return mChoiceRepo.getWorkmateChoiceForRestaurant(pWorkmateId, pRestaurant);
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
+       return mChoiceRepo.getOrSaveWorkmateChoiceForRestaurant(pWorkmate, pRestaurant, pActionStatus);
     }
 
-    public MutableLiveData<ActionStatus> getWorkmateLikeForRestaurant(String pWorkmateId, Restaurant pRestaurant) {
-        return mWorkmateRepo.getWorkmateLikeForRestaurant(pWorkmateId, pRestaurant);
+    /**
+     * Access to WorkmateRepository
+     */
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
+        return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(pWorkmate, pRestaurant, pActionStatus);
     }
 
     public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
