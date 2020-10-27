@@ -127,17 +127,23 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
 
-        BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+        BitmapDescriptor lIcon;
 
         Log.d("TAG_GETRESTO", "setMapMarkers: response size" + pRestaurants.size());
 
-        for (Restaurant restaurant : pRestaurants) {
+        for (Restaurant lRestaurant : pRestaurants) {
 
-            String lName = restaurant.getRestoName();
-            String lAddress = restaurant.getRestoAddress();
+            String lName = lRestaurant.getRestoName();
+            String lAddress = lRestaurant.getRestoAddress();
 
-            LatLng latLng = new LatLng(restaurant.getRestoLocation().getLat(),
-                    restaurant.getRestoLocation().getLng());
+            if(lRestaurant.getRestoNbWorkmates() == 0) {
+                lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+            } else {
+                lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_green);
+            }
+
+            LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
+                    lRestaurant.getRestoLocation().getLng());
             mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(lName + " : " + lAddress)
