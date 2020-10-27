@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -23,7 +24,9 @@ import android.view.ViewGroup;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
+import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 import com.fleb.go4lunch.viewmodel.map.MapViewModel;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,6 +38,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
@@ -77,6 +81,12 @@ public class MapsFragment extends Fragment implements LocationListener {
             }
 
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.style_json));
+
+            mMap.setOnMarkerClickListener(pMarker -> {
+                displayRestaurantDetail(pMarker);
+                return false;
+            });
+
         }
     };
 
@@ -134,7 +144,6 @@ public class MapsFragment extends Fragment implements LocationListener {
         for (Restaurant lRestaurant : pRestaurants) {
 
             String lName = lRestaurant.getRestoName();
-            String lAddress = lRestaurant.getRestoAddress();
 
             if(lRestaurant.getRestoNbWorkmates() == 0) {
                 lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
@@ -144,10 +153,23 @@ public class MapsFragment extends Fragment implements LocationListener {
 
             LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
                     lRestaurant.getRestoLocation().getLng());
-            mMap.addMarker(new MarkerOptions()
+            Marker lMarker = mMap.addMarker(new MarkerOptions()
                     .position(latLng)
-                    .title(lName + " : " + lAddress)
+                    .title(lName)
                     .icon(lIcon));
+            lMarker.setTag(lRestaurant);
+        }
+    }
+
+    private void displayRestaurantDetail(Marker pMarker) {
+        Context lContext = requireContext();
+        Restaurant lRestaurant = (Restaurant) pMarker.getTag();
+        if (lRestaurant != null) {
+            Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
+            String lJsonRestaurant = GsonHelper.getGsonString(lRestaurant);
+            lIntentRestoDetail.putExtra("placeid", lRestaurant.getRestoPlaceId());
+            lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
+            lContext.startActivity(lIntentRestoDetail);
         }
     }
 
