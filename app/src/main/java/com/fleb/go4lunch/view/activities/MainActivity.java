@@ -32,13 +32,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_COLLECTION;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_EMAIL_KEY;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_NAME_KEY;
-import static com.fleb.go4lunch.repository.WorkmateRepository.WORKMATE_PHOTO_URL_KEY;
 import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 
