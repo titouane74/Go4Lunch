@@ -14,11 +14,11 @@ public class WorkmateListViewModel extends ViewModel {
 
     private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
 
-    private WorkmateRepository mRepository = new WorkmateRepository();
-
     public WorkmateListViewModel() {
-        mLDWorkmateList = mRepository.getLDWorkmateListData();
+        WorkmateRepository lRepository = new WorkmateRepository();
+        mLDWorkmateList = lRepository.getLDWorkmateListData();
     }
+
     public LiveData<List<Workmate>> getWorkmateList() {
         return mLDWorkmateList;
     }

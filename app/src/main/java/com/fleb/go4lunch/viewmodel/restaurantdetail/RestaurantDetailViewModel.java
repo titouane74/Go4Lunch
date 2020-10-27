@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.ChoiceRepository;
@@ -23,21 +22,17 @@ public class RestaurantDetailViewModel extends ViewModel {
     public static final String TAG = "TAG_RESTO_DET_VM";
     private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
     private ChoiceRepository mChoiceRepo = new ChoiceRepository();
-    private MutableLiveData<List<Choice>> mLDChoiceList ;
+    private MutableLiveData<List<Workmate>> mLDChoiceList ;
 
     public RestaurantDetailViewModel(Restaurant pRestaurant) {
-        //TODO get de la liste des utlisateurs qui ont choisi ce restaurant
         Log.d(TAG, "RestaurantDetailViewModel: call get liste workmate in this restaurant");
-        mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant.getRestoPlaceId());
+        mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant);
     }
 
     /**
      * Access to ChoiceRepository
      */
-
-    //TODO retourne la liste des workmates ayant choisi le resto
-    public LiveData<List<Choice>> getWorkmateComingInRestaurant() {
-        Log.d(TAG, "getWorkmateComingInRestaurant: return the workmate list to the view");
+    public LiveData<List<Workmate>> getWorkmateComingInRestaurant() {
         return mLDChoiceList;
     }
 
@@ -52,7 +47,4 @@ public class RestaurantDetailViewModel extends ViewModel {
         return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(pWorkmate, pRestaurant, pActionStatus);
     }
 
-    public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
-        return mWorkmateRepo.getWorkmate(pWorkmateId);
-    }
 }

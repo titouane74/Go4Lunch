@@ -15,13 +15,13 @@ public class Choice {
     private String chRestoPlaceId;
     private String chRestoName;
     private Timestamp chCreateDate;
-    private Timestamp chChoiceDate;
+    private String chChoiceDate;
 
     public Choice () {}
 
     public Choice(String pChChoiceId, String pChWorkmateId, @Nullable String pChWorkmateName, String pChRestoPlaceId,
-                  @Nullable String pChRestoName, Timestamp pChCreateDate, Timestamp pChChoiceDate) {
-        chChoiceId =pChChoiceId;
+                  @Nullable String pChRestoName, Timestamp pChCreateDate, String pChChoiceDate) {
+        chChoiceId = pChChoiceId;
         chWorkmateId = pChWorkmateId;
         chWorkmateName = pChWorkmateName;
         chRestoPlaceId = pChRestoPlaceId;
@@ -54,9 +54,9 @@ public class Choice {
 
     public void setChCreateDate(Timestamp pChCreateDate) { chCreateDate = pChCreateDate; }
 
-    public Timestamp getChChoiceDate() { return chChoiceDate; }
+    public String getChChoiceDate() { return chChoiceDate; }
 
-    public void setChChoiceDate(Timestamp pChChoiceDate) { chChoiceDate = pChChoiceDate; }
+    public void setChChoiceDate(String pChChoiceDate) { chChoiceDate = pChChoiceDate; }
 
     public enum Fields {
         Choice,

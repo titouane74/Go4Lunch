@@ -111,6 +111,7 @@
     <!-- WORKMATE LIST -->
     <string name="text_workmate_not_decided">n\'a pas encore décidé</string>
     <string name="text_workmate_eating">mange</string>
+    <string name="text_workmate_joining">vient!</string>
 
 
     <!-- MAPS -->

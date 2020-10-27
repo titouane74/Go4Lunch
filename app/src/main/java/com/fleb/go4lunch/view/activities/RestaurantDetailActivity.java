@@ -2,6 +2,8 @@ package com.fleb.go4lunch.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -24,6 +26,8 @@ import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViweModelFactory;
+import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailWorkmateAdapter;
+import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RestaurantDetailActivity extends AppCompatActivity {
@@ -40,9 +44,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private ImageView mRestoImgWebSite;
     private ImageView mRestoLike;
     private FloatingActionButton mRestoBtnFloatChecked;
+    private RecyclerView mRecyclerView;
 
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
     private Workmate mWorkmate;
+    private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoImgCall = findViewById(R.id.img_call);
         mRestoImgWebSite = findViewById(R.id.img_website);
         mRestoLike = findViewById(R.id.img_like);
+        mRecyclerView = findViewById(R.id.restaurant_detail_workmate_list);
 
         mWorkmate = lApi.getWorkmate();
 
@@ -81,17 +88,22 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void configureViewModel() {
 
         initializeViewModel();
+        initRecyclerView();
 
         displayChoiceStatus(mRestaurant);
         displayLikeStatus(mRestaurant);
 
-        mRestaurantDetailViewModel.getWorkmateComingInRestaurant().observe(this, pChoicesList ->
+        mRestaurantDetailViewModel.getWorkmateComingInRestaurant().observe(this, pWorkmateList ->
         {
-            //TODO envoyé les données de retour à l'adapter
-            //TODO mettre en place le recyclerview
-            Log.d(TAG, "configureViewModel: call liste workmate coming in restaurant size : " + pChoicesList.size());
+            mWorkmateAdapter.setWorkmateList(pWorkmateList);
+            mWorkmateAdapter.notifyDataSetChanged();
         });
+    }
 
+    private void initRecyclerView() {
+        mWorkmateAdapter = new RestaurantDetailWorkmateAdapter();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mWorkmateAdapter);
     }
 
     private void initializeViewModel() {

@@ -17,19 +17,32 @@ public class Workmate {
     private String workmateRestoChoosed;
     private List<Likes> workmateLikes;
 
+    public Workmate() {}
+
+    public Workmate(String pWorkmateId, List<Likes> pWorkmateLikes) {
+        this.workmateId = pWorkmateId;
+        this.workmateLikes = pWorkmateLikes;
+    }
+
+    public Workmate(String pWorkmateId, String pWorkmateName) {
+        workmateId = pWorkmateId;
+        workmateName = pWorkmateName;
+    }
+
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmatePhotoUrl, String pWorkmateRestoChoosed) {
+        workmateId = pWorkmateId;
+        workmateName = pWorkmateName;
+        workmatePhotoUrl = pWorkmatePhotoUrl;
+        workmateRestoChoosed = pWorkmateRestoChoosed;
+    }
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                String pWorkmateRestoChoosed ) {
+                    String pWorkmateRestoChoosed ) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
         this.workmateRestoChoosed = pWorkmateRestoChoosed;
-    }
-
-    public Workmate(String pWorkmateId, List<Likes> pWorkmateLikes) {
-        workmateId = pWorkmateId;
-        workmateLikes = pWorkmateLikes;
     }
 
     public Workmate(String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
@@ -38,8 +51,6 @@ public class Workmate {
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
     }
 
-
-    public Workmate() {}
 
     public String getWorkmateName() { return workmateName; }
 
