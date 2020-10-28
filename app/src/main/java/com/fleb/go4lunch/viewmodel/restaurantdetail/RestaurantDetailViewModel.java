@@ -6,10 +6,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.ChoiceRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
+import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.ActionStatus;
 
 import java.util.List;
@@ -26,7 +28,8 @@ public class RestaurantDetailViewModel extends ViewModel {
 
     public RestaurantDetailViewModel(Restaurant pRestaurant) {
         Log.d(TAG, "RestaurantDetailViewModel: call get liste workmate in this restaurant");
-        mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant);
+        Go4LunchApi lApi = DI.getGo4LunchApiService();
+        mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant, lApi.getWorkmateId());
     }
 
     /**
@@ -40,6 +43,9 @@ public class RestaurantDetailViewModel extends ViewModel {
        return mChoiceRepo.getOrSaveWorkmateChoiceForRestaurant(pWorkmate, pRestaurant, pActionStatus);
     }
 
+    public LiveData<Boolean> hasAlreadyMadeAChoice(Workmate pWorkmate) {
+        return mChoiceRepo.hasAlreadyMadeAChoice(pWorkmate);
+    }
     /**
      * Access to WorkmateRepository
      */
