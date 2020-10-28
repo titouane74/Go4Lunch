@@ -115,7 +115,7 @@
 
 
     <!-- MAPS -->
-    <string name="proximity_radius">150</string>
+    <string name="proximity_radius">300</string>
     <string name="type_search">restaurant</string>
     <string name="map_zoom">16</string>
     <!--    Permissions    -->

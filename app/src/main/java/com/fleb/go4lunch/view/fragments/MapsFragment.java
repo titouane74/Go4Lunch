@@ -90,6 +90,8 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     };
 
+    public MapsFragment() {}
+
     @SuppressLint("MissingPermission")
     @Nullable
     @Override
@@ -128,7 +130,7 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     public void configViewModel(Location pLocation) {
 
-        MapViewModel lMapViewModel = new ViewModelProvider(requireActivity()).get(MapViewModel.class);
+        MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
 
         lMapViewModel.saveLocationInSharedPreferences(pLocation);
 
@@ -308,4 +310,8 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 }

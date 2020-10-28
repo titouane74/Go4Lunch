@@ -80,6 +80,11 @@ public class RestaurantRepository {
     private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
     private String mDateChoice = mSdf.format(mDate);
 
+
+    private int mCptWorkmate;
+    private int mCptResto;
+    private int mMaxWorkmate;
+
     private List<Restaurant> mRestaurantList = new ArrayList<>();
 
     public void saveLocationInSharedPreferences(Location pLocation) {
@@ -275,12 +280,16 @@ public class RestaurantRepository {
 
         removeRestaurantOutOfRadiusFromList(mRestaurantList);
 
+        mCptWorkmate =0;
+        mCptResto=0;
+        mMaxWorkmate=0;
         updateNbWorkmateLiveDataRestaurantList(mRestaurantList);
 
         //TODO nombre de workmate à zéro au premier lancement
         // attendre le retour du OnComplete, gestion de l'async
         Log.d(TAG, "getChoice: mRestaurantList.size" + mRestaurantList.size());
-        mLDRestoList.setValue(mRestaurantList);
+        if((mCptResto == mRestaurantList.size()) && (mCptWorkmate == mMaxWorkmate))
+            mLDRestoList.setValue(mRestaurantList);
 
     }
 
@@ -316,22 +325,25 @@ public class RestaurantRepository {
     private void updateNbWorkmateLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
 //        Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: " + pRestaurantList.size());
         for (Restaurant lRestaurant : pRestaurantList) {
-
+            mCptResto++;
             mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), lRestaurant.getRestoPlaceId())
                     .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
                     .get()
                     .addOnCompleteListener(pTask -> {
                         if (pTask.isSuccessful()) {
                             List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
+                            mMaxWorkmate+=lChoiceList.size();
                             for (Choice lChoice : lChoiceList) {
                                 if ((lChoice.getChChoiceDate().equals(mDateChoice))
                                         && (lChoice.getChRestoPlaceId().equals(lRestaurant.getRestoPlaceId()))) {
                                     int cpt = lRestaurant.getRestoNbWorkmates() + 1;
 /*                                    Log.d(TAG, "getChoice: resto : " + lChoice.getChRestoName() + " workmate" + lChoice.getChWorkmateName()
                                             + " nbWorkmate : " + cpt);*/
+                                    mCptWorkmate++;
                                     lRestaurant.setRestoNbWorkmates(cpt);
                                 }
                             }
+                            mCptWorkmate += lChoiceList.size();
                             Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: " + mRestaurantList.size());
                         }
                     })

@@ -133,16 +133,21 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         mRestoLike.setOnClickListener(v -> saveLikeRestaurant(pRestaurant));
 
-        mRestoBtnFloatChecked.setOnClickListener(v -> hasAlreadyChoosedARestaurant(pRestaurant));
+        mRestoBtnFloatChecked.setOnClickListener(v -> {
+            hasAlreadyChoosedARestaurant(pRestaurant);
+            saveChoiceRestaurant(pRestaurant);
+        });
     }
 
     private void hasAlreadyChoosedARestaurant(Restaurant pRestaurant) {
         mRestaurantDetailViewModel.hasAlreadyMadeAChoice(mWorkmate).observe(this,pIsChoosed -> {
+/*
             if(pIsChoosed){
                 Toast.makeText(this, "Votre précédent choix a été supprimé", Toast.LENGTH_SHORT).show();
             }
+*/
         });
-        saveChoiceRestaurant(pRestaurant);
+
 
     }
     private void saveChoiceRestaurant(Restaurant pRestaurant) {
