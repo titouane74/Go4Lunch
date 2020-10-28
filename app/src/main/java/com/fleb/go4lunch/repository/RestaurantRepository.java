@@ -17,6 +17,7 @@ import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PreferencesHelper;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,10 +29,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +48,7 @@ import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_TYPE_GOOGL
  * Created by Florence LE BOURNOT on 13/10/2020
  */
 public class RestaurantRepository {
-    //public static final String TAG = "TAG4_REPO";
+    public static final String TAG = "TAG_REPO";
 
     public static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
     public static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
@@ -148,7 +149,7 @@ public class RestaurantRepository {
                         List<Restaurant> lRestoList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
                         prepareAndSendRestoListForDisplay(lRestoList);
                     } else {
-                        Log.d("TAG4_GET_FIRESTORE", "Error : " + pTask.getException());
+                        Log.d("TAG_GET_FIRESTORE", "Error : " + pTask.getException());
                     }
                 });
     }
@@ -268,14 +269,36 @@ public class RestaurantRepository {
 
     private void prepareAndSendRestoListForDisplay(List<Restaurant> pRestaurantList) {
 
-        List<Restaurant> lRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
-        Collections.sort(lRestaurantList);
-        Collections.reverse(lRestaurantList);
+        mRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
+        Collections.sort(mRestaurantList);
+        Collections.reverse(mRestaurantList);
 
-        updateNbWorkmateLiveDataRestaurantList(lRestaurantList);
+        removeRestaurantOutOfRadiusFromList(mRestaurantList);
+
+        updateNbWorkmateLiveDataRestaurantList(mRestaurantList);
+
         //TODO nombre de workmate à zéro au premier lancement
         // attendre le retour du OnComplete, gestion de l'async
+        Log.d(TAG, "getChoice: mRestaurantList.size" + mRestaurantList.size());
         mLDRestoList.setValue(mRestaurantList);
+
+    }
+
+    private void removeRestaurantOutOfRadiusFromList(List<Restaurant> pRestaurantList) {
+        int lProximityRadius = mPreferences.getInt(PREF_KEY_RADIUS, 150);
+        try {
+            for(Iterator<Restaurant> lRestaurantIterator = mRestaurantList.iterator(); lRestaurantIterator.hasNext();){
+                Restaurant lRestaurant = lRestaurantIterator.next();
+                if (lRestaurant.getRestoDistance() > lProximityRadius) {
+                    lRestaurantIterator.remove();
+                }
+            }
+        } catch (java.util.ConcurrentModificationException exception) {
+            // Catch ConcurrentModificationExceptions.
+            Log.d(TAG, "removeRestaurantOutOfRadiusFromList: " + exception);;
+        }
+
+        mRestaurantList = pRestaurantList;
     }
 
     private List<Restaurant> updateDistanceInLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
@@ -283,7 +306,6 @@ public class RestaurantRepository {
 
             int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                     mFusedLocationProvider, lRestaurant.getRestoLocation());
-
             String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
             lRestaurant.setRestoDistance(lDistance);
             lRestaurant.setRestoDistanceText(lNewDistance);
@@ -291,23 +313,32 @@ public class RestaurantRepository {
         return pRestaurantList;
     }
 
-
     private void updateNbWorkmateLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
-
+//        Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: " + pRestaurantList.size());
         for (Restaurant lRestaurant : pRestaurantList) {
 
             mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), lRestaurant.getRestoPlaceId())
-                    .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice);
-            mChoiceRef.get()
+                    .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
+                    .get()
                     .addOnCompleteListener(pTask -> {
                         if (pTask.isSuccessful()) {
                             List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
                             for (Choice lChoice : lChoiceList) {
                                 if ((lChoice.getChChoiceDate().equals(mDateChoice))
                                         && (lChoice.getChRestoPlaceId().equals(lRestaurant.getRestoPlaceId()))) {
-                                    lRestaurant.setRestoNbWorkmates(lRestaurant.getRestoNbWorkmates() + 1);
+                                    int cpt = lRestaurant.getRestoNbWorkmates() + 1;
+/*                                    Log.d(TAG, "getChoice: resto : " + lChoice.getChRestoName() + " workmate" + lChoice.getChWorkmateName()
+                                            + " nbWorkmate : " + cpt);*/
+                                    lRestaurant.setRestoNbWorkmates(cpt);
                                 }
                             }
+                            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: " + mRestaurantList.size());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception pE) {
+                            Log.d(TAG, "Failed : " + pE.getMessage());
                         }
                     });
         }
