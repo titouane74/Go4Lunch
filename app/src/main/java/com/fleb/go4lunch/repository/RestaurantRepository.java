@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.BuildConfig;
+import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.FirestoreUpdateFields;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
@@ -16,8 +17,6 @@ import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PreferencesHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,7 +55,7 @@ public class RestaurantRepository {
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
     private CollectionReference mRestoLastUpdRef = mDb.collection(String.valueOf(FirestoreUpdateFields.RestaurantLastUpdate));
-
+    private CollectionReference mChoiceRef = mDb.collection(String.valueOf(Choice.Fields.Choice));
     /**
      * Google  / Retrofit declarations
      */
@@ -74,13 +74,19 @@ public class RestaurantRepository {
     private Double mLatitude;
     private Double mLongitude;
 
+    private Date mDate = new Date();
+    @SuppressLint("SimpleDateFormat")
+    private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
+    private String mDateChoice = mSdf.format(mDate);
+
+    private List<Restaurant> mRestaurantList = new ArrayList<>();
+
     public void saveLocationInSharedPreferences(Location pLocation) {
         PreferencesHelper.saveStringPreferences(PREF_KEY_LATITUDE, String.valueOf(pLocation.getLatitude()));
         PreferencesHelper.saveStringPreferences(PREF_KEY_LONGITUDE, String.valueOf(pLocation.getLongitude()));
     }
 
     public MutableLiveData<List<Restaurant>> getRestaurantList() {
-        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: enter");
 
         mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
         mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
@@ -90,7 +96,6 @@ public class RestaurantRepository {
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: oncomplete exist");
                         DocumentSnapshot lResult = pTask.getResult();
                         Timestamp lTimestamp;
                         if (lResult.getData() != null) {
@@ -111,36 +116,24 @@ public class RestaurantRepository {
                                 @SuppressLint("SimpleDateFormat")
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: DayFirestore : " + sdf.format(mFirestoreLastUpdate));
-                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: DayToday : " + sdf.format(lDate) + " day of week " + lCal.get(Calendar.DAY_OF_WEEK));
-                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: currentDay " + Go4LunchHelper.getCurrentDayInt());
-
                                 // The dates are different and we are on a monday we retieve informations from Google
-                                //implement RestaurantList with Google
                                 if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
                                     // 2 = Monday
-                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Google 1");
-                                    getGoogleRestaurantList();
                                     //TODO for the moment deactivate the google call
-                                    //getFirestoreRestaurantList();
+                                    //getGoogleRestaurantList();
+                                    getFirestoreRestaurantList();
 
                                 } else {
-                                    //implements RestaurantList with Firestore
-                                    Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: call Firestore 1");
                                     getFirestoreRestaurantList();
                                 }
                             }
                         } else {
-                            Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList - onComplete: Firestore date is null - call Google 2");
-                            //implement RestaurantList with Google
                             //TODO for the moment deactivate the google call
-                            getGoogleRestaurantList();
-                            //getFirestoreRestaurantList();
+                            //getGoogleRestaurantList();
+                            getFirestoreRestaurantList();
                         }
                     } else {
-                        Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: on complete - pTask not successfull - call Firestore 2");
                         mFirestoreLastUpdate = null;
-                        //implements RestaurantList with Firestore
                         getFirestoreRestaurantList();
                     }
                 });
@@ -148,13 +141,11 @@ public class RestaurantRepository {
     }
 
     private void getFirestoreRestaurantList() {
-        Log.d("TAG4_GET_FIRESTORE", "getLDFirestoreRestaurantList: enter");
+
         mRestoRef.get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        Log.d("TAG4_GET_FIRESTORE", "getLDFirestoreRestaurantList: isSuccessfull ");
                         List<Restaurant> lRestoList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
-                        Log.d("TAG4_GET_FIRESTORE", "getLDFirestoreRestaurantList: call saveRestoList");
                         prepareAndSendRestoListForDisplay(lRestoList);
                     } else {
                         Log.d("TAG4_GET_FIRESTORE", "Error : " + pTask.getException());
@@ -163,17 +154,15 @@ public class RestaurantRepository {
     }
 
     private void getGoogleRestaurantList() {
-        Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: enter can update the date");
 
-        int lProximityRadius = mPreferences.getInt(PREF_KEY_RADIUS,150);
-        String lType = mPreferences.getString(PREF_KEY_TYPE_GOOGLE_SEARCH,"restaurant");
+        int lProximityRadius = mPreferences.getInt(PREF_KEY_RADIUS, 150);
+        String lType = mPreferences.getString(PREF_KEY_TYPE_GOOGLE_SEARCH, "restaurant");
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
         Call<RestaurantPojo> lRestaurantPojoCall = mJsonRetrofitApi.getNearByPlaces(mKey, lType,
                 mLatitude + "," + mLongitude, lProximityRadius);
 
-        Log.d("TAG4_GET_GOOGLE", "getLDGoogleRestaurantList: before enqueue");
         lRestaurantPojoCall.enqueue(new Callback<RestaurantPojo>() {
             @Override
             public void onResponse(@NonNull Call<RestaurantPojo> call, @NonNull Response<RestaurantPojo> response) {
@@ -181,9 +170,6 @@ public class RestaurantRepository {
                     List<RestaurantPojo.Result> lRestoResponse = Objects.requireNonNull(response.body()).getResults();
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
-                       //Appel datelresto(livedata  mLDRestoList,lRestoList,pRestaurantActuel,lDetailResponse.size )
-                        Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: call the GoogleDetailPlace - size list : " + lRestoResponse.size());
-                        Log.d("TAG4_GET_GOOGLE", "getGoogleRestaurantList: call the GoogleDetailPlace - restoname : " + restaurantPojo.getName());
                         manageRestaurantInformationsAndGetGoogleDetailRestaurant(restaurantPojo, lRestoResponse.size());
                     }
                 }
@@ -198,9 +184,8 @@ public class RestaurantRepository {
     }
 
     public void manageRestaurantInformationsAndGetGoogleDetailRestaurant(RestaurantPojo.Result pRestaurantList, int pResponseSize) {
-        Log.d("TAG4_MANAGE", "manageRestaurantInformationsAndGetGoogleDetailRestaurant: enter");
 
-        String lFields = mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS,null);
+        String lFields = mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS, null);
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
@@ -234,21 +219,17 @@ public class RestaurantRepository {
                     String lDistance = String.valueOf(Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                             mFusedLocationProvider, pRestaurantList.getGeometry().getLocation()));
 
-                    Log.d("TAG4_MANAGE", "manage: create resto : " + lName);
                     Restaurant lRestaurant = new Restaurant(
                             lPlaceId, lName, lAddress, null, null, lDistance, 0,
-                            lRating, lPhoto, lLocation, null,0
+                            lRating, lPhoto, lLocation, null, 0
                     );
 
-                    Log.d("TAG4_MANAGE", "manage - onResponse: resto " + lRestoDetResponse.getName() + " - lRestaurant : " + lRestaurant.getRestoName());
                     lRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
                     lRestaurant.setRestoWebSite(lRestoDetResponse.getWebsite());
                     lRestaurant.setRestoPhone(lRestoDetResponse.getFormattedPhoneNumber());
 
-                    Log.d("TAG4_MANAGE", "manage - onResponse : add resto to list : " + lRestaurant.getRestoName());
                     mRestoListDetail.add(lRestaurant);
 
-                    Log.d("TAG4_MANAGE", "manage - onResponse: call backup in Firestore");
                     backupDataInFirestore(pResponseSize);
                 }
             }
@@ -263,59 +244,42 @@ public class RestaurantRepository {
     }
 
     private void backupDataInFirestore(int pResponseSize) {
-        Log.d("TAG4_BACKUP", "backupDataInFirestore: list size " + mRestoListDetail.size() + " / detailresponse size " + pResponseSize);
         if (mRestoListDetail.size() == pResponseSize) {
-            //Sauvegarde data dans firestore
             for (Restaurant lRestaurant : mRestoListDetail) {
-                Log.d("TAG4_BACKUP", "backupDataInFirestore: saveResto in firestore " + lRestaurant.getRestoName());
                 saveRestaurantInFirestore(lRestaurant);
             }
-            Log.d("TAG4_BACKUP", "backupDataInFirestore: call update date in firestore");
-            //Met à jour la date d'actualisation des données firestore
             updateDateOfRestaurantLastUpdateInFirestore();
 
-            Log.d("TAG4_BACKUP", "backupDataInFirestore: call saveRestoList to send the livedata");
-            //renvoi le livedata quand il est prêt
             prepareAndSendRestoListForDisplay(mRestoListDetail);
         }
     }
 
     public void saveRestaurantInFirestore(Restaurant pRestaurant) {
-        Log.d("TAG4_SAVE_RESTO", "saveRestaurantInFirestore: enter");
         mRestoRef.document(pRestaurant.getRestoPlaceId())
                 .get()
-                .addOnSuccessListener(pVoid -> {
-                    //in all case we save the data
-                    Log.d("TAG4_SAVE_RESTO", "saveRestaurantInFirestore: create / save restaurant " + pRestaurant.getRestoName());
-
-                    mRestoRef.document(pRestaurant.getRestoPlaceId())
-                            .set(pRestaurant)
-                            .addOnSuccessListener(pDocumentReference ->
-                                    Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
-                            .addOnFailureListener(pE ->
-                                    Log.d("TAG4_SAVE_RESTO", "onFailure: Document not saved", pE));
-
-                })
+                .addOnSuccessListener(pVoid -> mRestoRef.document(pRestaurant.getRestoPlaceId())
+                        .set(pRestaurant)
+                        .addOnSuccessListener(pDocumentReference ->
+                                Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
+                        .addOnFailureListener(pE ->
+                                Log.d("TAG4_SAVE_RESTO", "onFailure: Document not saved", pE)))
                 .addOnFailureListener(pE -> Log.d("TAG4_SAVE_RESTO", "onFailure Save: Document not saved", pE));
     }
 
     private void prepareAndSendRestoListForDisplay(List<Restaurant> pRestaurantList) {
-        //Update the distance in the livedata
+
         List<Restaurant> lRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
-        //Sort restaurant by distance
         Collections.sort(lRestaurantList);
         Collections.reverse(lRestaurantList);
 
-        sendRestoListToLiveData(lRestaurantList);
-    }
-
-    public void sendRestoListToLiveData(List<Restaurant> pRestaurantList) {
-
-        mLDRestoList.setValue(pRestaurantList);
+        updateNbWorkmateLiveDataRestaurantList(lRestaurantList);
+        //TODO nombre de workmate à zéro au premier lancement
+        // attendre le retour du OnComplete, gestion de l'async
+        mLDRestoList.setValue(mRestaurantList);
     }
 
     private List<Restaurant> updateDistanceInLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
-        for(Restaurant lRestaurant : pRestaurantList) {
+        for (Restaurant lRestaurant : pRestaurantList) {
 
             int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                     mFusedLocationProvider, lRestaurant.getRestoLocation());
@@ -325,6 +289,28 @@ public class RestaurantRepository {
             lRestaurant.setRestoDistanceText(lNewDistance);
         }
         return pRestaurantList;
+    }
+
+
+    private void updateNbWorkmateLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
+
+        for (Restaurant lRestaurant : pRestaurantList) {
+
+            mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), lRestaurant.getRestoPlaceId())
+                    .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice);
+            mChoiceRef.get()
+                    .addOnCompleteListener(pTask -> {
+                        if (pTask.isSuccessful()) {
+                            List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
+                            for (Choice lChoice : lChoiceList) {
+                                if ((lChoice.getChChoiceDate().equals(mDateChoice))
+                                        && (lChoice.getChRestoPlaceId().equals(lRestaurant.getRestoPlaceId()))) {
+                                    lRestaurant.setRestoNbWorkmates(lRestaurant.getRestoNbWorkmates() + 1);
+                                }
+                            }
+                        }
+                    });
+        }
     }
 
     private void updateDateOfRestaurantLastUpdateInFirestore() {
