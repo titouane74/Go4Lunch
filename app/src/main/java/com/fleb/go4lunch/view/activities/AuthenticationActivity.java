@@ -267,7 +267,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getEmail());
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getPhotoUrl());
 
-            mApi.saveWorkmateId(pCurrentUser);
+            mApi.setWorkmateId(pCurrentUser);
 
             saveWorkmateIfNotExist(pCurrentUser);
 
