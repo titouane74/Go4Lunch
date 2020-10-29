@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.service;
 
+import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -8,12 +9,17 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public interface Go4LunchApi {
 
-    void saveWorkmateId(FirebaseUser pUser) ;
+    void setWorkmateId(FirebaseUser pUser) ;
 
     String getWorkmateId();
 
     void setWorkmate(Workmate pWorkmate);
 
     Workmate getWorkmate() ;
+
+    void setRestaurant(Restaurant pRestaurant);
+
+    Restaurant getRestaurant();
+
 
 }
