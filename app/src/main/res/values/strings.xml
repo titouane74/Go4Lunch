@@ -114,6 +114,10 @@
     <string name="text_workmate_joining">vient!</string>
 
 
+    <!-- YOUR LUNCH -->
+    <string name="text_lunch_not_choosed">Vous n\'avez pas encore choisi de restaurant</string>
+
+
     <!-- MAPS -->
     <string name="proximity_radius">300</string>
     <string name="type_search">restaurant</string>
