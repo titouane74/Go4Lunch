@@ -2,6 +2,7 @@ package com.fleb.go4lunch.view.fragments;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +23,7 @@ public class RestaurantListFragment extends BaseFragment {
 
     private RestaurantAdapter mRestoAdapter;
     private RecyclerView mRecyclerView;
+    private RestaurantListViewModel mRestaurantListViewModel;
 
     public RestaurantListFragment() {}
 
@@ -45,10 +47,22 @@ public class RestaurantListFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        RestaurantListViewModel lRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
-        lRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
+        mRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
+
+    }
+
+    private void configureViewModel() {
+        mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
             mRestoAdapter.setRestoList(pRestaurantList);
             mRestoAdapter.notifyDataSetChanged();
         });
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        configureViewModel();
+        Toast.makeText(getContext(), "OnResume", Toast.LENGTH_SHORT).show();
+        mRestoAdapter.notifyDataSetChanged();
     }
 }

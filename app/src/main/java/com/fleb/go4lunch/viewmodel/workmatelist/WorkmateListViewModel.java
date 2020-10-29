@@ -1,7 +1,6 @@
 package com.fleb.go4lunch.viewmodel.workmatelist;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fleb.go4lunch.model.Workmate;
@@ -12,15 +11,12 @@ import java.util.List;
 
 public class WorkmateListViewModel extends ViewModel {
 
-    private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
+    private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
 
-    public WorkmateListViewModel() {
-        WorkmateRepository lRepository = new WorkmateRepository();
-        mLDWorkmateList = lRepository.getLDWorkmateListData();
-    }
+    public WorkmateListViewModel() {    }
 
     public LiveData<List<Workmate>> getWorkmateList() {
-        return mLDWorkmateList;
+        return mWorkmateRepo.getLDWorkmateListData();
     }
 
 }
