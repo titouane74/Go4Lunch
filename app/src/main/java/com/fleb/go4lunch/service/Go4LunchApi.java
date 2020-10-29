@@ -26,4 +26,6 @@ public interface Go4LunchApi {
     void setRestaurantList(List<Restaurant> pRestaurantList);
 
     List<Restaurant> getRestaurantList();
+
+    Restaurant getRestaurantFromList(String pRestaurantName);
 }

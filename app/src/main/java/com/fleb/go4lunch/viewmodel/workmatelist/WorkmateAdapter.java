@@ -1,6 +1,7 @@
 package com.fleb.go4lunch.viewmodel.workmatelist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.di.DI;
+import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.service.Go4LunchApi;
+import com.fleb.go4lunch.utils.GsonHelper;
+import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.util.List;
 
@@ -26,6 +32,8 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     private static final String TAG_WORKMATE_ADAPT = "TAG_WORKMATE_ADAPT";
     private List<Workmate> mWorkmateList;
+    private Go4LunchApi mApi;
+    private String mRestaurantChoosed = "";
 
     public void setWorkmateList(List<Workmate> pWorkmateList) {
         mWorkmateList = pWorkmateList;
@@ -36,26 +44,29 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
     @Override
     public WorkmateHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View lView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_workmate_list_item,
-                parent,false);
+                parent, false);
+        if (mApi == null) {
+            mApi = DI.getGo4LunchApiService();
+        }
         return new WorkmateHolder(lView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull WorkmateHolder pWorkmateHolder, int position) {
 
-        String lTxtWorkmate ;
+        String lTxtWorkmate;
 
         Context lContext = pWorkmateHolder.itemView.getContext();
 
         if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
+            mRestaurantChoosed = mWorkmateList.get(position).getWorkmateRestoChoosed();
             lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
-                    + " " + lContext.getString(R.string.text_workmate_eating)
-                    + " (" + mWorkmateList.get(position).getWorkmateRestoChoosed() + ")";
+                    + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChoosed + ")";
             pWorkmateHolder.mTxtViewName.setTextColor(lContext.getResources().getColor(R.color.colorTextBlack));
             pWorkmateHolder.mTxtViewName.setTypeface(null, Typeface.NORMAL);
         } else {
             lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
-                + " " + lContext.getString(R.string.text_workmate_not_decided);
+                    + " " + lContext.getString(R.string.text_workmate_not_decided);
             pWorkmateHolder.mTxtViewName.setTextColor(lContext.getResources().getColor(R.color.colorTextUnavailable));
             pWorkmateHolder.mTxtViewName.setTypeface(null, Typeface.ITALIC);
         }
@@ -65,12 +76,24 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
                 .load(mWorkmateList.get(position).getWorkmatePhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(pWorkmateHolder.mImgViewWorkmate);
+
+        pWorkmateHolder.itemView.setOnClickListener(v -> {
+            if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
+                Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
+                mRestaurantChoosed =  mWorkmateList.get(position).getWorkmateRestoChoosed();
+                Restaurant lRestaurant = mApi.getRestaurantFromList(mRestaurantChoosed);
+                String lJsonRestaurant = GsonHelper.getGsonString(lRestaurant);
+                lIntentRestoDetail.putExtra("placeid", lRestaurant.getRestoPlaceId());
+                lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
+                lContext.startActivity(lIntentRestoDetail);
+            }
+        });
     }
 
 
     @Override
     public int getItemCount() {
-        if(mWorkmateList == null) {
+        if (mWorkmateList == null) {
             return 0;
         } else {
             return mWorkmateList.size();

@@ -15,6 +15,7 @@ public class Go4LunchApiService implements Go4LunchApi {
     private Workmate mWorkmate;
     private String mWorkmateId;
     private Restaurant mRestaurant;
+    private Restaurant mRestaurantFromList;
     private List<Restaurant> mRestaurantList;
 
     @Override
@@ -52,4 +53,18 @@ public class Go4LunchApiService implements Go4LunchApi {
 
     @Override
     public List<Restaurant> getRestaurantList() { return mRestaurantList; }
+
+    @Override
+    public Restaurant getRestaurantFromList(String pRestaurantName) {
+        Restaurant lRestaurantFromList = new Restaurant();
+
+        if(mRestaurantList.size() > 0) {
+            for(Restaurant lRestaurant : mRestaurantList) {
+                if(lRestaurant.getRestoName().equals(pRestaurantName)) {
+                    return lRestaurant;
+                }
+            }
+        }
+        return lRestaurantFromList;
+    }
 }
