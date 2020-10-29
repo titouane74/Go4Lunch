@@ -11,7 +11,6 @@ import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
@@ -65,7 +64,7 @@ public class ChoiceRepository {
         return mLDChoiceStatus;
     }
 
-    public MutableLiveData<Boolean> hasAlreadyMadeAChoice(Workmate pWorkmate) {
+    public MutableLiveData<Boolean> hasAlreadyMadeAChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         Log.d(TAG, "workmate : " + pWorkmate.getWorkmateId() + " dateChoice " + mDateChoice);
         mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
                 .whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), pWorkmate.getWorkmateId())
@@ -76,13 +75,15 @@ public class ChoiceRepository {
                         if (pTask.isSuccessful()) {
                             List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
                             for (Choice lChoice : lChoiceList) {
-                                mChoiceRef.document(lChoice.getChChoiceId())
-                                        .delete()
-                                        .addOnSuccessListener(pDocumentReference -> {
-                                            Log.d("TAG_CHOICE", "onSuccess : previous choice removed ");
-                                            mLDHasChoosed.setValue(true);
-                                        })
-                                        .addOnFailureListener(pE -> Log.d("TAG_CHOICE", "onFailure: previous choice error : ", pE));
+                                if (!lChoice.getChRestoPlaceId().equals(pRestaurant.getRestoPlaceId())) {
+                                    mChoiceRef.document(lChoice.getChChoiceId())
+                                            .delete()
+                                            .addOnSuccessListener(pDocumentReference -> {
+                                                Log.d("TAG_CHOICE", "onSuccess : previous choice removed ");
+                                                mLDHasChoosed.setValue(true);
+                                            })
+                                            .addOnFailureListener(pE -> Log.d("TAG_CHOICE", "onFailure: previous choice error : ", pE));
+                                }
                             }
                         } else {
                             mLDHasChoosed.setValue(false);
@@ -167,21 +168,21 @@ public class ChoiceRepository {
                 });
     }
 
-    //@SuppressLint("SimpleDateFormat")
     public MutableLiveData<List<Workmate>> getWorkmateComingInRestaurant(Restaurant pRestaurant, String pWorkmateId) {
-/*        Date lDate = new Date();
-        SimpleDateFormat lSdf = new SimpleDateFormat("yyyyMMdd");
-        String lDateChoice = lSdf.format(lDate);*/
+
         mRestaurant = pRestaurant;
 
-        mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), mRestaurant.getRestoPlaceId())
-                .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice);
+/*        Log.d(TAG, " param requête : dateChoice : " + mDateChoice
+                + " , restaurant : " + mRestaurant.getRestoName()
+                + " / " + mRestaurant.getRestoPlaceId());*/
 
-        mChoiceRef.get()
+        mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
+                .whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), mRestaurant.getRestoPlaceId())
+                .get()
                 .addOnSuccessListener(pQueryDocumentSnapshots -> {
                     if (!pQueryDocumentSnapshots.isEmpty()) {
                         List<DocumentSnapshot> lResult = pQueryDocumentSnapshots.getDocuments();
-                        Log.d(TAG, "onSuccess: il y a des données");
+                        //Log.d(TAG, "onSuccess: il y a des données");
                         extractWorkmates(lResult, mDateChoice, pWorkmateId);
                     } else {
                         Log.d(TAG, "onSuccess: pas de données");
@@ -196,20 +197,18 @@ public class ChoiceRepository {
         for (DocumentSnapshot lDoc : pResult) {
             lWorkmateCount++;
 
-            if (Objects.requireNonNull(lDoc.get(String.valueOf(Choice.Fields.chRestoName))).equals(mRestaurant.getRestoName())) {
-                Log.d(TAG, "extractWorkmates: bon resto : " + mRestaurant.getRestoName());
-                if (Objects.requireNonNull(lDoc.get(String.valueOf(Choice.Fields.chChoiceDate))).equals(pDateChoice)) {
-                    Log.d(TAG, "extractWorkmates: bonne date : " + pDateChoice);
-                    String lWorkmateId = String.valueOf(lDoc.get(String.valueOf(Choice.Fields.chWorkmateId)));
-                    if (!lWorkmateId.equals(pWorkmateId)) {
-                        //MutableLiveData<Workmate> lLDWorkmate =  mWorkmateRepo.getWorkmate(lWorkmateId);
-                        addWorkmateToList(lWorkmateId, pResult.size(), lWorkmateCount);
-                    }
-                } else {
-                    Log.d(TAG, "extractWorkmates: pas la bonne date on ne fait rien");
-                }
-            } else {
-                Log.d(TAG, "extractWorkmates: pas  le bon resto on ne fait rien");
+/*
+            Log.d(TAG, "extract workmate : dateChoice : " + mDateChoice
+                    + " , restaurant : " + mRestaurant.getRestoName()
+                    + " / " + mRestaurant.getRestoPlaceId());
+            Log.d(TAG, "result : dateChoice : " +lDoc.get(String.valueOf(Choice.Fields.chChoiceDate))
+                    + " , restaurant : " + lDoc.get(String.valueOf(Choice.Fields.chRestoName))
+                    + " / " + lDoc.get(String.valueOf(Choice.Fields.chRestoPlaceId)));
+*/
+            String lWorkmateId = String.valueOf(lDoc.get(String.valueOf(Choice.Fields.chWorkmateId)));
+            if (!lWorkmateId.equals(pWorkmateId)) {
+                //MutableLiveData<Workmate> lLDWorkmate =  mWorkmateRepo.getWorkmate(lWorkmateId);
+                addWorkmateToList(lWorkmateId, pResult.size(), lWorkmateCount);
             }
         }
     }
@@ -228,8 +227,8 @@ public class ChoiceRepository {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         if (lWorkmate != null) {
-                            mWorkmateList.add(new Workmate(pWorkmateId, lWorkmate.getWorkmateName(),
-                                    lWorkmate.getWorkmatePhotoUrl(), mRestaurant.getRestoName()));
+                            lWorkmate.setWorkmateRestoChoosed(mRestaurant.getRestoName());
+                            mWorkmateList.add(lWorkmate);
                             sendBackToView(pResultSize, pWorkmateCount);
                         }
                     } else {

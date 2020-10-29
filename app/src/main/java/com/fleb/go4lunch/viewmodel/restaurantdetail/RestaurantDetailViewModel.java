@@ -25,32 +25,36 @@ public class RestaurantDetailViewModel extends ViewModel {
     private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
     private ChoiceRepository mChoiceRepo = new ChoiceRepository();
     private MutableLiveData<List<Workmate>> mLDChoiceList ;
+    private Go4LunchApi mApi;
+    private Restaurant mRestaurant;
+    private Workmate mWorkmate;
 
-    public RestaurantDetailViewModel(Restaurant pRestaurant) {
-        Log.d(TAG, "RestaurantDetailViewModel: call get liste workmate in this restaurant");
-        Go4LunchApi lApi = DI.getGo4LunchApiService();
-        mLDChoiceList = mChoiceRepo.getWorkmateComingInRestaurant(pRestaurant, lApi.getWorkmateId());
+    public RestaurantDetailViewModel(Go4LunchApi pApi) {
+        mApi = pApi;
+        mRestaurant = mApi.getRestaurant();
+        mWorkmate = mApi.getWorkmate();
     }
 
     /**
      * Access to ChoiceRepository
      */
     public LiveData<List<Workmate>> getWorkmateComingInRestaurant() {
-        return mLDChoiceList;
+        return mChoiceRepo.getWorkmateComingInRestaurant(mRestaurant, mApi.getWorkmateId());
     }
 
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
-       return mChoiceRepo.getOrSaveWorkmateChoiceForRestaurant(pWorkmate, pRestaurant, pActionStatus);
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(ActionStatus pActionStatus) {
+       return mChoiceRepo.getOrSaveWorkmateChoiceForRestaurant(mWorkmate, mRestaurant, pActionStatus);
     }
 
-    public LiveData<Boolean> hasAlreadyMadeAChoice(Workmate pWorkmate) {
-        return mChoiceRepo.hasAlreadyMadeAChoice(pWorkmate);
+    public LiveData<Boolean> hasAlreadyMadeAChoice() {
+        return mChoiceRepo.hasAlreadyMadeAChoice(mWorkmate, mRestaurant);
     }
     /**
      * Access to WorkmateRepository
      */
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(pWorkmate, pRestaurant, pActionStatus);
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(ActionStatus pActionStatus) {
+
+        return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(mWorkmate,mRestaurant, pActionStatus);
     }
 
 }
