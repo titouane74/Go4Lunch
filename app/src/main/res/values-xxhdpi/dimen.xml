@@ -64,6 +64,9 @@
     <dimen name="item_size_height">122dp</dimen>
     <dimen name="linear_layout_size_height_workmate">110dp</dimen>
 
+    <!-- Your lunch -->
+    <dimen name="text_size_title">24sp</dimen>
+    <dimen name="img_size_cutlery">80dp</dimen>
 
     <!-- Pin mam -->
     <dimen name="pin_width">10dp</dimen>

@@ -116,6 +116,7 @@
 
     <!-- YOUR LUNCH -->
     <string name="text_lunch_not_choosed">Vous n\'avez pas encore choisi de restaurant</string>
+    <string name="text_lunch_title">Vous mangez au :</string>
 
 
     <!-- MAPS -->
