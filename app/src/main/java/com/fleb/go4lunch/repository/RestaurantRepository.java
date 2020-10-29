@@ -354,22 +354,31 @@ public class RestaurantRepository {
                                     Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : get choice resto : "
                                             + lChoice.getChRestoName() + " workmate " + lChoice.getChWorkmateName()
                                             + " nbWorkmate : " + cpt);
-                                    mCptWorkmate++;
+                                    mCptWorkmate= mCptWorkmate +1;
                                     lRestaurant.setRestoNbWorkmates(cpt);
                                 }else {
-//                                    Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo :" +
-//                                            " no workmate for the restaurant " + lChoice.getChRestoName());
+                                    Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo :" +
+                                            " no workmate for the restaurant " + lChoice.getChRestoName());
                                 }
                             }
-                            mCptWorkmate += lChoiceList.size();
-//                            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : increased CptWorkmate with the number of" +
-//                                    " workmate inthe restrautn list choice");
+                            mMaxWorkmate += lChoiceList.size();
+                            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : increased mMaxWorkmate : " + mMaxWorkmate);
+                            if((mCptResto == mRestaurantList.size()) && (mCptWorkmate == mMaxWorkmate)) {
+                                Log.d(TAG, "prepareAndSendRestoListForDisplay: mCptResto: " + mCptResto
+                                        + " =  mRestaurantList.size() : " +  mRestaurantList.size()
+                                        + " / mCptWorkmate : " + mCptWorkmate
+                                        + " = mMaxWorkmate : " + mMaxWorkmate);
+                                Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
+                                mLDRestoList.setValue(mRestaurantList);
+                            }
                         }
+
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception pE) {
                             Log.d(TAG, "Failed : " + pE.getMessage());
+                            mLDRestoList.setValue(mRestaurantList);
                         }
                     });
         }

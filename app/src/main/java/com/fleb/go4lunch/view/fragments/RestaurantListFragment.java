@@ -3,7 +3,6 @@ package com.fleb.go4lunch.view.fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,8 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.di.DI;
+import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantAdapter;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
+
+import java.util.List;
 
 
 /**
@@ -26,6 +30,8 @@ public class RestaurantListFragment extends BaseFragment {
     private RestaurantAdapter mRestoAdapter;
     private RecyclerView mRecyclerView;
     private RestaurantListViewModel mRestaurantListViewModel;
+    private Go4LunchApi mApi;
+    private List<Restaurant> mRestaurantList;
 
     public RestaurantListFragment() {}
 
@@ -34,6 +40,10 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
+        if(mApi == null) {
+            mApi = DI.getGo4LunchApiService();
+        }
+
         Log.d(TAG, "configureFragmentOnCreateView: enter");
         mRecyclerView = pView.findViewById(R.id.restaurant_list);
 
@@ -44,6 +54,10 @@ public class RestaurantListFragment extends BaseFragment {
         Log.d(TAG, "initRecyclerView: enter");
         mRestoAdapter = new RestaurantAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+
+        mRestaurantList = mApi.getRestaurantList();
+        mRestoAdapter.setRestoList(mRestaurantList);
+
         mRecyclerView.setAdapter(mRestoAdapter);
         Log.d(TAG, "initRecyclerView: setAdapter=mRestoAdpater");
 
@@ -59,6 +73,7 @@ public class RestaurantListFragment extends BaseFragment {
     private void configureViewModel() {
         Log.d(TAG, "configureViewModel: enter");
         mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
+            mApi.setRestaurantList(pRestaurantList);
             Log.d(TAG, "configureViewModel: recup liste resto");
             mRestoAdapter.setRestoList(pRestaurantList);
             Log.d(TAG, "configureViewModel: send to adpater the new list");

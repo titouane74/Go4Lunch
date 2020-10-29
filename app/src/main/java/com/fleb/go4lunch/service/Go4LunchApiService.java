@@ -1,10 +1,10 @@
 package com.fleb.go4lunch.service;
 
-import android.util.Log;
-
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 26/10/2020
@@ -15,6 +15,7 @@ public class Go4LunchApiService implements Go4LunchApi {
     private Workmate mWorkmate;
     private String mWorkmateId;
     private Restaurant mRestaurant;
+    private List<Restaurant> mRestaurantList;
 
     @Override
     public void setWorkmateId(FirebaseUser pUser) {
@@ -45,4 +46,10 @@ public class Go4LunchApiService implements Go4LunchApi {
     public Restaurant getRestaurant() {
         return mRestaurant;
     }
+
+    @Override
+    public void setRestaurantList(List<Restaurant> pRestaurantList) { mRestaurantList = pRestaurantList; }
+
+    @Override
+    public List<Restaurant> getRestaurantList() { return mRestaurantList; }
 }

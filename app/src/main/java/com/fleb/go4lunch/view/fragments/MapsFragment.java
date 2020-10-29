@@ -3,6 +3,7 @@ package com.fleb.go4lunch.view.fragments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -23,7 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fleb.go4lunch.R;
+import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
@@ -50,6 +53,8 @@ import static androidx.core.content.ContextCompat.checkSelfPermission;
 public class MapsFragment extends Fragment implements LocationListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    private Go4LunchApi mApi;
     private int mZoom;
     public static final String TAG_MAP = " TAG_MAP";
     private GoogleMap mMap;
@@ -100,6 +105,10 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable Bundle savedInstanceState) {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        if(mApi == null) {
+            mApi = DI.getGo4LunchApiService();
+        }
+
         mZoom = Integer.parseInt(getString(R.string.map_zoom));
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
@@ -134,7 +143,13 @@ public class MapsFragment extends Fragment implements LocationListener {
 
         lMapViewModel.saveLocationInSharedPreferences(pLocation);
 
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
+            @Override
+            public void onChanged(List<Restaurant> pRestaurantList) {
+                mApi.setRestaurantList(pRestaurantList);
+                MapsFragment.this.setMapMarkers(pRestaurantList);
+            }
+        });
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
