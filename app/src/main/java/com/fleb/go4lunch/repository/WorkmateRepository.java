@@ -67,6 +67,7 @@ public class WorkmateRepository {
     private String mDateChoice = mSdf.format(mDate);
 
     private void getRestaurantChoice() {
+
         for (Workmate lWorkmate : mWorkmateList) {
             mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), lWorkmate.getWorkmateId())
                     .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice);
@@ -77,14 +78,17 @@ public class WorkmateRepository {
                             for (Choice lChoice : lChoiceList) {
                                 if ((lChoice.getChChoiceDate().equals(mDateChoice))
                                         && (lChoice.getChWorkmateId().equals(lWorkmate.getWorkmateId()))) {
+                                    //passer l'objet resto dans table choiceloge
+                                    Log.e(TAG, "getRestaurantChoice: " + lChoice.getChRestoName());
                                     lWorkmate.setWorkmateRestoChoosed(lChoice.getChRestoName());
                                 }
                             }
+                            mLDWorkmateList.postValue(mWorkmateList);
                         }
 
                     });
         }
-        mLDWorkmateList.setValue(mWorkmateList);
+            mLDWorkmateList.setValue(mWorkmateList);
     }
 
     public MutableLiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {

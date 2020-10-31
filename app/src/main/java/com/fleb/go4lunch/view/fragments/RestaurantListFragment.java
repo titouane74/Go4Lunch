@@ -54,10 +54,6 @@ public class RestaurantListFragment extends BaseFragment {
         Log.d(TAG, "initRecyclerView: enter");
         mRestoAdapter = new RestaurantAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-
-        mRestaurantList = mApi.getRestaurantList();
-        mRestoAdapter.setRestoList(mRestaurantList);
-
         mRecyclerView.setAdapter(mRestoAdapter);
         Log.d(TAG, "initRecyclerView: setAdapter=mRestoAdpater");
 

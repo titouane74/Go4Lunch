@@ -292,14 +292,14 @@ public class RestaurantRepository {
         //TODO nombre de workmate à zéro au premier lancement
         // attendre le retour du OnComplete, gestion de l'async
         Log.d(TAG, "getChoice: mRestaurantList.size" + mRestaurantList.size());
-        if((mCptResto == mRestaurantList.size()) && (mCptWorkmate == mMaxWorkmate)) {
+/*        if((mCptResto == mRestaurantList.size()) && (mCptWorkmate == mMaxWorkmate)) {
             Log.d(TAG, "prepareAndSendRestoListForDisplay: mCptResto: " + mCptResto
                     + " =  mRestaurantList.size() : " +  mRestaurantList.size()
                     + " / mCptWorkmate : " + mCptWorkmate
             + " = mMaxWorkmate : " + mMaxWorkmate);
             Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
             mLDRestoList.setValue(mRestaurantList);
-        }
+        }*/
     }
 
     private void removeRestaurantOutOfRadiusFromList(List<Restaurant> pRestaurantList) {
@@ -368,8 +368,10 @@ public class RestaurantRepository {
                                         + " / mCptWorkmate : " + mCptWorkmate
                                         + " = mMaxWorkmate : " + mMaxWorkmate);
                                 Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
-                                mLDRestoList.setValue(mRestaurantList);
+//                                mLDRestoList.setValue(mRestaurantList);
                             }
+                            Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.postValue");
+                            mLDRestoList.postValue(mRestaurantList);
                         }
 
                     })
