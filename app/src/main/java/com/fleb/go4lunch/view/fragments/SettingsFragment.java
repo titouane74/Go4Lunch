@@ -7,27 +7,30 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_1_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_2_ID;
+import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_3_ID;
+import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
@@ -48,12 +51,21 @@ public class SettingsFragment extends BaseFragment {
     protected void configureFragmentOnCreateView(View pView) {
         mContext = pView.getContext();
 
+
         SettingsViewModel lSettingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
         final TextView textView = pView.findViewById(R.id.text_settings);
         lSettingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
 
         mNotificationManager = NotificationManagerCompat.from(mContext);
+
+        boolean lIsNotificationEnable = mNotificationManager.areNotificationsEnabled();
+
+        if (!lIsNotificationEnable) {
+            Toast.makeText(mContext, "Vous devez autoriser les notifications pour cette application", Toast.LENGTH_SHORT).show();
+            openNotificationSettingsForApp();
+        }
+
 
         mEditTextTitle = pView.findViewById(R.id.edit_text_title);
         mEditTextMessage = pView.findViewById(R.id.edit_text_message);
@@ -122,14 +134,25 @@ public class SettingsFragment extends BaseFragment {
         lWorkmateList.add(lWorkmate7);
         lWorkmateList.add(lWorkmate8);
 
-        NotificationCompat.Builder lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_2_ID)
+        NotificationCompat.Builder lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
                 .setSmallIcon(R.drawable.logo_go4lunch_orange)
-                .setColor(Color.argb(100, 255, 87, 34))
+                .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                 .setContentTitle(lTitle)
                 .setContentText(lMessage)
                 .setAutoCancel(true)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
+        NotificationCompat.InboxStyle lInboxStyle = new NotificationCompat.InboxStyle()
+                .setBigContentTitle(lTitle)
+                .setSummaryText(lTitle);
+
+        // Add each summary line of the new emails, you can add up to 5.
+        for (Workmate lWorkmate : lWorkmateList) {
+            lInboxStyle.addLine(lWorkmate.getWorkmateName());
+        }
+        lBuilder.setStyle(lInboxStyle);
+
+        lBuilder.setOnlyAlertOnce(true);
 
         switch (lNotifPriority) {
             case NotificationCompat.PRIORITY_HIGH:
@@ -148,80 +171,20 @@ public class SettingsFragment extends BaseFragment {
                 lBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         }
 
-        int lNbWorkmate = 0;
-        if (lWorkmateList.size()>0) {
-            lNbWorkmate = lWorkmateList.size();
-            if (lNbWorkmate>7) {
-                lNbWorkmate = 7;
-            }
-        }
-        switch (lNbWorkmate) {
-            case 1:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                .setBigContentTitle(lMessage)
-                .setSummaryText(lTitle));
-                break;
-            case 2:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                        .addLine(lWorkmateList.get(1).getWorkmateName())
-                        .setBigContentTitle(lMessage)
-                        .setSummaryText(lTitle));
-                break;
-            case 3:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                        .addLine(lWorkmateList.get(1).getWorkmateName())
-                        .addLine(lWorkmateList.get(2).getWorkmateName())
-                        .setBigContentTitle(lMessage)
-                        .setSummaryText(lTitle));
-                break;
-            case 4:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                        .addLine(lWorkmateList.get(1).getWorkmateName())
-                        .addLine(lWorkmateList.get(2).getWorkmateName())
-                        .addLine(lWorkmateList.get(3).getWorkmateName())
-                        .setBigContentTitle(lMessage)
-                        .setSummaryText(lTitle));
-                break;
-            case 5:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                        .addLine(lWorkmateList.get(1).getWorkmateName())
-                        .addLine(lWorkmateList.get(2).getWorkmateName())
-                        .addLine(lWorkmateList.get(3).getWorkmateName())
-                        .addLine(lWorkmateList.get(4).getWorkmateName())
-                        .setBigContentTitle(lMessage)
-                        .setSummaryText(lTitle));
-                break;
-            case 6:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                        .addLine(lWorkmateList.get(1).getWorkmateName())
-                        .addLine(lWorkmateList.get(2).getWorkmateName())
-                        .addLine(lWorkmateList.get(3).getWorkmateName())
-                        .addLine(lWorkmateList.get(4).getWorkmateName())
-                        .addLine(lWorkmateList.get(5).getWorkmateName())
-                        .setBigContentTitle(lMessage)
-                        .setSummaryText(lTitle));
-                break;
-            case 7:
-                lBuilder.setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(lWorkmateList.get(0).getWorkmateName())
-                        .addLine(lWorkmateList.get(1).getWorkmateName())
-                        .addLine(lWorkmateList.get(2).getWorkmateName())
-                        .addLine(lWorkmateList.get(3).getWorkmateName())
-                        .addLine(lWorkmateList.get(4).getWorkmateName())
-                        .addLine(lWorkmateList.get(5).getWorkmateName())
-                        .addLine(lWorkmateList.get(6).getWorkmateName())
-                        .setBigContentTitle(lMessage)
-                        .setSummaryText(lTitle));
-                break;
-            default:
-        }
 
-        mNotificationManager.notify(2, lBuilder.build());
+        mNotificationManager.notify(1, lBuilder.build());
+    }
+
+    private void openNotificationSettingsForApp() {
+        // Links to this app's notification settings.
+        Intent intent = new Intent();
+        intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+        intent.putExtra("app_package", mContext.getPackageName());
+        intent.putExtra("app_uid", mContext.getApplicationInfo().uid);
+
+        // for Android 8 and above
+        intent.putExtra("android.provider.extra.APP_PACKAGE", mContext.getPackageName());
+
+        startActivity(intent);
     }
 }
