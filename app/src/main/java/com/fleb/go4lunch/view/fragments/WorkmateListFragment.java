@@ -30,7 +30,6 @@ public class WorkmateListFragment extends BaseFragment  {
     @Override
     protected void configureFragmentOnCreateView(View pView) {
         mRecyclerView = pView.findViewById(R.id.workmate_list);
-
         initRecyclerView();
     }
 

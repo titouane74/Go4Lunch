@@ -14,6 +14,6 @@ public class MainActivityViewModel extends ViewModel {
     private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
 
     public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
-        return mWorkmateRepo.getWorkmate(pWorkmateId);
+        return mWorkmateRepo.getWorkmateData(pWorkmateId);
     }
 }

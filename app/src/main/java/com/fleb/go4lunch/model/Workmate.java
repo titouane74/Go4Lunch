@@ -14,7 +14,8 @@ public class Workmate {
     private String workmateName;
     private String workmateEmail;
     private String workmatePhotoUrl;
-    private String workmateRestoChoosed;
+    @Nullable
+    private Restaurant workmateRestoChoosed;
     private List<Likes> workmateLikes;
 
     public Workmate() {}
@@ -29,7 +30,7 @@ public class Workmate {
         workmateName = pWorkmateName;
     }
 
-    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmatePhotoUrl, String pWorkmateRestoChoosed) {
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmatePhotoUrl, @Nullable Restaurant pWorkmateRestoChoosed) {
         workmateId = pWorkmateId;
         workmateName = pWorkmateName;
         workmatePhotoUrl = pWorkmatePhotoUrl;
@@ -37,7 +38,7 @@ public class Workmate {
     }
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                    String pWorkmateRestoChoosed ) {
+                    @Nullable Restaurant pWorkmateRestoChoosed ) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
@@ -64,9 +65,9 @@ public class Workmate {
 
     public void setWorkmatePhotoUrl(@Nullable String pWorkmatePhotoUrl) { workmatePhotoUrl = pWorkmatePhotoUrl; }
 
-    public String getWorkmateRestoChoosed() { return workmateRestoChoosed; }
+    public @Nullable Restaurant getWorkmateRestoChoosed() { return workmateRestoChoosed; }
 
-    public void setWorkmateRestoChoosed(String pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
+    public void setWorkmateRestoChoosed(@Nullable Restaurant pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
 
     public String getWorkmateId() { return workmateId; }
 

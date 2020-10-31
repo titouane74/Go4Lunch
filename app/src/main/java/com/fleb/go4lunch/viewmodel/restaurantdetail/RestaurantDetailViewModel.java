@@ -43,17 +43,13 @@ public class RestaurantDetailViewModel extends ViewModel {
     }
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(ActionStatus pActionStatus) {
-       return mChoiceRepo.getOrSaveWorkmateChoiceForRestaurant(mWorkmate, mRestaurant, pActionStatus);
+        return mWorkmateRepo.getOrSaveWorkmateRestaurantChoice(mWorkmate, mRestaurant, pActionStatus);
     }
 
-    public LiveData<Boolean> hasAlreadyMadeAChoice() {
-        return mChoiceRepo.hasAlreadyMadeAChoice(mWorkmate, mRestaurant);
-    }
     /**
      * Access to WorkmateRepository
      */
     public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(ActionStatus pActionStatus) {
-
         return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(mWorkmate,mRestaurant, pActionStatus);
     }
 

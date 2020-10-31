@@ -32,8 +32,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     private static final String TAG_WORKMATE_ADAPT = "TAG_WORKMATE_ADAPT";
     private List<Workmate> mWorkmateList;
-    private Go4LunchApi mApi;
-    private String mRestaurantChoosed = "";
+    private Restaurant mRestaurantChoosed;
 
     public void setWorkmateList(List<Workmate> pWorkmateList) {
         mWorkmateList = pWorkmateList;
@@ -45,9 +44,6 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
     public WorkmateHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View lView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_workmate_list_item,
                 parent, false);
-        if (mApi == null) {
-            mApi = DI.getGo4LunchApiService();
-        }
         return new WorkmateHolder(lView);
     }
 
@@ -81,9 +77,8 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
             if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
                 Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
                 mRestaurantChoosed =  mWorkmateList.get(position).getWorkmateRestoChoosed();
-                Restaurant lRestaurant = mApi.getRestaurantFromList(mRestaurantChoosed);
-                String lJsonRestaurant = GsonHelper.getGsonString(lRestaurant);
-                lIntentRestoDetail.putExtra("placeid", lRestaurant.getRestoPlaceId());
+                String lJsonRestaurant = GsonHelper.getGsonString(mRestaurantChoosed);
+                lIntentRestoDetail.putExtra("placeid", mRestaurantChoosed.getRestoPlaceId());
                 lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
                 lContext.startActivity(lIntentRestoDetail);
             }

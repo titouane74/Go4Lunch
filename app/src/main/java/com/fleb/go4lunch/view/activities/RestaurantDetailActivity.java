@@ -136,14 +136,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoLike.setOnClickListener(v -> saveLikeRestaurant());
 
         mRestoBtnFloatChecked.setOnClickListener(v -> {
-            hasAlreadyChoosedARestaurant();
             saveChoiceRestaurant();
         });
     }
 
-    private void hasAlreadyChoosedARestaurant() {
-        mRestaurantDetailViewModel.hasAlreadyMadeAChoice().observe(this,pIsChoosed -> { });
-    }
     private void saveChoiceRestaurant() {
         Log.d(TAG, "saveChoiceRestaurant: name : " + mRestaurant.getRestoName());
 

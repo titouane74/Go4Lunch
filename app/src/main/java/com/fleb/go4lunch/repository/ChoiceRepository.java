@@ -227,7 +227,7 @@ public class ChoiceRepository {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         if (lWorkmate != null) {
-                            lWorkmate.setWorkmateRestoChoosed(mRestaurant.getRestoName());
+                            lWorkmate.setWorkmateRestoChoosed(mRestaurant);
                             mWorkmateList.add(lWorkmate);
                             sendBackToView(pResultSize, pWorkmateCount);
                         }
