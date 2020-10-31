@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -33,26 +37,30 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
-
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "TAG_MAIN";
 
+
+
+    /**
+     * Api Service
+     */
+    private Go4LunchApi mApi;
+
+    /**
+     * Firebase
+     */
+    private FirebaseUser mCurrentUser;
+
+    /**
+     * Design
+     */
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private static final String TAG = "TAG_MAIN";
-
-    public static final String PREF_KEY_RADIUS = "PREF_KEY_RADIUS";
-    public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
-    public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
-
-    private Go4LunchApi mApi;
-
     private NavController mNavController;
-
-    private FirebaseUser mCurrentUser;
-
+    private BottomNavigationView mBottomNav;
     private ImageView mImgUser;
     private TextView mTxtName;
     private TextView mTxtEmail;
@@ -62,8 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeSharedPreferences();
-        if(mApi == null) {
+        if (mApi == null) {
             mApi = DI.getGo4LunchApiService();
         }
 
@@ -78,20 +85,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         configureDrawerLayoutNavigationView();
 
-        NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
-        //Contient un navigationitemselectedlistener
-        NavigationUI.setupWithNavController(mNavigationView, mNavController);
-
-        //Bottom navigation
-        BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
-        //When drawer and bottomnav are identical
-        NavigationUI.setupWithNavController(lBottomNav, mNavController);
+/*  La bottom navigation bar ne fonctionne plus si j'active ça à moins de gérer les fragments
+        mBottomNav.setOnNavigationItemSelectedListener(MainActivity::onNavigationItemSelected);
+*/
+        //Ca ça sert à rien
+        mDrawerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: " + v.getId());
+            }
+        });
+/*  La bottom navigation bar ne fonctionne plus si j'active ça à moins de gérer les fragments
+    mNavController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                    Log.d(TAG, "onDestinationChanged: " + mNavigationView.getCheckedItem());
+            }
+        });*/
 
     }
 
+    /*  La bottom navigation bar ne fonctionne plus si j'active ça à moins de gérer les fragments
+        private static boolean onNavigationItemSelected(MenuItem pMenuItem) {
+            //Ca ne marche que pour la bottom navigation bar
+            Log.d(TAG, "onNavigationItemSelected: " + pMenuItem);
+            return false;
+        }
+*/
     private void configureViewModel() {
         MainActivityViewModel lMainActivityViewModel = new MainActivityViewModel();
-        lMainActivityViewModel.getWorkmateInfos(mApi.getWorkmateId()).observe(this,pWorkmate ->
+        lMainActivityViewModel.getWorkmateInfos(mApi.getWorkmateId()).observe(this, pWorkmate ->
         {
             Log.d(TAG, "configureViewModel: return from repo save workmate in Api : " + pWorkmate.getWorkmateName());
             mApi.setWorkmate(pWorkmate);
@@ -99,29 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void initializeSharedPreferences() {
 
-        PreferencesHelper.loadPreferences(MainActivity.this);
-        String lValueString;
-        int lValueInt;
-
-        if(mPreferences.getString(PREF_KEY_TYPE_GOOGLE_SEARCH,null) == null) {
-            lValueString = getString(R.string.type_search);
-            Log.d("TAG_PREFS", "initializeSharedPreferences: type " + lValueString);
-            PreferencesHelper.saveStringPreferences(PREF_KEY_TYPE_GOOGLE_SEARCH,lValueString);
-        }
-
-        if(mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS,null) == null) {
-            lValueString = getString(R.string.place_detail_fields);
-            Log.d("TAG_PREFS", "initializeSharedPreferences: fields " + lValueString);
-            PreferencesHelper.saveStringPreferences(PREF_KEY_PLACE_DETAIL_FIELDS,lValueString);
-        }
-
-        lValueInt = Integer.parseInt(getString(R.string.proximity_radius));
-        Log.d("TAG_PREFS", "initializeSharedPreferences: radius " + lValueInt);
-        PreferencesHelper.saveIntPreferences(PREF_KEY_RADIUS,lValueInt);
-
-    }
 
     /**
      * Suppress the super.onBackPressed because we don't want that the user can press Back
@@ -185,9 +186,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setOpenableLayout(mDrawerLayout)
                 .build();
 
-/*        if (mCurrentUser != null) {
-            displayWorkmateData(mCurrentUser);
-        }*/
+
+        NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+
+        //Contient un navigationitemselectedlistener
+        NavigationUI.setupWithNavController(mNavigationView, mNavController);
+
+        //Bottom navigation
+        mBottomNav = findViewById(R.id.nav_bottom);
+        //When drawer and bottomnav are identical
+        NavigationUI.setupWithNavController(mBottomNav, mNavController);
+
         mImgUser.setOnClickListener(this);
     }
 
@@ -210,4 +219,3 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 }
-

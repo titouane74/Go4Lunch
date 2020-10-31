@@ -3,7 +3,6 @@ package com.fleb.go4lunch.view.fragments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -52,18 +51,13 @@ import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
+    public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
     private Go4LunchApi mApi;
     private int mZoom;
-    public static final String TAG_MAP = " TAG_MAP";
     private GoogleMap mMap;
-    private double mLatitude;
-    private double mLongitude;
-    private LatLng mLatLng;
-    private Location mCurrentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
-    private LocationManager mLocationManager;
     private SupportMapFragment mMapFragment;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -137,18 +131,13 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
-    public void configViewModel(Location pLocation) {
+    public void configViewModel() {
 
         MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
 
-        lMapViewModel.saveLocationInSharedPreferences(pLocation);
-
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
-            @Override
-            public void onChanged(List<Restaurant> pRestaurantList) {
-                mApi.setRestaurantList(pRestaurantList);
-                MapsFragment.this.setMapMarkers(pRestaurantList);
-            }
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
+            mApi.setRestaurantList(pRestaurantList);
+            MapsFragment.this.setMapMarkers(pRestaurantList);
         });
     }
 
@@ -195,24 +184,25 @@ public class MapsFragment extends Fragment implements LocationListener {
         Task<Location> task = mFusedLocationClient.getLastLocation();
         task.addOnSuccessListener(location -> {
             if (location != null) {
+                Log.d(TAG, "getCurrentLocation: " + location);
                 saveLocation(location);
             }
         });
 
-        mLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
-        if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
+        LocationManager lLocationManager = (LocationManager) this.requireContext().getSystemService(Context.LOCATION_SERVICE);
+        if (lLocationManager != null) {
+            lLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, this);
         }
     }
 
     public void saveLocation(Location pLocation) {
-        mCurrentLocation = pLocation;
-        mLongitude = pLocation.getLongitude();
-        mLatitude = pLocation.getLatitude();
-        mLatLng = new LatLng(mLatitude, mLongitude);
+        double lLongitude = pLocation.getLongitude();
+        double lLatitude = pLocation.getLatitude();
+        LatLng lLatLng = new LatLng(lLatitude, lLongitude);
 
-        configViewModel(pLocation);
-        setCameraOnCurrentLocation(mLatLng, mZoom);
+        mApi.saveLocationInSharedPreferences(pLocation);
+        configViewModel();
+        setCameraOnCurrentLocation(lLatLng, mZoom);
     }
 
     private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {

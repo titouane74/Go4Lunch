@@ -123,27 +123,13 @@
     <string name="proximity_radius">300</string>
     <string name="type_search">restaurant</string>
     <string name="map_zoom">16</string>
+    <string name="default_latitude_position">48.8236549</string>
+    <string name="default_longitude_position">2.4102578</string>
     <!--    Permissions    -->
     <string name="permission_rationale_location">L\'accès au service de localisation est nécessaire pour permettre la localisation.</string>
     <string name="location_permission_denied">L\'application nécessite une autorisation de localisation pour permettre la locatlisation . Veuillez réessayer et accorder l\'accès pour utiliser l\'emplacement. \nSi l\'autorisation a été définitivement refusée, elle peut être activée à partir des paramètres système &gt; Applications &gt; \'Go4Lunch \'.</string>
     <string name="permission_required_toast">Une autorisation de localisation est requise.</string>
 
     <string name="place_detail_fields">name,address_components,adr_address,formatted_address,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 </resources>

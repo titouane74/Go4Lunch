@@ -38,20 +38,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_PLACE_DETAIL_FIELDS;
+import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_RADIUS;
+import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_TYPE_GOOGLE_SEARCH;
 import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
+import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LATITUDE;
+import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LONGITUDE;
 import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
-import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_PLACE_DETAIL_FIELDS;
-import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_RADIUS;
-import static com.fleb.go4lunch.view.activities.MainActivity.PREF_KEY_TYPE_GOOGLE_SEARCH;
+
 
 /**
  * Created by Florence LE BOURNOT on 13/10/2020
  */
 public class RestaurantRepository {
     public static final String TAG = "TAG_REPO";
-
-    public static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
-    public static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
@@ -80,22 +80,21 @@ public class RestaurantRepository {
     private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
     private String mDateChoice = mSdf.format(mDate);
 
-
     private int mCptWorkmate;
     private int mCptResto;
     private int mMaxWorkmate;
 
     private List<Restaurant> mRestaurantList = new ArrayList<>();
 
-    public void saveLocationInSharedPreferences(Location pLocation) {
+/*    public void saveLocationInSharedPreferences(Location pLocation) {
         PreferencesHelper.saveStringPreferences(PREF_KEY_LATITUDE, String.valueOf(pLocation.getLatitude()));
         PreferencesHelper.saveStringPreferences(PREF_KEY_LONGITUDE, String.valueOf(pLocation.getLongitude()));
-    }
+    }*/
 
     public MutableLiveData<List<Restaurant>> getRestaurantList() {
         Log.d(TAG, "getRestaurantList: Repo : enter");
-        mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, null)));
-        mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, null)));
+        mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, "")));
+        mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, "")));
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
         Log.d(TAG, "getRestaurantList: Repo : get preferences for position");
         mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))

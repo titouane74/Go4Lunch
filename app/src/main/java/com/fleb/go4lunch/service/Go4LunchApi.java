@@ -1,5 +1,7 @@
 package com.fleb.go4lunch.service;
 
+import android.location.Location;
+
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,4 +30,11 @@ public interface Go4LunchApi {
     List<Restaurant> getRestaurantList();
 
     Restaurant getRestaurantFromList(String pRestaurantName);
+
+    void setLocation(Location pLocation);
+
+    Location getLocation();
+
+    void saveLocationInSharedPreferences(Location pLocation);
+
 }

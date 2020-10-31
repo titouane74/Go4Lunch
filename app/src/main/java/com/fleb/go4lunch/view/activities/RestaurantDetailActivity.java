@@ -25,7 +25,7 @@ import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
-import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViweModelFactory;
+import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModelFactory;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -109,7 +109,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViewModel() {
-        RestaurantDetailViweModelFactory lFactory = new RestaurantDetailViweModelFactory(mApi);
+        RestaurantDetailViewModelFactory lFactory = new RestaurantDetailViewModelFactory(mApi);
         mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
     }
 

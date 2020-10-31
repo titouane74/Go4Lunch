@@ -11,12 +11,12 @@ import com.fleb.go4lunch.service.Go4LunchApi;
 /**
  * Created by Florence LE BOURNOT on 26/10/2020
  */
-public class RestaurantDetailViweModelFactory implements ViewModelProvider.Factory {
+public class RestaurantDetailViewModelFactory implements ViewModelProvider.Factory {
 
     private Restaurant mRestaurant;
     private Go4LunchApi mApi;
 
-    public RestaurantDetailViweModelFactory(Go4LunchApi pApi) {
+    public RestaurantDetailViewModelFactory(Go4LunchApi pApi) {
         mApi = pApi;
     }
 
