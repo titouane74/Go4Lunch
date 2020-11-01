@@ -270,9 +270,9 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             mApi.setWorkmateId(pCurrentUser);
 
             saveWorkmateIfNotExist(pCurrentUser);
-
             finish();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
         } else {
             Toast.makeText(this, R.string.auth_msg_sign_in_to_continue, Toast.LENGTH_SHORT).show();
         }
@@ -292,6 +292,8 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             } else {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_not_created, Toast.LENGTH_SHORT).show();
             }
+            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         });
     }
 }

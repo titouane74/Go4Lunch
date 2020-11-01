@@ -22,7 +22,6 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.DayOpeningHours;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
-import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
@@ -117,9 +116,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         pRestoHolder.itemView.setOnClickListener(v -> {
             Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-            String lJsonRestaurant = GsonHelper.getGsonString(mRestoList.get(position));
             lIntentRestoDetail.putExtra("placeid", mRestoList.get(position).getRestoPlaceId());
-            lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
             lContext.startActivity(lIntentRestoDetail);
         });
     }

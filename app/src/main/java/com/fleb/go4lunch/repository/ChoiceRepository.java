@@ -40,7 +40,7 @@ public class ChoiceRepository {
     private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
 
     private MutableLiveData<List<Workmate>> mLDListWorkmateComing = new MutableLiveData<>();
-    private MutableLiveData<ActionStatus> mLDChoiceStatus = new MutableLiveData<>();
+//    private MutableLiveData<ActionStatus> mLDChoiceStatus = new MutableLiveData<>();
 
     private List<Workmate> mWorkmateList = new ArrayList<>();
     private Restaurant mRestaurant;
@@ -50,8 +50,9 @@ public class ChoiceRepository {
     private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
     private String mDateChoice = mSdf.format(mDate);
 
-    private MutableLiveData<Boolean> mLDHasChoosed = new MutableLiveData<>();
+//    private MutableLiveData<Boolean> mLDHasChoosed = new MutableLiveData<>();
 
+/*
     public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
 
         String lIdDoc = pWorkmate.getWorkmateId() + pRestaurant.getRestoPlaceId() + mDateChoice;
@@ -63,7 +64,9 @@ public class ChoiceRepository {
         }
         return mLDChoiceStatus;
     }
+*/
 
+/*
     public MutableLiveData<Boolean> hasAlreadyMadeAChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         Log.d(TAG, "workmate : " + pWorkmate.getWorkmateId() + " dateChoice " + mDateChoice);
         mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
@@ -92,7 +95,8 @@ public class ChoiceRepository {
                 });
         return mLDHasChoosed;
     }
-
+*/
+/*
     private void getWorkmateChoiceForRestaurant(String pIdDoc) {
         mChoiceRef.document(pIdDoc)
                 .get()
@@ -110,7 +114,8 @@ public class ChoiceRepository {
                 });
 
     }
-
+*/
+/*
     public void saveChoiceWorkmateRestaurant(String pIdDoc, Workmate pWorkmate,
                                              Restaurant pRestaurant, String pDateChoice) {
         Log.d(TAG, "saveChoiceWorkmateRestaurant: " + pRestaurant.getRestoName());
@@ -130,6 +135,8 @@ public class ChoiceRepository {
                     }
                 });
     }
+*/
+/*
 
     private void addRestaurantToChoice(String pIdDoc, Workmate pWorkmate, Restaurant pRestaurant, String pDateChoice) {
         Timestamp lTimestamp = Timestamp.now();
@@ -151,6 +158,9 @@ public class ChoiceRepository {
                 });
     }
 
+*/
+
+/*
     private void removeRestaurantFromChoice(Choice pChoice) {
 
         String lIdDoc = pChoice.getChChoiceId();
@@ -167,14 +177,11 @@ public class ChoiceRepository {
                     mLDChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
                 });
     }
+*/
 
     public MutableLiveData<List<Workmate>> getWorkmateComingInRestaurant(Restaurant pRestaurant, String pWorkmateId) {
 
         mRestaurant = pRestaurant;
-
-/*        Log.d(TAG, " param requête : dateChoice : " + mDateChoice
-                + " , restaurant : " + mRestaurant.getRestoName()
-                + " / " + mRestaurant.getRestoPlaceId());*/
 
         mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
                 .whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), mRestaurant.getRestoPlaceId())
@@ -182,7 +189,6 @@ public class ChoiceRepository {
                 .addOnSuccessListener(pQueryDocumentSnapshots -> {
                     if (!pQueryDocumentSnapshots.isEmpty()) {
                         List<DocumentSnapshot> lResult = pQueryDocumentSnapshots.getDocuments();
-                        //Log.d(TAG, "onSuccess: il y a des données");
                         extractWorkmates(lResult, mDateChoice, pWorkmateId);
                     } else {
                         Log.d(TAG, "onSuccess: pas de données");
@@ -227,7 +233,6 @@ public class ChoiceRepository {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         if (lWorkmate != null) {
-                            lWorkmate.setWorkmateRestoChoosed(mRestaurant);
                             mWorkmateList.add(lWorkmate);
                             sendBackToView(pResultSize, pWorkmateCount);
                         }

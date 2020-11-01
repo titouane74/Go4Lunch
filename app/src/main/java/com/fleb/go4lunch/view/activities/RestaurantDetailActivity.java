@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
-import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
@@ -29,10 +26,11 @@ import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModelFac
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+
 public class RestaurantDetailActivity extends AppCompatActivity {
 
-    private static final String TAG = "TAG_DETAIL_RESTO";
     private Restaurant mRestaurant;
+    private String mRestaurantId;
     private TextView mRestoName;
     private TextView mRestoAddress;
     private ImageView mRestoNote1;
@@ -46,7 +44,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
 
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
-    private Workmate mWorkmate;
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
     private Go4LunchApi mApi;
 
@@ -69,8 +66,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoLike = findViewById(R.id.img_like);
         mRecyclerView = findViewById(R.id.restaurant_detail_workmate_list);
 
-        mWorkmate = mApi.getWorkmate();
-
         getIncomingIntent();
 
         configureViewModel();
@@ -78,43 +73,38 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void getIncomingIntent() {
-        if (getIntent().hasExtra("placeid") && (getIntent().hasExtra("restaurant"))) {
-            mRestaurant = GsonHelper.getGsonRestaurant(getIntent().getStringExtra("restaurant"));
+        if (getIntent().hasExtra("placeid")) {
+            mRestaurantId = getIntent().getStringExtra("placeid");
 
-            mApi.setRestaurant(mRestaurant);
-
-            setInfoRestaurant();
         }
     }
 
     private void configureViewModel() {
-
         initializeViewModel();
         initRecyclerView();
-
-        displayChoiceStatus();
-        displayLikeStatus();
-
-        mRestaurantDetailViewModel.getWorkmateComingInRestaurant().observe(this, pWorkmateList ->
-        {
-            mWorkmateAdapter.setWorkmateList(pWorkmateList);
-            mWorkmateAdapter.notifyDataSetChanged();
-        });
     }
 
     private void initRecyclerView() {
         mWorkmateAdapter = new RestaurantDetailWorkmateAdapter();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mWorkmateAdapter);
     }
 
     private void initializeViewModel() {
         RestaurantDetailViewModelFactory lFactory = new RestaurantDetailViewModelFactory(mApi);
         mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
+        mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
+            mWorkmateAdapter.setWorkmateList(pRestaurant.getRestoWkList());
+            mWorkmateAdapter.notifyDataSetChanged();
+            mRestaurant = pRestaurant;
+            mApi.setRestaurant(mRestaurant);
+            setInfoRestaurant();
+            displayChoiceStatus();
+            displayLikeStatus();
+        });
     }
 
     private void setInfoRestaurant() {
-
         mRestoName.setText(mRestaurant.getRestoName());
         mRestoAddress.setText(mRestaurant.getRestoAddress());
 
@@ -135,15 +125,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         mRestoLike.setOnClickListener(v -> saveLikeRestaurant());
 
-        mRestoBtnFloatChecked.setOnClickListener(v -> {
-            saveChoiceRestaurant();
-        });
+        mRestoBtnFloatChecked.setOnClickListener(v -> saveChoiceRestaurant());
     }
 
     private void saveChoiceRestaurant() {
-        Log.d(TAG, "saveChoiceRestaurant: name : " + mRestaurant.getRestoName());
-
-        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(ActionStatus.SAVED)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
                 .observe(this, pActionStatus -> {
                     switch (pActionStatus) {
                         case ADDED:
@@ -164,7 +150,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(ActionStatus.TO_SEARCH)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
                         changeChoiceStatus(true);
@@ -189,7 +175,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(ActionStatus.TO_SEARCH)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
                         changeLikeStatus(true);
@@ -200,15 +186,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void saveLikeRestaurant() {
-        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(ActionStatus.TO_SAVE)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
                 .observe(this, pActionStatus -> {
                     if (pActionStatus.equals(ActionStatus.ADDED)) {
-//                        Toast.makeText(RestaurantDetailActivity.this,getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
                         changeLikeStatus(true);
                     } else if (pActionStatus.equals(ActionStatus.REMOVED)) {
-//                        Toast.makeText(RestaurantDetailActivity.this,getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
                         changeLikeStatus(false);
-                    } else if (pActionStatus.equals(ActionStatus.ERROR)){
+                    } else if (pActionStatus.equals(ActionStatus.ERROR)) {
                         Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                     }
                 });

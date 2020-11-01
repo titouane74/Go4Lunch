@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.BuildConfig;
-import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.FirestoreUpdateFields;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
@@ -16,8 +15,6 @@ import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
-import com.fleb.go4lunch.utils.PreferencesHelper;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -56,7 +53,6 @@ public class RestaurantRepository {
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
     private CollectionReference mRestoLastUpdRef = mDb.collection(String.valueOf(FirestoreUpdateFields.RestaurantLastUpdate));
-    private CollectionReference mChoiceRef = mDb.collection(String.valueOf(Choice.Fields.Choice));
     /**
      * Google  / Retrofit declarations
      */
@@ -67,6 +63,7 @@ public class RestaurantRepository {
      * MutableLiveData Declarations
      */
     private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>();
+    private MutableLiveData<Restaurant> mLDResto = new MutableLiveData<>();
 
     private Location mFusedLocationProvider;
     private Date mFirestoreLastUpdate = new Date();
@@ -75,28 +72,25 @@ public class RestaurantRepository {
     private Double mLatitude;
     private Double mLongitude;
 
-    private Date mDate = new Date();
-    @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
-    private String mDateChoice = mSdf.format(mDate);
-
-    private int mCptWorkmate;
-    private int mCptResto;
-    private int mMaxWorkmate;
-
     private List<Restaurant> mRestaurantList = new ArrayList<>();
 
-/*    public void saveLocationInSharedPreferences(Location pLocation) {
-        PreferencesHelper.saveStringPreferences(PREF_KEY_LATITUDE, String.valueOf(pLocation.getLatitude()));
-        PreferencesHelper.saveStringPreferences(PREF_KEY_LONGITUDE, String.valueOf(pLocation.getLongitude()));
-    }*/
+    public MutableLiveData<Restaurant> getRestaurantDetail(String pRestaurantId) {
+        mRestoRef.document(pRestaurantId)
+                .get()
+                .addOnCompleteListener(pTask -> {
+                    if(pTask.isSuccessful()) {
+                        mLDResto.setValue(pTask.getResult().toObject(Restaurant.class));
+                    }
+                })
+                .addOnFailureListener(pE -> Log.d("TAG_", "onFailure ", pE));
+        return mLDResto;
+    }
+
 
     public MutableLiveData<List<Restaurant>> getRestaurantList() {
-        Log.d(TAG, "getRestaurantList: Repo : enter");
         mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, "")));
         mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, "")));
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
-        Log.d(TAG, "getRestaurantList: Repo : get preferences for position");
         mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -115,8 +109,6 @@ public class RestaurantRepository {
 
                                 mFirestoreLastUpdate = lTimestamp.toDate();
 
-                                Log.d("TAG4_GET_RESTO_LIST", "getRestaurantList: mFirestoreLastUpdate " + mFirestoreLastUpdate);
-
                                 //Compare the only dates (today and firestore date)
                                 @SuppressLint("SimpleDateFormat")
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -129,7 +121,6 @@ public class RestaurantRepository {
                                     getFirestoreRestaurantList();
 
                                 } else {
-                                    Log.d(TAG, "getRestaurantList: Repo : call getFirestoreRestoList 1");
                                     getFirestoreRestaurantList();
                                 }
                             }
@@ -140,7 +131,6 @@ public class RestaurantRepository {
                         }
                     } else {
                         mFirestoreLastUpdate = null;
-                        Log.d(TAG, "getRestaurantList: Repo : call getFirestoreRestoList 2");
                         getFirestoreRestaurantList();
                     }
                 });
@@ -148,15 +138,11 @@ public class RestaurantRepository {
     }
 
     private void getFirestoreRestaurantList() {
-        Log.d(TAG, "getFirestoreRestaurantList: Repo : enter");
         mRestoRef.get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         List<Restaurant> lRestoList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
-                        Log.d(TAG, "getFirestoreRestaurantList: Repo : call prepareandsend");
                         prepareAndSendRestoListForDisplay(lRestoList);
-                    } else {
-                        Log.d("TAG_GET_FIRESTORE", "Error : " + pTask.getException());
                     }
                 });
     }
@@ -265,7 +251,8 @@ public class RestaurantRepository {
     public void saveRestaurantInFirestore(Restaurant pRestaurant) {
         mRestoRef.document(pRestaurant.getRestoPlaceId())
                 .get()
-                .addOnSuccessListener(pVoid -> mRestoRef.document(pRestaurant.getRestoPlaceId())
+                .addOnSuccessListener(pDocumentSnapshot ->
+                        mRestoRef.document(pRestaurant.getRestoPlaceId())
                         .set(pRestaurant)
                         .addOnSuccessListener(pDocumentReference ->
                                 Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
@@ -298,8 +285,7 @@ public class RestaurantRepository {
                 }
             }
         } catch (java.util.ConcurrentModificationException exception) {
-            // Catch ConcurrentModificationExceptions.
-            Log.d(TAG, "removeRestaurantOutOfRadiusFromList: " + exception);;
+            Log.d(TAG, "removeRestaurantOutOfRadiusFromList: " + exception);
         }
 
         mRestaurantList = pRestaurantList;

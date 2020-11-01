@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.model.Restaurant;
 
 import java.util.List;
 
@@ -23,12 +23,11 @@ import java.util.List;
  */
 public class RestaurantDetailWorkmateAdapter extends RecyclerView.Adapter<RestaurantDetailWorkmateAdapter.WorkmateHolder> {
 
-    private List<Workmate> mWorkmateList;
+    private List<Restaurant.WorkmatesList> mWorkmateList;
 
-    public void setWorkmateList(List<Workmate> pWorkmateList) {
+    public void setWorkmateList(List<Restaurant.WorkmatesList> pWorkmateList) {
         mWorkmateList = pWorkmateList;
     }
-
 
     @NonNull
     @Override
@@ -44,12 +43,12 @@ public class RestaurantDetailWorkmateAdapter extends RecyclerView.Adapter<Restau
 
         Context lContext = pWorkmateHolder.itemView.getContext();
 
-        lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
+        lTxtWorkmate = mWorkmateList.get(position).getWkName()
                 + " " + lContext.getString(R.string.text_workmate_joining);
         pWorkmateHolder.mTxtViewName.setText(lTxtWorkmate);
 
         Glide.with(pWorkmateHolder.mImgViewWorkmate.getContext())
-                .load(mWorkmateList.get(position).getWorkmatePhotoUrl())
+                .load(mWorkmateList.get(position).getWkUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(pWorkmateHolder.mImgViewWorkmate);
     }

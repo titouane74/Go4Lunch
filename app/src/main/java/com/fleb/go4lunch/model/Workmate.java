@@ -14,8 +14,7 @@ public class Workmate {
     private String workmateName;
     private String workmateEmail;
     private String workmatePhotoUrl;
-    @Nullable
-    private Restaurant workmateRestoChoosed;
+    private WorkmateRestoChoice workmateRestoChoosed;
     private List<Likes> workmateLikes;
 
     public Workmate() {}
@@ -39,7 +38,7 @@ public class Workmate {
     }
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                    @Nullable Restaurant pWorkmateRestoChoosed ) {
+                    WorkmateRestoChoice pWorkmateRestoChoosed ) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
@@ -47,7 +46,8 @@ public class Workmate {
         this.workmateRestoChoosed = pWorkmateRestoChoosed;
     }
 
-    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl, @Nullable Restaurant pWorkmateRestoChoosed, List<Likes> pWorkmateLikes) {
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
+                    WorkmateRestoChoice pWorkmateRestoChoosed, List<Likes> pWorkmateLikes) {
         workmateId = pWorkmateId;
         workmateName = pWorkmateName;
         workmateEmail = pWorkmateEmail;
@@ -68,9 +68,9 @@ public class Workmate {
 
     public void setWorkmatePhotoUrl(@Nullable String pWorkmatePhotoUrl) { workmatePhotoUrl = pWorkmatePhotoUrl; }
 
-    public @Nullable Restaurant getWorkmateRestoChoosed() { return workmateRestoChoosed; }
+    public WorkmateRestoChoice getWorkmateRestoChoosed() { return workmateRestoChoosed; }
 
-    public void setWorkmateRestoChoosed(@Nullable Restaurant pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
+    public void setWorkmateRestoChoosed(WorkmateRestoChoice pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
 
     public String getWorkmateId() { return workmateId; }
 
@@ -112,6 +112,35 @@ public class Workmate {
 
         public void setRestoName(String pRestoName) { restoName = pRestoName; }
     }
+
+    public static class WorkmateRestoChoice {
+        public String restoId;
+        public String restoName;
+
+        public WorkmateRestoChoice() {}
+
+        public WorkmateRestoChoice(String pRestoId, String pRestoName) {
+            restoId = pRestoId;
+            restoName = pRestoName;
+        }
+
+        public String getRestoId() {
+            return restoId;
+        }
+
+        public void setRestoId(String pRestoId) {
+            restoId = pRestoId;
+        }
+
+        public String getRestoName() {
+            return restoName;
+        }
+
+        public void setRestoName(String pRestoName) {
+            restoName = pRestoName;
+        }
+    }
+
     public enum Fields {
         Workmate,
         workmateId,

@@ -15,12 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.di.DI;
-import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.service.Go4LunchApi;
-import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
+
 
 import java.util.List;
 
@@ -30,9 +27,8 @@ import java.util.List;
  */
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateHolder> {
 
-    private static final String TAG_WORKMATE_ADAPT = "TAG_WORKMATE_ADAPT";
     private List<Workmate> mWorkmateList;
-    private Restaurant mRestaurantChoosed;
+    private Workmate.WorkmateRestoChoice mRestaurantChoosed;
 
     public void setWorkmateList(List<Workmate> pWorkmateList) {
         mWorkmateList = pWorkmateList;
@@ -57,7 +53,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
         if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
             mRestaurantChoosed = mWorkmateList.get(position).getWorkmateRestoChoosed();
             lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
-                    + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChoosed.getRestoName() + ")";
+            + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChoosed.getRestoName() + ")";
             pWorkmateHolder.mTxtViewName.setTextColor(lContext.getResources().getColor(R.color.colorTextBlack));
             pWorkmateHolder.mTxtViewName.setTypeface(null, Typeface.NORMAL);
         } else {
@@ -77,9 +73,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
             if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
                 Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
                 mRestaurantChoosed =  mWorkmateList.get(position).getWorkmateRestoChoosed();
-                String lJsonRestaurant = GsonHelper.getGsonString(mRestaurantChoosed);
-                lIntentRestoDetail.putExtra("placeid", mRestaurantChoosed.getRestoPlaceId());
-                lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
+                lIntentRestoDetail.putExtra("placeid", mRestaurantChoosed.getRestoId());
                 lContext.startActivity(lIntentRestoDetail);
             }
         });

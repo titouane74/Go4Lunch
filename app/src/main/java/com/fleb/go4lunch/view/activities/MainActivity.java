@@ -5,19 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -30,7 +26,6 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
-import com.fleb.go4lunch.utils.PreferencesHelper;
 import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -40,8 +35,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG_MAIN";
-
-
 
     /**
      * Api Service
@@ -58,9 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
     private NavController mNavController;
-    private BottomNavigationView mBottomNav;
     private ImageView mImgUser;
     private TextView mTxtName;
     private TextView mTxtEmail;
@@ -85,38 +76,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         configureDrawerLayoutNavigationView();
 
-/*  La bottom navigation bar ne fonctionne plus si j'active ça à moins de gérer les fragments
-        mBottomNav.setOnNavigationItemSelectedListener(MainActivity::onNavigationItemSelected);
-*/
-        //Ca ça sert à rien
-        mDrawerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: " + v.getId());
-            }
-        });
-/*  La bottom navigation bar ne fonctionne plus si j'active ça à moins de gérer les fragments
-    mNavController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                    Log.d(TAG, "onDestinationChanged: " + mNavigationView.getCheckedItem());
-            }
-        });*/
-
     }
 
-    /*  La bottom navigation bar ne fonctionne plus si j'active ça à moins de gérer les fragments
-        private static boolean onNavigationItemSelected(MenuItem pMenuItem) {
-            //Ca ne marche que pour la bottom navigation bar
-            Log.d(TAG, "onNavigationItemSelected: " + pMenuItem);
-            return false;
-        }
-*/
     private void configureViewModel() {
         MainActivityViewModel lMainActivityViewModel = new MainActivityViewModel();
-        lMainActivityViewModel.getWorkmateInfos(mApi.getWorkmateId()).observe(this, pWorkmate ->
+        lMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
         {
-            Log.d(TAG, "configureViewModel: return from repo save workmate in Api : " + pWorkmate.getWorkmateName());
             mApi.setWorkmate(pWorkmate);
             displayDrawerData(pWorkmate);
         });
@@ -172,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void configureDrawerLayoutNavigationView() {
 
         mDrawerLayout = findViewById(R.id.main_activity_drawer_layout);
-        mNavigationView = findViewById(R.id.nav_view);
-        View lHeaderView = mNavigationView.getHeaderView(0);
+        NavigationView lNavigationView = findViewById(R.id.nav_view);
+        View lHeaderView = lNavigationView.getHeaderView(0);
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         mImgUser = lHeaderView.findViewById(R.id.nav_img_user);
@@ -190,12 +155,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
 
         //Contient un navigationitemselectedlistener
-        NavigationUI.setupWithNavController(mNavigationView, mNavController);
+        NavigationUI.setupWithNavController(lNavigationView, mNavController);
 
         //Bottom navigation
-        mBottomNav = findViewById(R.id.nav_bottom);
+        BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
         //When drawer and bottomnav are identical
-        NavigationUI.setupWithNavController(mBottomNav, mNavController);
+        NavigationUI.setupWithNavController(lBottomNav, mNavController);
 
         mImgUser.setOnClickListener(this);
     }

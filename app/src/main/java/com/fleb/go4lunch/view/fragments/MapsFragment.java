@@ -26,7 +26,6 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.service.Go4LunchApi;
-import com.fleb.go4lunch.utils.GsonHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 import com.fleb.go4lunch.viewmodel.map.MapViewModel;
@@ -144,9 +143,8 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
 
-        BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+        BitmapDescriptor lIcon ;
 
-        Log.d("TAG_GETRESTO", "setMapMarkers: response size" + pRestaurants.size());
 
         for (Restaurant lRestaurant : pRestaurants) {
 
@@ -173,9 +171,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         Restaurant lRestaurant = (Restaurant) pMarker.getTag();
         if (lRestaurant != null) {
             Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-            String lJsonRestaurant = GsonHelper.getGsonString(lRestaurant);
             lIntentRestoDetail.putExtra("placeid", lRestaurant.getRestoPlaceId());
-            lIntentRestoDetail.putExtra("restaurant", lJsonRestaurant);
             lContext.startActivity(lIntentRestoDetail);
         }
     }

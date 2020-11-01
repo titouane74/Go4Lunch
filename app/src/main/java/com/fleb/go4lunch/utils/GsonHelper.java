@@ -14,7 +14,7 @@ public class GsonHelper {
      * @param pRestaurant : restaurant
      * @return : String : retourne la liste du restaurant au format String
      */
-    public static String getGsonString (Restaurant pRestaurant) {
+    public static String getGsonRestaurantToString(Restaurant pRestaurant) {
         return new Gson().toJson(pRestaurant);
 
     }
