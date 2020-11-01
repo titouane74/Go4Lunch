@@ -62,13 +62,18 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RestaurantHolder pRestoHolder, int position) {
-
+        int lNbWorkmate = 0;
         Context lContext = pRestoHolder.itemView.getContext();
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
         pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistanceText());
         pRestoHolder.mRestoAddress.setText(Go4LunchHelper.formatAddress(mRestoList.get(position).getRestoAddress()));
-        pRestoHolder.mRestoNbWorkmates.setText("(" + mRestoList.get(position).getRestoNbWorkmates() + ")");
+
+        if (mRestoList.get(position).getRestoWkList() != null) {
+            lNbWorkmate = mRestoList.get(position).getRestoWkList().size();
+        }
+
+        pRestoHolder.mRestoNbWorkmates.setText("(" + lNbWorkmate + ")");
 
         if (mRestoList.get(position).getRestoOpeningHours() != null) {
 

@@ -3,7 +3,6 @@ package com.fleb.go4lunch.repository;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.di.DI;
@@ -13,9 +12,6 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.ActionStatus;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -44,6 +40,7 @@ public class WorkmateRepository {
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
     private CollectionReference mChoiceRef = mDb.collection(String.valueOf(Choice.Fields.Choice));
+    private CollectionReference mRestaurantRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
     private DocumentReference mWorkmateDocRef;
 
     private MutableLiveData<List<Workmate>> mLDWorkmateList = new MutableLiveData<>();
@@ -88,7 +85,7 @@ public class WorkmateRepository {
                                 if ((lChoice.getChChoiceDate().equals(mDateChoice))
                                         && (lChoice.getChWorkmateId().equals(lWorkmate.getWorkmateId()))) {
                                     //passer l'objet resto dans table choiceloge
-                                    Log.e(TAG, "getRestaurantChoice: " + lChoice.getChRestoName());
+                                    Log.d(TAG, "getRestaurantChoice: " + lChoice.getChRestoName());
                                     //TODO replace
                                     //lWorkmate.setWorkmateRestoChoosed(lChoice.getChRestoName());
                                 }
@@ -291,72 +288,97 @@ public class WorkmateRepository {
         return mLDWorkmateChoice;
     }
 
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateRestaurantChoice(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateRestaurantChoice(Restaurant pRestaurant, ActionStatus pActionStatus) {
+
         Workmate lWorkmate = mApi.getWorkmate();
         mWorkmateDocRef = mWorkmateRef.document(lWorkmate.getWorkmateId());
+
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
-            Log.e(TAG, "getOrSaveWorkmateRestaurantChoice: search");
+            Log.d(TAG, "getOrSaveWorkmateRestaurantChoice: search");
             getWorkmateChoice(lWorkmate);
         } else {
-            Log.e(TAG, "getOrSaveWorkmateRestaurantChoice: save");
-            saveWorkmateChoice(lWorkmate, pRestaurant, pActionStatus);
+            Log.d(TAG, "getOrSaveWorkmateRestaurantChoice: save");
+            saveWorkmateChoice(lWorkmate, pRestaurant);
         }
         return mLDWorkmateChoiceStatus;
     }
 
-    private void saveWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
+    private void saveWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant) {
 
         if (pWorkmate.getWorkmateRestoChoosed() == null) {
-            Log.e(TAG, "getOrSaveWorkmateRestaurantChoice: add");
-            addChoice(pWorkmate, pRestaurant, pActionStatus);
+            Log.d(TAG, "saveWorkmateChoice: add");
+            addChoice(pWorkmate, pRestaurant);
         } else {
-            Log.e(TAG, "getOrSaveWorkmateRestaurantChoice: remove");
-            removeChoice(pWorkmate);
+            Log.d(TAG, "saveWorkmateChoice: remove");
+            removeChoice(pWorkmate, pRestaurant);
         }
     }
 
-    private void addChoice(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
-        pWorkmate.setWorkmateRestoChoosed(pRestaurant);
+    private void addChoice(Workmate pWorkmate,  Restaurant pRestaurant) {
+        Log.d(TAG, "addChoice: " + pRestaurant.getRestoName());
+
+        Restaurant lRestaurant = pRestaurant;
+        pWorkmate.setWorkmateRestoChoosed(lRestaurant);
         mApi.setWorkmate(pWorkmate);
 
-        mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), pRestaurant)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> pTask) {
-                        Log.e(TAG, "saveWorkmateChoice : Document saved ");
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.ADDED);
-                    }
+        mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), lRestaurant)
+                .addOnCompleteListener(pTask -> {
+                    Log.d(TAG, "addChoice : workmate saved ");
+                    addWorkmateToRestaurant(pWorkmate, pRestaurant);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception pE) {
-                        Log.e(TAG, "saveWorkmateChoice : Document saved Failed");
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
-                    }
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "addChoice : workmate not saved");
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
                 });
     }
 
-    private void removeChoice(Workmate pWorkmate) {
-        pWorkmate.setWorkmateRestoChoosed(null);
-        mApi.setWorkmate(pWorkmate);
+    private void addWorkmateToRestaurant(Workmate pWorkmate,Restaurant pRestaurant) {
+        Restaurant.WorkmatesList lWorkmatesInRestoList =
+                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
 
-        mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> pTask) {
-                        Log.e(TAG, "saveWorkmateChoice : Document removed ");
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.REMOVED);
-                    }
+        mRestaurantRef.document(pRestaurant.getRestoPlaceId())
+                .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayUnion(lWorkmatesInRestoList))
+                .addOnSuccessListener(pDocumentReference -> {
+                    Log.d(TAG, "onSuccess : Document saved ");
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.ADDED);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception pE) {
-                        Log.e(TAG, "saveWorkmateChoice : Document saved Failed");
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
-                    }
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "onFailure: Document not saved", pE);
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
                 });
 
+    }
 
+    private void removeChoice(Workmate pWorkmate, Restaurant pRestaurant) {
+        Log.d(TAG, "removeChoice: name : " + pRestaurant.getRestoName());
+        pWorkmate.setWorkmateRestoChoosed(null);
+        mApi.setWorkmate(pWorkmate);
+        Log.d(TAG, "removeChoice: ");
+        mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
+                .addOnCompleteListener(pTask -> {
+                    Log.d(TAG, "removeChoice : restaurant removed from workmate");
+                    removeWorkmateFromRestaurant(pWorkmate, pRestaurant);
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "removeChoice : restaurant removed Failed");
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
+                });
+    }
+
+    private void removeWorkmateFromRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
+        Restaurant.WorkmatesList lWorkmatesInRestoList =
+                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
+
+        mRestaurantRef.document(pRestaurant.getRestoPlaceId())
+                .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
+                .addOnSuccessListener(pDocumentReference -> {
+                    Log.d(TAG, "onSuccess : Document saved ");
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.REMOVED);
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "onFailure: Document not saved", pE);
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
+                });
     }
 
     private void getWorkmateChoice(Workmate pWorkmate) {
@@ -364,17 +386,19 @@ public class WorkmateRepository {
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
+                        Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
+                        if (lWorkmate.getWorkmateRestoChoosed() != null) {
+                            mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
+                        } else {
+                            mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);
+                        }
                     } else {
                         mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception pE) {
-                        Log.e(TAG, "saveWorkmateChoice : Document saved Failed");
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.ERROR);
-                    }
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "getWorkmateChoice : Document saved Failed");
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.ERROR);
                 });
     }
 }

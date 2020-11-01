@@ -43,7 +43,7 @@ public class RestaurantDetailViewModel extends ViewModel {
     }
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveWorkmateRestaurantChoice(mWorkmate, mRestaurant, pActionStatus);
+        return mWorkmateRepo.getOrSaveWorkmateRestaurantChoice(mRestaurant, pActionStatus);
     }
 
     /**

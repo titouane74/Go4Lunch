@@ -129,7 +129,7 @@ public class RestaurantRepository {
                                     getFirestoreRestaurantList();
 
                                 } else {
-                                    Log.d(TAG, "getRestaurantList: Repo : call getFirestoreRestoList");
+                                    Log.d(TAG, "getRestaurantList: Repo : call getFirestoreRestoList 1");
                                     getFirestoreRestaurantList();
                                 }
                             }
@@ -140,7 +140,7 @@ public class RestaurantRepository {
                         }
                     } else {
                         mFirestoreLastUpdate = null;
-                        Log.d(TAG, "getRestaurantList: Repo : call getFirestoreRestoList");
+                        Log.d(TAG, "getRestaurantList: Repo : call getFirestoreRestoList 2");
                         getFirestoreRestaurantList();
                     }
                 });
@@ -228,8 +228,8 @@ public class RestaurantRepository {
                             mFusedLocationProvider, pRestaurantList.getGeometry().getLocation()));
 
                     Restaurant lRestaurant = new Restaurant(
-                            lPlaceId, lName, lAddress, null, null, lDistance, 0,
-                            lRating, lPhoto, lLocation, null, 0
+                            lPlaceId, lName, lAddress, null, null, lDistance,
+                            lRating, lPhoto, lLocation, null, 0,null
                     );
 
                     lRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
@@ -283,23 +283,9 @@ public class RestaurantRepository {
         Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : oder managed");
         removeRestaurantOutOfRadiusFromList(mRestaurantList);
         Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : remove out of radius restaurant");
-        mCptWorkmate =0;
-        mCptResto=0;
-        mMaxWorkmate=0;
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : call nbworkmate calculation");
-        updateNbWorkmateLiveDataRestaurantList(mRestaurantList);
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : back from nbworkmate calculation");
-        //TODO nombre de workmate à zéro au premier lancement
-        // attendre le retour du OnComplete, gestion de l'async
-        Log.d(TAG, "getChoice: mRestaurantList.size" + mRestaurantList.size());
-/*        if((mCptResto == mRestaurantList.size()) && (mCptWorkmate == mMaxWorkmate)) {
-            Log.d(TAG, "prepareAndSendRestoListForDisplay: mCptResto: " + mCptResto
-                    + " =  mRestaurantList.size() : " +  mRestaurantList.size()
-                    + " / mCptWorkmate : " + mCptWorkmate
-            + " = mMaxWorkmate : " + mMaxWorkmate);
-            Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
-            mLDRestoList.setValue(mRestaurantList);
-        }*/
+
+        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
+        mLDRestoList.setValue(mRestaurantList);
     }
 
     private void removeRestaurantOutOfRadiusFromList(List<Restaurant> pRestaurantList) {
@@ -329,60 +315,6 @@ public class RestaurantRepository {
             lRestaurant.setRestoDistanceText(lNewDistance);
         }
         return pRestaurantList;
-    }
-
-    private void updateNbWorkmateLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
-        Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : enter");
-        for (Restaurant lRestaurant : pRestaurantList) {
-            mCptResto++;
-//            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : increased the number of resto checked");
-            mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chRestoPlaceId), lRestaurant.getRestoPlaceId())
-                    .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
-                    .get()
-                    .addOnCompleteListener(pTask -> {
-                        if (pTask.isSuccessful()) {
-                            List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
-//                            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : get all the workmate for the restaurant");
-                            mMaxWorkmate+=lChoiceList.size();
-//                            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : get the max number of workmate in " +
-//                                    "the liste for the restaurant");
-                            for (Choice lChoice : lChoiceList) {
-                                if ((lChoice.getChChoiceDate().equals(mDateChoice))
-                                        && (lChoice.getChRestoPlaceId().equals(lRestaurant.getRestoPlaceId()))) {
-                                    int cpt = lRestaurant.getRestoNbWorkmates() + 1;
-                                    Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : get choice resto : "
-                                            + lChoice.getChRestoName() + " workmate " + lChoice.getChWorkmateName()
-                                            + " nbWorkmate : " + cpt);
-                                    mCptWorkmate= mCptWorkmate +1;
-                                    lRestaurant.setRestoNbWorkmates(cpt);
-                                }else {
-                                    Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo :" +
-                                            " no workmate for the restaurant " + lChoice.getChRestoName());
-                                }
-                            }
-                            mMaxWorkmate += lChoiceList.size();
-                            Log.d(TAG, "updateNbWorkmateLiveDataRestaurantList: Repo : increased mMaxWorkmate : " + mMaxWorkmate);
-                            if((mCptResto == mRestaurantList.size()) && (mCptWorkmate == mMaxWorkmate)) {
-                                Log.d(TAG, "prepareAndSendRestoListForDisplay: mCptResto: " + mCptResto
-                                        + " =  mRestaurantList.size() : " +  mRestaurantList.size()
-                                        + " / mCptWorkmate : " + mCptWorkmate
-                                        + " = mMaxWorkmate : " + mMaxWorkmate);
-                                Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
-//                                mLDRestoList.setValue(mRestaurantList);
-                            }
-                            Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.postValue");
-                            mLDRestoList.postValue(mRestaurantList);
-                        }
-
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception pE) {
-                            Log.d(TAG, "Failed : " + pE.getMessage());
-                            mLDRestoList.setValue(mRestaurantList);
-                        }
-                    });
-        }
     }
 
     private void updateDateOfRestaurantLastUpdateInFirestore() {

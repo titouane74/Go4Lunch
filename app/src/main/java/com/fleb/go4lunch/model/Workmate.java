@@ -30,11 +30,12 @@ public class Workmate {
         workmateName = pWorkmateName;
     }
 
-    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmatePhotoUrl, @Nullable Restaurant pWorkmateRestoChoosed) {
-        workmateId = pWorkmateId;
-        workmateName = pWorkmateName;
-        workmatePhotoUrl = pWorkmatePhotoUrl;
-        workmateRestoChoosed = pWorkmateRestoChoosed;
+
+    public Workmate(String pWorkmateId,String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
+        this.workmateId = pWorkmateId;
+        this.workmateName = pWorkmateName;
+        this.workmateEmail = pWorkmateEmail;
+        this.workmatePhotoUrl = pWorkmatePhotoUrl;
     }
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
@@ -46,12 +47,14 @@ public class Workmate {
         this.workmateRestoChoosed = pWorkmateRestoChoosed;
     }
 
-    public Workmate(String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl) {
-        this.workmateName = pWorkmateName;
-        this.workmateEmail = pWorkmateEmail;
-        this.workmatePhotoUrl = pWorkmatePhotoUrl;
+    public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl, @Nullable Restaurant pWorkmateRestoChoosed, List<Likes> pWorkmateLikes) {
+        workmateId = pWorkmateId;
+        workmateName = pWorkmateName;
+        workmateEmail = pWorkmateEmail;
+        workmatePhotoUrl = pWorkmatePhotoUrl;
+        workmateRestoChoosed = pWorkmateRestoChoosed;
+        workmateLikes = pWorkmateLikes;
     }
-
 
     public String getWorkmateName() { return workmateName; }
 

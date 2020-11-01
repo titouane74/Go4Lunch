@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.view.fragments;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -22,11 +23,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.notifications.ReminderBroadcast;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import static android.content.Context.ALARM_SERVICE;
 import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_1_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_2_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_3_ID;
@@ -36,6 +43,12 @@ import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
  * Created by Florence LE BOURNOT on 07/07/2020
  */
 public class SettingsFragment extends BaseFragment {
+
+    public static final String TAG="TAG_NOTIF";
+
+    private static final int NOTIFICATION_HOUR = 11;
+    private static final int NOTIFICATION_MINUTE = 38;
+    private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
     private NotificationManagerCompat mNotificationManager;
     private EditText mEditTextTitle;
@@ -83,7 +96,7 @@ public class SettingsFragment extends BaseFragment {
         String lTitle = mEditTextTitle.getText().toString();
         String lMessage = mEditTextMessage.getText().toString();
 */
-        String lTitle = "Tata eugénie";
+/*        String lTitle = "Tata eugénie";
         String lMessage = "92bis rue de Charenton";
 
         Bitmap lLargeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.logo_go4lunch_orange_png);
@@ -102,9 +115,62 @@ public class SettingsFragment extends BaseFragment {
                 .setColor(Color.argb(100, 255, 87, 34))
                 .build();
 
-        mNotificationManager.notify(1, lNotification);
+        mNotificationManager.notify(1, lNotification);*/
+
+        final Calendar lCalendar = Calendar.getInstance();
+
+        long lSysTime = System.currentTimeMillis();
+
+        Log.d(TAG, "sendOnChannel1: now : " + lSysTime);
+
+        //  NOTIFICATION_HOUR = 12 & NOTIFICATION_MINUTE = 0
+        //  if Now >= 12h00 -> + 1 day
+        if (lCalendar.get(Calendar.HOUR_OF_DAY) > NOTIFICATION_HOUR
+                || (lCalendar.get(Calendar.HOUR_OF_DAY) == NOTIFICATION_HOUR && lCalendar.get(Calendar.MINUTE) > NOTIFICATION_MINUTE))
+        {
+            Log.d(TAG, "sendOnChannel1: add one day");
+            lCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+/*
+        lCalendar.set(Calendar.HOUR_OF_DAY, NOTIFICATION_HOUR);
+        lCalendar.set(Calendar.MINUTE, NOTIFICATION_MINUTE);
+        lCalendar.set(Calendar.SECOND, 0);
+        lCalendar.set(Calendar.MILLISECOND, 0);
+*/
+        lCalendar.set(Calendar.HOUR_OF_DAY, 11);
+        lCalendar.set(Calendar.MINUTE, 56);
+        lCalendar.set(Calendar.SECOND, 0);
+        lCalendar.set(Calendar.MILLISECOND, 0);
+
+        long lTimeSendNotification = lCalendar.getTimeInMillis() - lSysTime;
+
+        Log.d(TAG, "sendOnChannel1: calendartime : " + lCalendar.getTimeInMillis());
+        Log.d(TAG, "sendOnChannel1: timetosend (cal-now) : " + lTimeSendNotification);
+
+        Intent lIntent = new Intent(mContext, ReminderBroadcast.class);
+        PendingIntent lPendingIntent = PendingIntent.getBroadcast(mContext, 0,lIntent,0);
+
+        AlarmManager lAlarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
+
+        long lTenSecondsInMillis = 1000 * 120;
+        Log.d(TAG, "sendOnChannel1: " + lTenSecondsInMillis);
+
+        if (lAlarmManager != null) {
+            lAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                    lSysTime + lTenSecondsInMillis,
+//                    lTimeSendNotification,
+                    lPendingIntent);
+        }
     }
 
+    private void scheduleJob(View pView) {
+
+    }
+
+    private void cancelJob(View pView){
+
+    }
     public void sendOnChannel2(View pView) {
 /*
         String lTitle = mEditTextTitle.getText().toString();

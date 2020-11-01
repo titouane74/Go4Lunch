@@ -57,7 +57,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
         if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
             mRestaurantChoosed = mWorkmateList.get(position).getWorkmateRestoChoosed();
             lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
-                    + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChoosed + ")";
+                    + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChoosed.getRestoName() + ")";
             pWorkmateHolder.mTxtViewName.setTextColor(lContext.getResources().getColor(R.color.colorTextBlack));
             pWorkmateHolder.mTxtViewName.setTypeface(null, Typeface.NORMAL);
         } else {

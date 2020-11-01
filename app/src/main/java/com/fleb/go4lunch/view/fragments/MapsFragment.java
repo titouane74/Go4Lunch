@@ -89,7 +89,8 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     };
 
-    public MapsFragment() {}
+    public MapsFragment() {
+    }
 
     @SuppressLint("MissingPermission")
     @Nullable
@@ -99,7 +100,7 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable Bundle savedInstanceState) {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        if(mApi == null) {
+        if (mApi == null) {
             mApi = DI.getGo4LunchApiService();
         }
 
@@ -143,7 +144,7 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
 
-        BitmapDescriptor lIcon;
+        BitmapDescriptor lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
 
         Log.d("TAG_GETRESTO", "setMapMarkers: response size" + pRestaurants.size());
 
@@ -151,10 +152,10 @@ public class MapsFragment extends Fragment implements LocationListener {
 
             String lName = lRestaurant.getRestoName();
 
-            if(lRestaurant.getRestoNbWorkmates() == 0) {
-                lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
-            } else {
+            if ((lRestaurant.getRestoWkList() != null) && (lRestaurant.getRestoWkList().size() > 0)) {
                 lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_green);
+            } else {
+                lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
             }
 
             LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
@@ -206,7 +207,11 @@ public class MapsFragment extends Fragment implements LocationListener {
     }
 
     private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        try {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        } catch (Exception pE) {
+            Log.e(TAG, "setCameraOnCurrentLocation: ");
+        }
     }
 
     /**

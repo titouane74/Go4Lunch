@@ -63,7 +63,6 @@ public class RestaurantListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated:enter");
         mRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
-
     }
 
     private void configureViewModel() {
