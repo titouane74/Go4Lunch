@@ -22,10 +22,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 /**
  * Created by Florence LE BOURNOT on 22/09/2020
@@ -51,7 +51,7 @@ public class WorkmateRepository {
     private MutableLiveData<String> mLDWorkmateChoice = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDWorkmateChoiceStatus = new MutableLiveData<>();
 
-    private Go4LunchApi mApi = DI.getGo4LunchApiService();
+//    private Go4LunchApi sApi = DI.getGo4LunchApiService();
 
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
         mWorkmateRef
@@ -273,7 +273,7 @@ public class WorkmateRepository {
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateRestaurantChoice(Restaurant pRestaurant, ActionStatus pActionStatus) {
 
-        Workmate lWorkmate = mApi.getWorkmate();
+        Workmate lWorkmate = sApi.getWorkmate();
         mWorkmateDocRef = mWorkmateRef.document(lWorkmate.getWorkmateId());
 
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
@@ -297,7 +297,7 @@ public class WorkmateRepository {
         Workmate.WorkmateRestoChoice lRestaurant = new Workmate.WorkmateRestoChoice(
                 pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName());
 
-        mApi.setWorkmate(pWorkmate);
+        sApi.setWorkmate(pWorkmate);
 
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), lRestaurant)
                 .addOnCompleteListener(pTask -> {
@@ -328,7 +328,7 @@ public class WorkmateRepository {
     private void removeChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         Log.d(TAG, "removeChoice: name : " + pRestaurant.getRestoName());
         pWorkmate.setWorkmateRestoChoosed(null);
-        mApi.setWorkmate(pWorkmate);
+        sApi.setWorkmate(pWorkmate);
         Log.d(TAG, "removeChoice: ");
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
                 .addOnCompleteListener(pTask -> {

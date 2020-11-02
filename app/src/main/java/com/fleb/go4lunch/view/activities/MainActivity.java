@@ -32,6 +32,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG_MAIN";
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Api Service
      */
-    private Go4LunchApi mApi;
+    //private Go4LunchApi mApi;
 
     /**
      * Firebase
@@ -60,15 +62,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+/*
         if (mApi == null) {
             mApi = DI.getGo4LunchApiService();
-        }
+        }*/
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
 
-        mApi.setWorkmateId(mCurrentUser);
+        sApi.setWorkmateId(mCurrentUser);
         Log.d(TAG, "onCreate: saveWorkmateID : " + mCurrentUser.getDisplayName() + " - " + mCurrentUser.getUid());
         configureViewModel();
 
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainActivityViewModel lMainActivityViewModel = new MainActivityViewModel();
         lMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
         {
-            mApi.setWorkmate(pWorkmate);
+            sApi.setWorkmate(pWorkmate);
             displayDrawerData(pWorkmate);
         });
     }

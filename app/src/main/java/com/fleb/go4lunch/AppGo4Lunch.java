@@ -6,19 +6,11 @@ import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
-import android.util.Log;
 
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PreferencesHelper;
-import com.fleb.go4lunch.view.activities.MainActivity;
-
-import java.util.Objects;
-
-
-import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LATITUDE;
-import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 /**
  * Created by Florence LE BOURNOT on 30/10/2020
@@ -40,7 +32,7 @@ public class AppGo4Lunch extends Application {
     public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
 
 
-    private Go4LunchApi mApi = DI.getGo4LunchApiService();
+    public static Go4LunchApi sApi = DI.getGo4LunchApiService();
     public static SharedPreferences mPreferences;
 
     @Override
@@ -71,8 +63,8 @@ public class AppGo4Lunch extends Application {
             double lLat = Double.parseDouble(getString(R.string.default_latitude_position));
             double lLng = Double.parseDouble(getString(R.string.default_longitude_position));
             Location lLocation = Go4LunchHelper.setCurrentLocation(lLat, lLng);
-            mApi.setLocation(lLocation);
-            mApi.saveLocationInSharedPreferences(lLocation);
+            sApi.setLocation(lLocation);
+            sApi.saveLocationInSharedPreferences(lLocation);
         }
     }
 

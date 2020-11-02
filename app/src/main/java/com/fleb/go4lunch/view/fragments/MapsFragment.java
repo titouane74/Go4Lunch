@@ -47,13 +47,14 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
     public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    private Go4LunchApi mApi;
+//    private Go4LunchApi mApi;
     private int mZoom;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -98,10 +99,10 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
-
-        if (mApi == null) {
-            mApi = DI.getGo4LunchApiService();
-        }
+//
+//        if (mApi == null) {
+//            mApi = DI.getGo4LunchApiService();
+//        }
 
         mZoom = Integer.parseInt(getString(R.string.map_zoom));
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -136,7 +137,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
 
         lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
-            mApi.setRestaurantList(pRestaurantList);
+            sApi.setRestaurantList(pRestaurantList);
             MapsFragment.this.setMapMarkers(pRestaurantList);
         });
     }
@@ -197,7 +198,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         double lLatitude = pLocation.getLatitude();
         LatLng lLatLng = new LatLng(lLatitude, lLongitude);
 
-        mApi.saveLocationInSharedPreferences(pLocation);
+        sApi.saveLocationInSharedPreferences(pLocation);
         configViewModel();
         setCameraOnCurrentLocation(lLatLng, mZoom);
     }

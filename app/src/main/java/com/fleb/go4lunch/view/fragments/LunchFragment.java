@@ -11,6 +11,8 @@ import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.viewmodel.lunch.LunchViewModel;
 import com.fleb.go4lunch.viewmodel.lunch.LunchViewModelFactory;
 
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
+
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
  */
@@ -21,9 +23,9 @@ public class LunchFragment extends BaseFragment {
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-        Go4LunchApi lApi = DI.getGo4LunchApiService();
+//        Go4LunchApi lApi = DI.getGo4LunchApiService();
 
-        LunchViewModelFactory lFactory = new LunchViewModelFactory(lApi);
+        LunchViewModelFactory lFactory = new LunchViewModelFactory(sApi);
         LunchViewModel lLunchViewModel = new ViewModelProvider(requireActivity(),lFactory).get(LunchViewModel.class);
 
         final TextView lTextLunch = pView.findViewById(R.id.text_lunch);

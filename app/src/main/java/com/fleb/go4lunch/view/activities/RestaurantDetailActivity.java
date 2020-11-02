@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
@@ -25,6 +24,8 @@ import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModelFactory;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 public class RestaurantDetailActivity extends AppCompatActivity {
@@ -45,14 +46,14 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
-    private Go4LunchApi mApi;
+//    private Go4LunchApi sApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
 
-        mApi = DI.getGo4LunchApiService();
+//        mApi = DI.getGo4LunchApiService();
 
         mRestoName = findViewById(R.id.text_restaurant_detail_name);
         mRestoNote1 = findViewById(R.id.img_detail_note1);
@@ -91,13 +92,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViewModel() {
-        RestaurantDetailViewModelFactory lFactory = new RestaurantDetailViewModelFactory(mApi);
+        RestaurantDetailViewModelFactory lFactory = new RestaurantDetailViewModelFactory(sApi);
         mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
         mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
             mWorkmateAdapter.setWorkmateList(pRestaurant.getRestoWkList());
             mWorkmateAdapter.notifyDataSetChanged();
             mRestaurant = pRestaurant;
-            mApi.setRestaurant(mRestaurant);
+            sApi.setRestaurant(mRestaurant);
             setInfoRestaurant();
             displayChoiceStatus();
             displayLikeStatus();

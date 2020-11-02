@@ -17,7 +17,7 @@ public class MapViewModel extends ViewModel {
 
     private RestaurantRepository mRepository = new RestaurantRepository();
     private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>() ;
-    private Go4LunchApi mApi = DI.getGo4LunchApiService();
+//    private Go4LunchApi mApi = DI.getGo4LunchApiService();
 
     public MapViewModel() {
 /*        Location lLocation = mApi.getLocation();

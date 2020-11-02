@@ -43,6 +43,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
+
 
 public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,7 +59,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
 
-    private Go4LunchApi mApi;
+//    private Go4LunchApi mApi;
 
     Button mBtnLoginGoogle, mBtnLoginFacebook, mBtnLoginEmail, mBtnLoginTwitter;
     FirebaseUser mCurrentUser;
@@ -68,7 +70,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
 
-        mApi = DI.getGo4LunchApiService();
+//        mApi = DI.getGo4LunchApiService();
 
         mBtnLoginGoogle = findViewById(R.id.btn_start_login_google);
         mBtnLoginFacebook = findViewById(R.id.btn_start_login_facebook);
@@ -267,7 +269,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getEmail());
             Log.d(TAG_AUTHENTICATION, "successLoginGetData: mCurrentUser " + pCurrentUser.getPhotoUrl());
 
-            mApi.setWorkmateId(pCurrentUser);
+            sApi.setWorkmateId(pCurrentUser);
 
             saveWorkmateIfNotExist(pCurrentUser);
             finish();
