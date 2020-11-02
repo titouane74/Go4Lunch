@@ -248,8 +248,11 @@ public class WorkmateRepository {
     }
 
     public MutableLiveData<String> getWorkmateRestaurantChoice(Workmate pWorkmate) {
-//TODO A supprimer en même temps que e fragment lunch qui sera remplacer par la fiche détail du resto
-        String pWorkmateId = pWorkmate.getWorkmateId();
+
+        Log.d(TAG, "getWorkmateRestaurantChoice: " + pWorkmate.getWorkmateRestoChoosed().getRestoName());
+
+        mLDWorkmateChoice.setValue(pWorkmate.getWorkmateRestoChoosed().getRestoName());
+/*
         mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), pWorkmateId)
                 .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
                 .get()
@@ -267,6 +270,7 @@ public class WorkmateRepository {
                         mLDWorkmateChoice.setValue("");
                     }
                 });
+*/
 
         return mLDWorkmateChoice;
     }

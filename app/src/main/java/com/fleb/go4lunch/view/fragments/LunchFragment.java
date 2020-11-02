@@ -10,6 +10,7 @@ import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.viewmodel.lunch.LunchViewModel;
 import com.fleb.go4lunch.viewmodel.lunch.LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
 
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
@@ -25,8 +26,9 @@ public class LunchFragment extends BaseFragment {
     protected void configureFragmentOnCreateView(View pView) {
 //        Go4LunchApi lApi = DI.getGo4LunchApiService();
 
-        LunchViewModelFactory lFactory = new LunchViewModelFactory(sApi);
-        LunchViewModel lLunchViewModel = new ViewModelProvider(requireActivity(),lFactory).get(LunchViewModel.class);
+//        LunchViewModelFactory lFactory = new LunchViewModelFactory(sApi);
+//        LunchViewModel lLunchViewModel = new ViewModelProvider(requireActivity(),lFactory).get(LunchViewModel.class);
+        LunchViewModel lLunchViewModel = new ViewModelProvider(requireActivity()).get(LunchViewModel.class);
 
         final TextView lTextLunch = pView.findViewById(R.id.text_lunch);
         lLunchViewModel.getLunchRestaurant().observe(getViewLifecycleOwner(), pRestaurantName -> {

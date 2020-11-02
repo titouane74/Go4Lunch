@@ -9,13 +9,16 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.WorkmateRepository;
 import com.fleb.go4lunch.service.Go4LunchApi;
 
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
+
 public class LunchViewModel extends ViewModel {
 
     private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
     private Workmate mWorkmate;
 
-    public LunchViewModel(Go4LunchApi pApi) {
-        mWorkmate = pApi.getWorkmate();
+    public LunchViewModel() {
+//        mWorkmate = pApi.getWorkmate();
+        mWorkmate = sApi.getWorkmate();
     }
 
     public LiveData<String> getLunchRestaurant() {
