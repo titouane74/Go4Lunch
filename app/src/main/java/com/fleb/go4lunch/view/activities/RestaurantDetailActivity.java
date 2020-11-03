@@ -106,8 +106,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
         if (mRestaurantId == null) {
             mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
-                Log.d(TAG, "initializeViewModel: " + pWorkmate);
-                Log.d(TAG, "initializeViewModel: " + pWorkmate.getWorkmateRestoChoosed().getRestoName());
                 mRestaurantId = pWorkmate.getWorkmateRestoChoosed().getRestoId();
                 getRestaurantDetail();
             });

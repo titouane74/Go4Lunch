@@ -76,7 +76,7 @@ public class SettingsFragment extends BaseFragment {
 
         if (!lIsNotificationEnable) {
             Toast.makeText(mContext, "Vous devez autoriser les notifications pour cette application", Toast.LENGTH_SHORT).show();
-            openNotificationSettingsForApp();
+//            openNotificationSettingsForApp();
         }
 
 
@@ -153,7 +153,7 @@ public class SettingsFragment extends BaseFragment {
 
         AlarmManager lAlarmManager = (AlarmManager) mContext.getSystemService(ALARM_SERVICE);
 
-        long lTenSecondsInMillis = 1000 * 120;
+        long lTenSecondsInMillis = 1000 * 20;
         Log.d(TAG, "sendOnChannel1: " + lTenSecondsInMillis);
 
         if (lAlarmManager != null) {
@@ -241,7 +241,7 @@ public class SettingsFragment extends BaseFragment {
         mNotificationManager.notify(1, lBuilder.build());
     }
 
-    private void openNotificationSettingsForApp() {
+/*    private void openNotificationSettingsForApp() {
         // Links to this app's notification settings.
         Intent intent = new Intent();
         intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
@@ -252,5 +252,5 @@ public class SettingsFragment extends BaseFragment {
         intent.putExtra("android.provider.extra.APP_PACKAGE", mContext.getPackageName());
 
         startActivity(intent);
-    }
+    }*/
 }

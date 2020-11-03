@@ -15,18 +15,19 @@ import java.util.List;
 
 public class MapViewModel extends ViewModel {
 
-    private RestaurantRepository mRepository = new RestaurantRepository();
+    private RestaurantRepository mRepository ;
     private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>() ;
 //    private Go4LunchApi mApi = DI.getGo4LunchApiService();
 
     public MapViewModel() {
+        mRepository = new RestaurantRepository();
 /*        Location lLocation = mApi.getLocation();
         mApi.saveLocationInSharedPreferences(lLocation);*/
-        mLDRestoList = mRepository.getRestaurantList();
+//        mLDRestoList = mRepository.getRestaurantList();
     }
 
-    public LiveData<List<Restaurant>> getRestaurantList() {
-        return mLDRestoList;
+    public LiveData<List<Restaurant>>  getRestaurantList() {
+        return mRepository.getRestaurantList();
     }
 
 /*

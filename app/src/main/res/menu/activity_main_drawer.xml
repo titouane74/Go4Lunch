@@ -10,7 +10,7 @@
             android:title="@string/menu_hungry"
             android:visible="false" />
         <item
-            android:id="@+id/nav_lunch"
+            android:id="@+id/restaurantDetailActivity"
             android:icon="@drawable/ic_menu_lunch"
             android:title="@string/menu_lunch" />
         <item

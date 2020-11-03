@@ -67,21 +67,15 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     private void configureViewModel() {
-        Log.d(TAG, "configureViewModel: enter");
         mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
-            sApi.setRestaurantList(pRestaurantList);
-            Log.d(TAG, "configureViewModel: recup liste resto");
             mRestoAdapter.setRestoList(pRestaurantList);
-            Log.d(TAG, "configureViewModel: send to adpater the new list");
             mRestoAdapter.notifyDataSetChanged();
-            Log.d(TAG, "configureViewModel: notify change to adpater");
         });
 
     }
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: enter");
-       // configureViewModel();
+        configureViewModel();
     }
 }

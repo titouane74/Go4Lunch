@@ -26,10 +26,9 @@ public class RestaurantListViewModel extends ViewModel {
     }
 
     public LiveData<List<Restaurant>>  getRestaurantList() {
-        Log.d(TAG, "getRestaurantList: VM getter seulement");
+//        Log.d(TAG, "getRestaurantList: VM getter seulement");
         //La liste ne sera jamais mise à jour s'il y a un changement de données
-        mLDRestoList = mRepository.getRestaurantList();
-        return mLDRestoList;
+        return mRepository.getRestaurantList();
     }
 
 }

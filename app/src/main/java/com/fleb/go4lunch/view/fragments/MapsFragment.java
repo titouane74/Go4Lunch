@@ -23,9 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 import com.fleb.go4lunch.viewmodel.map.MapViewModel;
@@ -132,25 +130,19 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
-    public void configViewModel() {
+    public void configureViewModel() {
 
         MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
 
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
-            sApi.setRestaurantList(pRestaurantList);
-            MapsFragment.this.setMapMarkers(pRestaurantList);
-        });
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), MapsFragment.this::setMapMarkers);
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
-
         BitmapDescriptor lIcon ;
-
-
+        mMap.clear();
         for (Restaurant lRestaurant : pRestaurants) {
 
             String lName = lRestaurant.getRestoName();
-
             if ((lRestaurant.getRestoWkList() != null) && (lRestaurant.getRestoWkList().size() > 0)) {
                 lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_green);
             } else {
@@ -182,7 +174,6 @@ public class MapsFragment extends Fragment implements LocationListener {
         Task<Location> task = mFusedLocationClient.getLastLocation();
         task.addOnSuccessListener(location -> {
             if (location != null) {
-                Log.d(TAG, "getCurrentLocation: " + location);
                 saveLocation(location);
             }
         });
@@ -199,7 +190,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         LatLng lLatLng = new LatLng(lLatitude, lLongitude);
 
         sApi.saveLocationInSharedPreferences(pLocation);
-        configViewModel();
+        configureViewModel();
         setCameraOnCurrentLocation(lLatLng, mZoom);
     }
 
@@ -320,5 +311,11 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        configureViewModel();
     }
 }

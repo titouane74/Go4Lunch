@@ -38,6 +38,7 @@ import retrofit2.Response;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_PLACE_DETAIL_FIELDS;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_RADIUS;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_TYPE_GOOGLE_SEARCH;
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
 import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LATITUDE;
 import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LONGITUDE;
@@ -91,6 +92,7 @@ public class RestaurantRepository {
         mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, "")));
         mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, "")));
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
+
         mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -138,13 +140,15 @@ public class RestaurantRepository {
     }
 
     private void getFirestoreRestaurantList() {
+
         mRestoRef.get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         List<Restaurant> lRestoList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
                         prepareAndSendRestoListForDisplay(lRestoList);
                     }
-                });
+                })
+        .addOnFailureListener(pE -> Log.d(TAG, "onFailure: FAILED"));
     }
 
     private void getGoogleRestaurantList() {
@@ -262,16 +266,12 @@ public class RestaurantRepository {
     }
 
     private void prepareAndSendRestoListForDisplay(List<Restaurant> pRestaurantList) {
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : enter");
+
         mRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : distance updated");
         Collections.sort(mRestaurantList);
         Collections.reverse(mRestaurantList);
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : oder managed");
         removeRestaurantOutOfRadiusFromList(mRestaurantList);
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : remove out of radius restaurant");
-
-        Log.d(TAG, "prepareAndSendRestoListForDisplay: Repo : LD.setValue");
+        sApi.setRestaurantList(mRestaurantList);
         mLDRestoList.setValue(mRestaurantList);
     }
 

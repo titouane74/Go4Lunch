@@ -19,6 +19,7 @@ import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateListViewModel;
 
 public class WorkmateListFragment extends BaseFragment  {
 
+    private WorkmateListViewModel mWorkmateListViewModel;
     private WorkmateAdapter mWorkmateAdapter;
     private RecyclerView mRecyclerView;
 
@@ -38,12 +39,16 @@ public class WorkmateListFragment extends BaseFragment  {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mWorkmateAdapter);
     }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity()).get(WorkmateListViewModel.class);
-        lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
+    @Override
+    public void onResume() {
+        super.onResume();
+        configureViewModel();
+    }
+
+    private void configureViewModel() {
+        mWorkmateListViewModel = new ViewModelProvider(requireActivity()).get(WorkmateListViewModel.class);
+        mWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
             mWorkmateAdapter.setWorkmateList(pWorkmateList);
             mWorkmateAdapter.notifyDataSetChanged();
         });
