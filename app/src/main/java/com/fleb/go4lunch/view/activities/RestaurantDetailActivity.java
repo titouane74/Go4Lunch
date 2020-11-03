@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
@@ -29,6 +31,8 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 public class RestaurantDetailActivity extends AppCompatActivity {
+
+    public static final String TAG="TAG_RD";
 
     private Restaurant mRestaurant;
     private String mRestaurantId;
@@ -47,6 +51,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
 //    private Go4LunchApi sApi;
+    private Workmate mWorkmate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void getIncomingIntent() {
         if (getIntent().hasExtra("placeid")) {
             mRestaurantId = getIntent().getStringExtra("placeid");
-
+            mWorkmate = sApi.getWorkmate();
+/*            Log.d(TAG, "getIncomingIntent: " + mWorkmate);
+            if (mWorkmate.getWorkmateRestoChoosed()==null) {
+                Toast.makeText(this, "Vous n'avez pas choisi de restaurant", Toast.LENGTH_SHORT).show();
+                finish();
+            }*/
         }
     }
 
@@ -94,6 +104,20 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void initializeViewModel() {
         RestaurantDetailViewModelFactory lFactory = new RestaurantDetailViewModelFactory(sApi);
         mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
+        if (mRestaurantId == null) {
+            mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
+                Log.d(TAG, "initializeViewModel: " + pWorkmate);
+                Log.d(TAG, "initializeViewModel: " + pWorkmate.getWorkmateRestoChoosed().getRestoName());
+                mRestaurantId = pWorkmate.getWorkmateRestoChoosed().getRestoId();
+                getRestaurantDetail();
+            });
+        } else {
+            getRestaurantDetail();
+        }
+    }
+
+    private void getRestaurantDetail() {
+
         mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
             mWorkmateAdapter.setWorkmateList(pRestaurant.getRestoWkList());
             mWorkmateAdapter.notifyDataSetChanged();
@@ -103,8 +127,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             displayChoiceStatus();
             displayLikeStatus();
         });
-    }
 
+    }
     private void setInfoRestaurant() {
         mRestoName.setText(mRestaurant.getRestoName());
         mRestoAddress.setText(mRestaurant.getRestoAddress());

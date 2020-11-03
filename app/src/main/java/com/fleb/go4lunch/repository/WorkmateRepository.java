@@ -129,11 +129,13 @@ public class WorkmateRepository {
     }
 
     public MutableLiveData<Workmate> getWorkmateData(String pWorkmateId) {
+
         mWorkmateRef.document(pWorkmateId)
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
+                        sApi.setWorkmate(lWorkmate);
                         mLDWorkmate.setValue(lWorkmate);
 
                     } else {
@@ -160,6 +162,7 @@ public class WorkmateRepository {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         if (lWorkmate != null) {
+                            sApi.setWorkmate(lWorkmate);
                             findRestaurantInLikes(lWorkmate, pRestaurant, pActionStatus);
                         } else {
                             Log.d("TAG_REPO_ERROR", "getWorkmateLikeForRestaurant: " + pTask.getException());
@@ -249,8 +252,6 @@ public class WorkmateRepository {
 
     public MutableLiveData<String> getWorkmateRestaurantChoice(Workmate pWorkmate) {
 
-        Log.d(TAG, "getWorkmateRestaurantChoice: " + pWorkmate.getWorkmateRestoChoosed().getRestoName());
-
         mLDWorkmateChoice.setValue(pWorkmate.getWorkmateRestoChoosed().getRestoName());
 /*
         mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), pWorkmateId)
@@ -301,10 +302,9 @@ public class WorkmateRepository {
         Workmate.WorkmateRestoChoice lRestaurant = new Workmate.WorkmateRestoChoice(
                 pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName());
 
-        sApi.setWorkmate(pWorkmate);
-
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), lRestaurant)
                 .addOnCompleteListener(pTask -> {
+                    sApi.setWorkmate(pWorkmate);
                     addWorkmateToRestaurant(pWorkmate, pRestaurant);
                 })
                 .addOnFailureListener(pE -> {
@@ -330,10 +330,8 @@ public class WorkmateRepository {
     }
 
     private void removeChoice(Workmate pWorkmate, Restaurant pRestaurant) {
-        Log.d(TAG, "removeChoice: name : " + pRestaurant.getRestoName());
         pWorkmate.setWorkmateRestoChoosed(null);
         sApi.setWorkmate(pWorkmate);
-        Log.d(TAG, "removeChoice: ");
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
                 .addOnCompleteListener(pTask -> {
                     removeWorkmateFromRestaurant(pWorkmate, pRestaurant);
@@ -365,6 +363,7 @@ public class WorkmateRepository {
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
+                        sApi.setWorkmate(lWorkmate);
                         if (lWorkmate.getWorkmateRestoChoosed() != null) {
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
                         } else {

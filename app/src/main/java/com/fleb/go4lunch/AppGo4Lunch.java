@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Build;
 
 import com.fleb.go4lunch.di.DI;
+import com.fleb.go4lunch.notifications.WorkerNotificationController;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PreferencesHelper;
@@ -42,6 +43,8 @@ public class AppGo4Lunch extends Application {
         createNotificationChannels();
 
         initializeSharedPreferences();
+
+        WorkerNotificationController.startWorkRequest(getBaseContext());
     }
 
     private void initializeSharedPreferences() {

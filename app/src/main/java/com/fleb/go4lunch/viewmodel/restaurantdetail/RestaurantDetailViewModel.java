@@ -24,15 +24,20 @@ public class RestaurantDetailViewModel extends ViewModel {
         mWorkmate = pApi.getWorkmate();
     }
 
+    /**
+     * Access to WorkmateRepository
+     */
+
     public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
         return mWorkmateRepo.getOrSaveWorkmateRestaurantChoice(pRestaurant, pActionStatus);
     }
 
-    /**
-     * Access to WorkmateRepository
-     */
     public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
         return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(mWorkmate,pRestaurant, pActionStatus);
+    }
+
+    public MutableLiveData<Workmate> getWorkmateData() {
+        return mWorkmateRepo.getWorkmateData(mWorkmate.getWorkmateId());
     }
 
     /**

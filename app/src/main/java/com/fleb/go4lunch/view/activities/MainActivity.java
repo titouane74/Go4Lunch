@@ -23,9 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -54,9 +52,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout mDrawerLayout;
     private NavController mNavController;
+    private NavigationView mNavigationView;
     private ImageView mImgUser;
     private TextView mTxtName;
     private TextView mTxtEmail;
+
+    private MainActivityViewModel mMainActivityViewModel;
+
+    private Workmate mWorkmate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +84,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void configureViewModel() {
-        MainActivityViewModel lMainActivityViewModel = new MainActivityViewModel();
-        lMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
+        mMainActivityViewModel = new MainActivityViewModel();
+        mMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
         {
             sApi.setWorkmate(pWorkmate);
+            mWorkmate = pWorkmate;
             displayDrawerData(pWorkmate);
+
+            configureMenuYourLunch();
+
         });
     }
-
 
 
     /**
@@ -105,6 +111,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onRestart() {
         super.onRestart();
         configureDrawerLayoutNavigationView();
+
+        mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
+            mWorkmate = pWorkmate;
+            configureMenuYourLunch();
+        });
+    }
+
+    private void configureMenuYourLunch() {
+        if (mWorkmate.getWorkmateRestoChoosed() != null) {
+            Menu lMenu = mNavigationView.getMenu();
+            lMenu.getItem(1).setEnabled(true);
+        } else {
+            Menu lMenu = mNavigationView.getMenu();
+            lMenu.getItem(1).setEnabled(false);
+        }
     }
 
     public void signOutFromFirebase() {
@@ -139,8 +160,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void configureDrawerLayoutNavigationView() {
 
         mDrawerLayout = findViewById(R.id.main_activity_drawer_layout);
-        NavigationView lNavigationView = findViewById(R.id.nav_view);
-        View lHeaderView = lNavigationView.getHeaderView(0);
+        mNavigationView = findViewById(R.id.nav_view);
+        View lHeaderView = mNavigationView.getHeaderView(0);
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         mImgUser = lHeaderView.findViewById(R.id.nav_img_user);
@@ -148,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTxtEmail = lHeaderView.findViewById(R.id.nav_txt_user_email);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_lunch, R.id.nav_logout, R.id.nav_settings, R.id.nav_map,
+                R.id.nav_home, R.id.restaurantDetailActivity, R.id.nav_logout, R.id.nav_settings, R.id.nav_map,
                 R.id.nav_restaurant_list, R.id.nav_workmate)
                 .setOpenableLayout(mDrawerLayout)
                 .build();
@@ -157,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
 
         //Contient un navigationitemselectedlistener
-        NavigationUI.setupWithNavController(lNavigationView, mNavController);
+        NavigationUI.setupWithNavController(mNavigationView, mNavController);
 
         //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
