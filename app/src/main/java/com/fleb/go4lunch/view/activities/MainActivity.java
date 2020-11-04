@@ -24,6 +24,7 @@ import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
+import com.fleb.go4lunch.notifications.WorkerNotificationController;
 import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -36,9 +37,6 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG_MAIN";
 
-    /**
-     * Api Service
-     */
     //private Go4LunchApi mApi;
 
     /**
@@ -81,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         configureDrawerLayoutNavigationView();
 
+        Log.d(TAG, "onCreate: call WorkManagerNotificationController StarRequest" );
+        WorkerNotificationController.startWorkRequest(getBaseContext());
     }
 
     private void configureViewModel() {

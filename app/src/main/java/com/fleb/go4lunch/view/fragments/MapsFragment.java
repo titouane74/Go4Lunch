@@ -52,7 +52,7 @@ public class MapsFragment extends Fragment implements LocationListener {
     public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-//    private Go4LunchApi mApi;
+    //    private Go4LunchApi mApi;
     private int mZoom;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -138,24 +138,26 @@ public class MapsFragment extends Fragment implements LocationListener {
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
-        BitmapDescriptor lIcon ;
-        mMap.clear();
-        for (Restaurant lRestaurant : pRestaurants) {
+        BitmapDescriptor lIcon;
+        if (mMap != null) {
+            mMap.clear();
+            for (Restaurant lRestaurant : pRestaurants) {
 
-            String lName = lRestaurant.getRestoName();
-            if ((lRestaurant.getRestoWkList() != null) && (lRestaurant.getRestoWkList().size() > 0)) {
-                lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_green);
-            } else {
-                lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+                String lName = lRestaurant.getRestoName();
+                if ((lRestaurant.getRestoWkList() != null) && (lRestaurant.getRestoWkList().size() > 0)) {
+                    lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_green);
+                } else {
+                    lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
+                }
+
+                LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
+                        lRestaurant.getRestoLocation().getLng());
+                Marker lMarker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(lName)
+                        .icon(lIcon));
+                lMarker.setTag(lRestaurant);
             }
-
-            LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
-                    lRestaurant.getRestoLocation().getLng());
-            Marker lMarker = mMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title(lName)
-                    .icon(lIcon));
-            lMarker.setTag(lRestaurant);
         }
     }
 
