@@ -11,7 +11,7 @@
         android:id="@+id/item_list_workmate_img"
         android:layout_width="@dimen/img_size_workmate_width_height"
         android:layout_height="@dimen/img_size_workmate_width_height"
-        android:background="@drawable/ic_profile_user"
+        android:background="@drawable/ic_profile_user_png"
         android:contentDescription="@string/img_user"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/default_margin"

@@ -8,12 +8,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!--NOT USED ?? -->
     <style name="Go4LunchTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 
     <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
@@ -43,6 +44,8 @@
         <item name="android:text">@string/sign_in_with_email</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <!--NOT USED ?? -->
     <style name="AuthenticationTheme.NoActionBar" parent="Go4LunchTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -56,7 +59,7 @@
         <item name="windowNoTitle">false</item>
     </style>
 
-    <style name="UserTheme.Button" parent="UserTheme" >
+    <style name="UserTheme.Button" parent="UserTheme">
         <item name="android:textSize">@dimen/user_btn_text_size</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:background">@drawable/btn_radius_primary_color</item>

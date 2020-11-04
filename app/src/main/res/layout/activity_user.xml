@@ -35,8 +35,8 @@
             <!-- PROGRESS BAR -->
             <ProgressBar
                 android:id="@+id/prof_user_progress_bar"
-                android:layout_width="30dip"
-                android:layout_height="30dip"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_margin="@dimen/default_large_margin"
                 android:visibility="invisible" />
 
@@ -46,7 +46,7 @@
                 android:layout_width="@dimen/user_img_size"
                 android:layout_height="@dimen/user_img_size"
                 android:contentDescription="@string/img_user"
-                app:srcCompat="@drawable/ic_profile_user" />
+                app:srcCompat="@drawable/ic_profile_user_png" />
 
         </LinearLayout>
 

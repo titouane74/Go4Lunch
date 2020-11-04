@@ -1,6 +1,7 @@
 package com.fleb.go4lunch.notifications;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -76,20 +77,30 @@ public class NotifyWorker extends Worker {
 
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
         int lNotifPriority = 0;
+        NotificationCompat.Builder lBuilder;
 
         Log.d(TAG, "createNotification: ");
         String lTitle = pRestaurant.getRestoName();
         String lMessage = pRestaurant.getRestoAddress();
         Log.d(TAG, "createNotification: address" + pRestaurant.getRestoAddress());
 
-        NotificationCompat.Builder lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
-                .setSmallIcon(R.drawable.logo_go4lunch_orange)
-                .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
-                .setContentTitle(lTitle)
-                .setContentText(lMessage)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE);
-
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
+                    .setSmallIcon(R.drawable.logo_go4lunch_orange)
+                    .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
+                    .setContentTitle(lTitle)
+                    .setContentText(lMessage)
+                    .setAutoCancel(true)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE);
+        } else {
+            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
+                    .setSmallIcon(R.drawable.logo_bowl_orange)
+                    .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
+                    .setContentTitle(lTitle)
+                    .setContentText(lMessage)
+                    .setAutoCancel(true)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE);
+        }
         NotificationCompat.InboxStyle lInboxStyle = new NotificationCompat.InboxStyle()
                 .setBigContentTitle(lTitle)
                 .setSummaryText(lTitle);

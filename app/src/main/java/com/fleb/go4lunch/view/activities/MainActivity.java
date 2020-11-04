@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
         {
             sApi.setWorkmate(pWorkmate);
+            Log.e(TAG, "configureViewModel: " + pWorkmate);
             mWorkmate = pWorkmate;
             displayDrawerData(pWorkmate);
 

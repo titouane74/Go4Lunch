@@ -3,10 +3,14 @@ package com.fleb.go4lunch;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.util.Log;
+
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.service.Go4LunchApi;
@@ -16,7 +20,7 @@ import com.fleb.go4lunch.utils.PreferencesHelper;
 /**
  * Created by Florence LE BOURNOT on 30/10/2020
  */
-public class AppGo4Lunch extends Application {
+public class AppGo4Lunch extends MultiDexApplication {
     /**
      * Notifications
      */
@@ -108,5 +112,10 @@ public class AppGo4Lunch extends Application {
 
     }
 
+    @Override
+    protected void attachBaseContext(Context context) {
+        super.attachBaseContext(context);
+        MultiDex.install(this);
+    }
 }
 

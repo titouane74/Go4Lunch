@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#FF8A50</color>
     <color name="colorAccent">#FF9900</color>
     <color name="colorError">#FF5252</color>
+    <!--NOT USED ?? -->
     <color name="colorProgressBar">#FFFFFF</color>
 
     <color name="ic_launcher_background">#FF5722</color>
@@ -19,11 +20,11 @@
     <color name="colorTextRed">#D93644</color>
     <color name="colorTextBlack">#000000</color>
 
-    <color name="colorPinGreen">#69F0AE</color>
     <color name="colorIconUnavailable">#909090</color>
 
 
     <!--AUTHENTICATION-->
+    <!--NOT USED ALL ?? -->
     <color name="color_btn_bckgrd_tint_email">@color/fui_bgEmail</color>
     <color name="color_btn_bckgrd_tint_facebook">@color/com_facebook_button_background_color</color>
     <color name="color_btn_bckgrd_tint_google">#FFFFFF</color>
