@@ -88,7 +88,7 @@ public class RestaurantRepository {
     }
 
 
-    public MutableLiveData<List<Restaurant>> getRestaurantList() {
+    public MutableLiveData<List<Restaurant>> getLDRestaurantList() {
         mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, "")));
         mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, "")));
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
@@ -321,4 +321,21 @@ public class RestaurantRepository {
                 + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
     }
 
+
+    public List<Restaurant> getRestaurantList() {
+        Log.d(TAG, "getRestaurantList: " );
+/*        mRestoRef.get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        mRestaurantList= (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
+                        Log.d(TAG, "getRestaurantList: size : " + mRestaurantList.size());
+                    } else {
+                        Log.d(TAG, "getRestaurantList: NOT SUCCESS");
+                    }
+                })
+                .addOnFailureListener(pE -> Log.d(TAG, "onFailure: FAILED"));
+        return mRestaurantList;*/
+
+        return sApi.getRestaurantList();
+    }
 }

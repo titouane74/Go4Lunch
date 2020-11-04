@@ -57,8 +57,6 @@
             android:theme="@style/UserTheme" />
         <activity android:name=".view.activities.RestaurantDetailActivity" />
 
-        <receiver android:name=".notifications.ReminderBroadcast"/>
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"

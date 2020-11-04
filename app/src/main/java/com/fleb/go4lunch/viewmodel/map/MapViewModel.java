@@ -1,15 +1,11 @@
 package com.fleb.go4lunch.viewmodel.map;
 
-import android.location.Location;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.repository.RestaurantRepository;
-import com.fleb.go4lunch.service.Go4LunchApi;
 
 import java.util.List;
 
@@ -27,7 +23,7 @@ public class MapViewModel extends ViewModel {
     }
 
     public LiveData<List<Restaurant>>  getRestaurantList() {
-        return mRepository.getRestaurantList();
+        return mRepository.getLDRestaurantList();
     }
 
 /*

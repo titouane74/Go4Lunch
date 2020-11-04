@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
+import android.util.Log;
 
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.notifications.WorkerNotificationController;
@@ -32,6 +33,7 @@ public class AppGo4Lunch extends Application {
     public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
     public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
 
+    public static final String TAG="TAG_NOTIF";
 
     public static Go4LunchApi sApi = DI.getGo4LunchApiService();
     public static SharedPreferences mPreferences;
@@ -43,7 +45,7 @@ public class AppGo4Lunch extends Application {
         createNotificationChannels();
 
         initializeSharedPreferences();
-
+        Log.d(TAG, "onCreate: call WorkManagerNotificationController StarRequest" );
         WorkerNotificationController.startWorkRequest(getBaseContext());
     }
 
@@ -72,7 +74,7 @@ public class AppGo4Lunch extends Application {
     }
 
     private void createNotificationChannels() {
-
+        Log.d(TAG, "createNotificationChannels: " );
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationManager lManager = getSystemService(NotificationManager.class);
