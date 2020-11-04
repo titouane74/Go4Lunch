@@ -20,8 +20,8 @@ public class WorkerNotificationController {
 
     private static final String WORK_REQUEST_NAME = "WORK_REQUEST_NAME_GO4LUNCH";
     private static final String WORK_REQUEST_TAG = "WORK_REQUEST_TAG_GO4LUNCH";
-    private static final int NOTIFICATION_HOUR = 23;
-    private static final int NOTIFICATION_MINUTE = 00;
+    private static final int NOTIFICATION_HOUR = 19;
+    private static final int NOTIFICATION_MINUTE = 10;
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
     public static void startWorkerController(Context context) {
@@ -63,8 +63,8 @@ public class WorkerNotificationController {
         // PeriodicWorkRequest
         return new PeriodicWorkRequest.Builder(NotifyWorker.class,
                 NOTIFICATION_FREQUENCY_DAY, TimeUnit.DAYS)
-//                .setInitialDelay(lStartTime, TimeUnit.MILLISECONDS)
-                .setInitialDelay(20000, TimeUnit.MILLISECONDS)
+                .setInitialDelay(lStartTime, TimeUnit.MILLISECONDS)
+//                .setInitialDelay(20000, TimeUnit.MILLISECONDS)
                 .setConstraints(lConstraints)
                 .addTag(WORK_REQUEST_TAG)
                 .build();

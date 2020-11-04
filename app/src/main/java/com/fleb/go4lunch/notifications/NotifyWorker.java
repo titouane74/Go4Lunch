@@ -45,7 +45,7 @@ public class NotifyWorker extends Worker {
 
         mCurrentWorkmate = sApi.getWorkmate();
 
-        if ((mCurrentWorkmate!=null) && (mCurrentWorkmate.getWorkmateRestoChoosed()!= null)) {
+        if ((mCurrentWorkmate != null) && (mCurrentWorkmate.getWorkmateRestoChoosed() != null)) {
             mRestaurantRepo.getRestaurantNotif(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId());
             prepareNotification();
         }
@@ -61,19 +61,17 @@ public class NotifyWorker extends Worker {
                     && (lRestaurant.getRestoPlaceId().equals(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId()))) {
                 Log.d(TAG, "doWork: liste non vide");
                 List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
-                    List<Workmate> lListWorkmatesComing = new ArrayList<>();
-                    for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
-                        Log.d(TAG, "doWork: workmate coming " + lWorkmateComing);
-                        if (!mCurrentWorkmate.getWorkmateName().equals(lWorkmateComing.getWkName())) {
-                            lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
-                            Log.d(TAG, "doWork: workmate add to list coming : " + lWorkmateComing.getWkName());
-                        }
+                List<Workmate> lListWorkmatesComing = new ArrayList<>();
+                for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
+                    Log.d(TAG, "doWork: workmate coming " + lWorkmateComing);
+                    if (!mCurrentWorkmate.getWorkmateName().equals(lWorkmateComing.getWkName())) {
+                        lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
+                        Log.d(TAG, "doWork: workmate add to list coming : " + lWorkmateComing.getWkName());
                     }
-                    createNotification(lListWorkmatesComing, lRestaurant);
+                }
+                createNotification(lListWorkmatesComing, lRestaurant);
             }
         }
-
-
     }
 
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
@@ -121,10 +119,7 @@ public class NotifyWorker extends Worker {
                 lBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         }
 
-
         NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(mContext);
         lNotificationManager.notify(1, lBuilder.build());
     }
-
-
 }

@@ -97,31 +97,6 @@ public class AppGo4Lunch extends Application {
                     NotificationManager.IMPORTANCE_HIGH);
             lChannel4.setDescription("Notification de haute importance");
 
-/*            if (lChannel1.getLightColor()==0) {
-                lChannel1.enableLights(true);
-            } else {
-                lChannel1.enableLights(false);
-            }
-            if (lChannel2.getLightColor()==0) {
-                lChannel2.enableLights(true);
-            } else {
-                lChannel2.enableLights(false);
-            }
-            if (lChannel3.getLightColor()==0) {
-            lChannel3.enableLights(true);
-            } else {
-                lChannel3.enableLights(false);
-            }
-            if (lChannel4.getLightColor()==0) {
-            lChannel4.enableLights(true);
-            } else {
-                lChannel4.enableLights(false);
-            }*/
-
-/*            lChannel1.enableVibration(true);
-            lChannel2.enableVibration(true);
-            lChannel3.enableVibration(true);
-            lChannel4.enableVibration(true);*/
 
             if (lManager != null) {
                 lManager.createNotificationChannel(lChannel1);
@@ -132,5 +107,6 @@ public class AppGo4Lunch extends Application {
         }
 
     }
+
 }
 
