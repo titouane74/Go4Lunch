@@ -24,23 +24,23 @@ public class WorkerNotificationController {
     private static final int NOTIFICATION_MINUTE = 00;
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
-    public static void startWorkRequest(Context context) {
-        Log.d(TAG, "startWorkRequest: " );
-        PeriodicWorkRequest lWorkRequest = configureWorkRequest();
-        Log.d(TAG, "startWorkRequest: enqueue the request");
+    public static void startWorkerController(Context context) {
+        Log.d(TAG, "startWorkerController: " );
+        PeriodicWorkRequest lWorkRequest = configureRequestPeriod();
+        Log.d(TAG, "startWorkerController: enqueue the request");
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_REQUEST_NAME,
                 ExistingPeriodicWorkPolicy.REPLACE, lWorkRequest);
     }
 
-    public static void stopWorkRequest(Context context) {
+    public static void stopWorkerController(Context context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(WORK_REQUEST_TAG);
     }
 
-    private static PeriodicWorkRequest configureWorkRequest() {
-        Log.d(TAG, "configureWorkRequest: " );
-        final Calendar lCalendar = Calendar.getInstance();
+    private static PeriodicWorkRequest configureRequestPeriod() {
+        Log.d(TAG, "configureRequestPeriod: " );
+        long lSysTime = System.currentTimeMillis();
 
-        final long lNowTimeInMillis = lCalendar.getTimeInMillis();
+        Calendar lCalendar = Calendar.getInstance();
 
         if (lCalendar.get(Calendar.HOUR_OF_DAY) > NOTIFICATION_HOUR
                 || (lCalendar.get(Calendar.HOUR_OF_DAY) == NOTIFICATION_HOUR
@@ -53,7 +53,7 @@ public class WorkerNotificationController {
         lCalendar.set(Calendar.SECOND, 0);
         lCalendar.set(Calendar.MILLISECOND, 0);
 
-        long lInitialDelay = lCalendar.getTimeInMillis() - lNowTimeInMillis;
+        long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
 
         // Constraints
         final Constraints lConstraints = new Constraints.Builder()
@@ -63,7 +63,7 @@ public class WorkerNotificationController {
         // PeriodicWorkRequest
         return new PeriodicWorkRequest.Builder(NotifyWorker.class,
                 NOTIFICATION_FREQUENCY_DAY, TimeUnit.DAYS)
-//                .setInitialDelay(lInitialDelay, TimeUnit.MILLISECONDS)
+//                .setInitialDelay(lStartTime, TimeUnit.MILLISECONDS)
                 .setInitialDelay(20000, TimeUnit.MILLISECONDS)
                 .setConstraints(lConstraints)
                 .addTag(WORK_REQUEST_TAG)

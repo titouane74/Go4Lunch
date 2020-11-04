@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         configureDrawerLayoutNavigationView();
 
         Log.d(TAG, "onCreate: call WorkManagerNotificationController StarRequest" );
-        WorkerNotificationController.startWorkRequest(getBaseContext());
+        WorkerNotificationController.startWorkerController(getBaseContext());
     }
 
     private void configureViewModel() {
