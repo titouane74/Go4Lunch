@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/restaurant_info"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/resto_det_info_height"
         android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -20,7 +20,6 @@
             android:layout_marginStart="@dimen/default_margin"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Nom restau"
             android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_item_title"/>
 
@@ -33,7 +32,7 @@
             app:layout_constraintStart_toEndOf="@+id/text_restaurant_detail_name"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
-            />
+            android:contentDescription="@null"/>
         <ImageView
             android:id="@+id/img_detail_note2"
             android:layout_width="wrap_content"
@@ -43,7 +42,7 @@
             app:layout_constraintStart_toEndOf="@+id/img_detail_note1"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
-            />
+            android:contentDescription="@null"/>
         <ImageView
             android:id="@+id/img_detail_note3"
             android:layout_width="wrap_content"
@@ -53,7 +52,7 @@
             app:layout_constraintStart_toEndOf="@+id/img_detail_note2"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
-            />
+            android:contentDescription="@null"/>
 
         <TextView
             android:id="@+id/text_restaurant_detail_address"
@@ -63,7 +62,6 @@
             android:layout_marginStart="@dimen/default_margin"
             app:layout_constraintTop_toBottomOf="@id/text_restaurant_detail_name"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Address restau"
             android:textColor="@color/colorTextPrimary"
             android:textSize="@dimen/text_size_item_description"/>
 

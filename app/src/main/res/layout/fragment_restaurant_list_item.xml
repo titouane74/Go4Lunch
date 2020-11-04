@@ -40,7 +40,7 @@
 
     <TextView
         android:id="@+id/text_restaurant_address"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_restaurant_name"
         android:layout_marginTop="@dimen/margin_vertical_between_item_description"
@@ -141,7 +141,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="@dimen/img_size_resto_width_height"
         android:layout_height="@dimen/img_size_resto_width_height"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="@dimen/corner_radius_img_resto"
         app:layout_constraintStart_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="parent">
 
