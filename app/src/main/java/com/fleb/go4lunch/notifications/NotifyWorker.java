@@ -94,7 +94,7 @@ public class NotifyWorker extends Worker {
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE);
         } else {
             lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
-                    .setSmallIcon(R.drawable.logo_bowl_orange)
+                    .setSmallIcon(R.drawable.logo_go4lunch_small_png)
                     .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                     .setContentTitle(lTitle)
                     .setContentText(lMessage)
