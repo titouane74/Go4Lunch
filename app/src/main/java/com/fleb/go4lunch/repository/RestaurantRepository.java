@@ -15,10 +15,13 @@ import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,7 +82,7 @@ public class RestaurantRepository {
         mRestoRef.document(pRestaurantId)
                 .get()
                 .addOnCompleteListener(pTask -> {
-                    if(pTask.isSuccessful()) {
+                    if (pTask.isSuccessful()) {
                         mLDResto.setValue(pTask.getResult().toObject(Restaurant.class));
                     }
                 })
@@ -148,7 +151,7 @@ public class RestaurantRepository {
                         prepareAndSendRestoListForDisplay(lRestoList);
                     }
                 })
-        .addOnFailureListener(pE -> Log.d(TAG, "onFailure: FAILED"));
+                .addOnFailureListener(pE -> Log.d(TAG, "onFailure: FAILED"));
     }
 
     private void getGoogleRestaurantList() {
@@ -219,7 +222,7 @@ public class RestaurantRepository {
 
                     Restaurant lRestaurant = new Restaurant(
                             lPlaceId, lName, lAddress, null, null, lDistance,
-                            lRating, lPhoto, lLocation, null, 0,null
+                            lRating, lPhoto, lLocation, null, 0, null
                     );
 
                     lRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
@@ -257,11 +260,11 @@ public class RestaurantRepository {
                 .get()
                 .addOnSuccessListener(pDocumentSnapshot ->
                         mRestoRef.document(pRestaurant.getRestoPlaceId())
-                        .set(pRestaurant)
-                        .addOnSuccessListener(pDocumentReference ->
-                                Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
-                        .addOnFailureListener(pE ->
-                                Log.d("TAG4_SAVE_RESTO", "onFailure: Document not saved", pE)))
+                                .set(pRestaurant)
+                                .addOnSuccessListener(pDocumentReference ->
+                                        Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
+                                .addOnFailureListener(pE ->
+                                        Log.d("TAG4_SAVE_RESTO", "onFailure: Document not saved", pE)))
                 .addOnFailureListener(pE -> Log.d("TAG4_SAVE_RESTO", "onFailure Save: Document not saved", pE));
     }
 
@@ -278,7 +281,7 @@ public class RestaurantRepository {
     private void removeRestaurantOutOfRadiusFromList(List<Restaurant> pRestaurantList) {
         int lProximityRadius = mPreferences.getInt(PREF_KEY_RADIUS, 150);
         try {
-            for(Iterator<Restaurant> lRestaurantIterator = mRestaurantList.iterator(); lRestaurantIterator.hasNext();){
+            for (Iterator<Restaurant> lRestaurantIterator = mRestaurantList.iterator(); lRestaurantIterator.hasNext(); ) {
                 Restaurant lRestaurant = lRestaurantIterator.next();
                 if (lRestaurant.getRestoDistance() > lProximityRadius) {
                     lRestaurantIterator.remove();
@@ -321,21 +324,36 @@ public class RestaurantRepository {
                 + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
     }
 
+    //        return sApi.getRestaurantList();
 
     public List<Restaurant> getRestaurantList() {
-        Log.d(TAG, "getRestaurantList: " );
-/*        mRestoRef.get()
-                .addOnCompleteListener(pTask -> {
-                    if (pTask.isSuccessful()) {
-                        mRestaurantList= (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
-                        Log.d(TAG, "getRestaurantList: size : " + mRestaurantList.size());
-                    } else {
-                        Log.d(TAG, "getRestaurantList: NOT SUCCESS");
+        Log.d(TAG, "getRestaurantList: ");
+        mRestoRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> pTask) {
+                        if (pTask.isSuccessful()) {
+                            mRestaurantList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
+                            Log.d(TAG, "getRestaurantList: size : " + mRestaurantList.size());
+                        } else {
+                            Log.d(TAG, "getRestaurantList: NOT SUCCESS");
+                        }
                     }
                 })
-                .addOnFailureListener(pE -> Log.d(TAG, "onFailure: FAILED"));
-        return mRestaurantList;*/
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "onFailure: FAILED");
+                });
+        return mRestaurantList;
+    }
 
+    public List<Restaurant> getRestaurantNotif(String pRestaurantId) {
+        mRestoRef.document(pRestaurantId)
+                .get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        sApi.setRestaurant(Objects.requireNonNull(pTask.getResult()).toObject(Restaurant.class));
+                    }
+                });
         return sApi.getRestaurantList();
     }
 }

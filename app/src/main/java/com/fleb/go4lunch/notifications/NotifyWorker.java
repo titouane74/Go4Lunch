@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -14,6 +15,8 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
+import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
+import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,53 +32,89 @@ public class NotifyWorker extends Worker {
     public static final String TAG = "TAG_NOTIF";
     private Context mContext;
     private RestaurantRepository mRestaurantRepo;
+    private Workmate mCurrentWorkmate;
 
     public NotifyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         mContext = context;
         mRestaurantRepo = new RestaurantRepository();
-        Log.d(TAG, "NotifyWorker: " );
+        Log.d(TAG, "NotifyWorker: ");
     }
 
     @NonNull
     @Override
     public Result doWork() {
         Log.d(TAG, "doWork: ");
-        List<Restaurant> lRestaurantList = mRestaurantRepo.getRestaurantList();
-        Log.d(TAG, "doWork: size : " + lRestaurantList.size());
-        for (Restaurant lRestaurant : lRestaurantList) {
-            Log.d(TAG, "doWork: " + lRestaurant.getRestoName());
-            if (lRestaurant.getRestoWkList() != null) {
-                Log.d(TAG, "doWork: liste non vide");
-                List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
-                for (Restaurant.WorkmatesList lWorkmate : lWorkmateList) {
-                    List<Workmate> lListWorkmatesComing = new ArrayList<>();
-                    String lSendToWorkmate = lWorkmate.getWkName();
-                    Log.d(TAG, "doWork: send to workmate : " + lSendToWorkmate);
-                    for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
-                        Log.d(TAG, "doWork: workmate coming " + lWorkmate );
-                        if (!lSendToWorkmate.equals(lWorkmateComing.getWkName())) {
-                            lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
-                            Log.d(TAG, "doWork: workmate add to list coming : " +lWorkmateComing.getWkName() );
-                        }
-                    }
-                    createNotification(lListWorkmatesComing, lRestaurant);
 
+        mCurrentWorkmate = sApi.getWorkmate();
+        if (mCurrentWorkmate.getWorkmateRestoChoosed()!= null) {
+            mRestaurantRepo.getRestaurantNotif(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId());
+            prepareNotification();
+        }
+
+/*
+            List<Restaurant> lRestaurantList = mRestaurantRepo.getRestaurantList();
+            Log.d(TAG, "doWork: size : " + lRestaurantList.size());
+
+if (lCurrentWorkmate.getWorkmateRestoChoosed() != null) {
+            for (Restaurant lRestaurant : lRestaurantList) {
+                Log.d(TAG, "doWork: " + lRestaurant.getRestoName());
+                if ((lRestaurant.getRestoWkList() != null)
+                        && (lCurrentWorkmate.getWorkmateRestoChoosed().getRestoName().equals(lRestaurant.getRestoName()))) {
+                    Log.d(TAG, "doWork: liste non vide");
+                    List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
+                    for (Restaurant.WorkmatesList lWorkmate : lWorkmateList) {
+                        List<Workmate> lListWorkmatesComing = new ArrayList<>();
+                        String lSendToWorkmate = lWorkmate.getWkName();
+                        Log.d(TAG, "doWork: send to workmate : " + lSendToWorkmate);
+                        for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
+                            Log.d(TAG, "doWork: workmate coming " + lWorkmate);
+                            if (!lSendToWorkmate.equals(lWorkmateComing.getWkName())) {
+                                lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
+                                Log.d(TAG, "doWork: workmate add to list coming : " + lWorkmateComing.getWkName());
+                            }
+                        }
+                        createNotification(lListWorkmatesComing, lRestaurant);
+
+                    }
                 }
             }
-        }
+        }*/
 
         return Result.success();
     }
 
+    public void prepareNotification() {
+        List<Restaurant> lRestaurantList = sApi.getRestaurantList();
+        Log.d(TAG, "prepareNotification: " + lRestaurantList.size());
+        for (Restaurant lRestaurant : lRestaurantList) {
+            Log.d(TAG, "doWork: " + lRestaurant.getRestoName());
+            if ((lRestaurant.getRestoWkList() != null)
+                    && (lRestaurant.getRestoPlaceId().equals(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId()))) {
+                Log.d(TAG, "doWork: liste non vide");
+                List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
+                    List<Workmate> lListWorkmatesComing = new ArrayList<>();
+                    for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
+                        Log.d(TAG, "doWork: workmate coming " + lWorkmateComing);
+                        if (!mCurrentWorkmate.getWorkmateName().equals(lWorkmateComing.getWkName())) {
+                            lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
+                            Log.d(TAG, "doWork: workmate add to list coming : " + lWorkmateComing.getWkName());
+                        }
+                    }
+                    createNotification(lListWorkmatesComing, lRestaurant);
+            }
+        }
+
+
+    }
 
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
         int lNotifPriority = 0;
 
-        Log.d(TAG, "createNotification: " );
+        Log.d(TAG, "createNotification: ");
         String lTitle = pRestaurant.getRestoName();
         String lMessage = pRestaurant.getRestoAddress();
-        Log.d(TAG, "createNotification: address"+pRestaurant.getRestoAddress() );
+        Log.d(TAG, "createNotification: address" + pRestaurant.getRestoAddress());
 
 /*        List<Workmate> lWorkmateList = new ArrayList<>();
         Workmate lWorkmate1 = new Workmate("id ti put", "Roger");
