@@ -15,13 +15,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
 
-
         manifestPlaceholders = [MAPS_API_KEY_FOR_MANIFEST: MAPS_API_KEY]
         buildConfigField("String","MAPS_API_KEY",MAPS_API_KEY)
         resValue("string", "maps_api_key", MAPS_API_KEY)
 
     }
-
     buildTypes {
         release {
             minifyEnabled false
