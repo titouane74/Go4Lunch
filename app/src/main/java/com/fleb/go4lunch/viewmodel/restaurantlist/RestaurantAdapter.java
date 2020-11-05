@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     private static final String TAG = "TAG_STATUS";
     private List<Restaurant> mRestoList;
     private DayOpeningHours mStatus;
-
+    private Context mContext;
 
     public static final int CASE_0_CLOSED_TODAY_OPEN_AT = 0;
     public static final int CASE_1_CLOSED_OPEN_AT_ON = 1;
@@ -62,7 +63,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     @Override
     public void onBindViewHolder(@NonNull RestaurantHolder pRestoHolder, int position) {
         int lNbWorkmate = 0;
-        Context lContext = pRestoHolder.itemView.getContext();
+        mContext = pRestoHolder.itemView.getContext();
 
         pRestoHolder.mRestoName.setText(mRestoList.get(position).getRestoName());
         pRestoHolder.mRestoDistance.setText(mRestoList.get(position).getRestoDistanceText());
@@ -74,22 +75,82 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         pRestoHolder.mRestoNbWorkmates.setText("(" + lNbWorkmate + ")");
 
-        if (mRestoList.get(position).getRestoOpeningHours() != null) {
+        displayOpeningHour(pRestoHolder, position);
 
-            DayOpeningHours lOpeningStatus = getRestaurantOpeningHoursStatus(lContext, mRestoList.get(position));
+        displayRating(pRestoHolder, position);
+
+        displayRestoImg(pRestoHolder, position);
+
+        displayLogoWorkmate(pRestoHolder,position);
+
+        pRestoHolder.itemView.setOnClickListener(v -> {
+            Intent lIntentRestoDetail = new Intent(mContext, RestaurantDetailActivity.class);
+            lIntentRestoDetail.putExtra("placeid", mRestoList.get(position).getRestoPlaceId());
+            mContext.startActivity(lIntentRestoDetail);
+        });
+    }
+
+    private void displayLogoWorkmate(RestaurantHolder pRestoHolder, int pPosition) {
+        int lImgWorkmate = R.drawable.ic_workmate;
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            lImgWorkmate = R.drawable.ic_workmate_small_png;
+        }
+
+        Glide.with(pRestoHolder.mWorkmateImg.getContext())
+                .load(lImgWorkmate)
+                .apply(RequestOptions.centerCropTransform())
+                .into(pRestoHolder.mWorkmateImg);
+    }
+
+    private void displayOpeningHour(RestaurantHolder pRestoHolder, int pPosition) {
+        if (mRestoList.get(pPosition).getRestoOpeningHours() != null) {
+
+            DayOpeningHours lOpeningStatus = getRestaurantOpeningHoursStatus(mContext, mRestoList.get(pPosition));
             if (lOpeningStatus.isDayIsOpen()) {
                 pRestoHolder.mRestoOpening.setText(lOpeningStatus.getDayDescription());
-                pRestoHolder.mRestoOpening.setTextColor(lContext.getResources().getColor(R.color.colorTextBlack));
+                pRestoHolder.mRestoOpening.setTextColor(mContext.getResources().getColor(R.color.colorTextBlack));
                 pRestoHolder.mRestoOpening.setTypeface(null, Typeface.ITALIC);
             } else {
                 pRestoHolder.mRestoOpening.setText(lOpeningStatus.getDayDescription());
-                pRestoHolder.mRestoOpening.setTextColor(lContext.getResources().getColor(R.color.colorTextRed));
+                pRestoHolder.mRestoOpening.setTextColor(mContext.getResources().getColor(R.color.colorTextRed));
                 pRestoHolder.mRestoOpening.setTypeface(null, Typeface.BOLD);
             }
         }
+    }
 
-        int lNbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(lContext,
-                mRestoList.get(position).getRestoRating());
+    private void displayRestoImg(RestaurantHolder pRestoHolder, int pPosition) {
+        if (mRestoList.get(pPosition).getRestoPhotoUrl() != null) {
+            Glide.with(pRestoHolder.mRestoImage.getContext())
+                    .load(mRestoList.get(pPosition).getRestoPhotoUrl())
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(pRestoHolder.mRestoImage);
+        } else {
+            Glide.with(pRestoHolder.mRestoImage.getContext())
+                    .load(R.drawable.ic_resto_default_detail)
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(pRestoHolder.mRestoImage);
+        }
+    }
+
+    private void displayRating(RestaurantHolder pRestoHolder, int pPosition) {
+        int lImgStar = R.drawable.ic_star_yellow_note;
+
+        Glide.with(pRestoHolder.mRestoNote1.getContext())
+                .load(lImgStar)
+                .apply(RequestOptions.centerCropTransform())
+                .into(pRestoHolder.mRestoNote1);
+        Glide.with(pRestoHolder.mRestoNote2.getContext())
+                .load(lImgStar)
+                .apply(RequestOptions.centerCropTransform())
+                .into(pRestoHolder.mRestoNote2);
+        Glide.with(pRestoHolder.mRestoNote3.getContext())
+                .load(lImgStar)
+                .apply(RequestOptions.centerCropTransform())
+                .into(pRestoHolder.mRestoNote3);
+
+        int lNbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(mContext,
+                mRestoList.get(pPosition).getRestoRating());
         switch (lNbStarToDisplay) {
             case 1:
                 pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);
@@ -106,19 +167,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 pRestoHolder.mRestoNote3.setVisibility(View.INVISIBLE);
                 break;
         }
-
-        if (mRestoList.get(position).getRestoPhotoUrl() != null) {
-            Glide.with(pRestoHolder.mRestoImage.getContext())
-                    .load(mRestoList.get(position).getRestoPhotoUrl())
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(pRestoHolder.mRestoImage);
-        }
-
-        pRestoHolder.itemView.setOnClickListener(v -> {
-            Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-            lIntentRestoDetail.putExtra("placeid", mRestoList.get(position).getRestoPlaceId());
-            lContext.startActivity(lIntentRestoDetail);
-        });
     }
 
     private DayOpeningHours getRestaurantOpeningHoursStatus(Context pContext, Restaurant pRestaurant) {
@@ -381,6 +429,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         private ImageView mRestoNote2;
         private ImageView mRestoNote3;
         private ImageView mRestoImage;
+        private ImageView mWorkmateImg;
 
         public RestaurantHolder(@NonNull View itemView) {
             super(itemView);
@@ -394,6 +443,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             mRestoNote2 = itemView.findViewById(R.id.img_star_note_2);
             mRestoNote3 = itemView.findViewById(R.id.img_star_note_3);
             mRestoImage = itemView.findViewById(R.id.img_restaurant);
+            mWorkmateImg = itemView.findViewById(R.id.img_workmate);
         }
     }
 }

@@ -53,6 +53,8 @@
     <dimen name="percent_center_guideline">0.60</dimen>
     <dimen name="percent_right_guideline">0.76</dimen>
     <dimen name="corner_radius_img_resto">5dp</dimen>
+    <dimen name="img_star_size">12dp</dimen>
+    <dimen name="img_workmate_size">20dp</dimen>
 
     <!-- restaurant detail -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
