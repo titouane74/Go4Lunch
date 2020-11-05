@@ -12,5 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
-secure.properties
 gradle.properties
