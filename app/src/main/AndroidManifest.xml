@@ -51,10 +51,10 @@
         </activity>
         <activity android:name=".view.activities.MainActivity" />
         <activity
-            android:name=".view.activities.UserActivity"
-            android:label="@string/user_activity_label"
+            android:name=".view.activities.SettingsActivity"
+            android:label="@string/menu_settings"
             android:parentActivityName=".view.activities.MainActivity"
-            android:theme="@style/UserTheme" />
+            android:theme="@style/SettingsTheme" />
         <activity android:name=".view.activities.RestaurantDetailActivity" />
 
         <meta-data

@@ -14,7 +14,7 @@
     <color name="colorDiviseur">#E5E6E7</color>
 
     <color name="colorTextPrimary">#FFFFFF</color>
-    <color name="colorTextUnavailable">#909090</color>
+    <color name="colorTextUnavailable">#A8A8A8</color>
     <color name="colorTextRestaurantInformation">#5A5A5A</color>
     <color name="colorTextDistance">#A8A8A8</color>
     <color name="colorTextRed">#D93644</color>

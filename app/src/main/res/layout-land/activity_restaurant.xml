@@ -8,199 +8,200 @@
     android:fitsSystemWindows="true"
     tools:context=".view.activities.RestaurantDetailActivity">
 
-
-    <ImageView
-        android:id="@+id/img_restaurant_detail"
-        android:layout_width="270dp"
-        android:layout_height="160dp"
-        android:background="@color/colorWhiteBackground"
-        android:contentDescription="@null"
-        android:scaleType="center"
-        app:layout_collapseMode="parallax"
-        app:srcCompat="@drawable/ic_resto_default_detail"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/restaurant_detail_info"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent">
 
-    <LinearLayout
-            android:layout_width="270dp"
+        <ImageView
+            android:id="@+id/img_restaurant_detail"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@color/colorWhiteBackground"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            app:layout_collapseMode="parallax"
+            app:srcCompat="@drawable/ic_resto_default_detail"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/restaurant_info"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/img_restaurant_detail">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_restaurant_detail_float_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:srcCompat="@drawable/ic_check_circle"
+                app:backgroundTint="@color/colorWhiteBackground"
+                android:tag="@string/btn_check"
+                app:layout_anchorGravity="top|right|end"
+                android:focusable="true"
+                app:layout_constraintTop_toTopOf="@+id/restaurant_info"
+                app:layout_constraintEnd_toEndOf="@+id/restaurant_info" />
+
+            <TextView
+                android:id="@+id/text_restaurant_detail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/text_size_item_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_detail_note1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin_mini"
+                android:contentDescription="@null"
+                app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
+                app:layout_constraintStart_toEndOf="@+id/text_restaurant_detail_name"
+                app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
+                app:srcCompat="@drawable/ic_star_yellow_note" />
+
+            <ImageView
+                android:id="@+id/img_detail_note2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin_mini"
+                android:contentDescription="@null"
+                app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
+                app:layout_constraintStart_toEndOf="@+id/img_detail_note1"
+                app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
+                app:srcCompat="@drawable/ic_star_yellow_note" />
+
+            <ImageView
+                android:id="@+id/img_detail_note3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin_mini"
+                android:contentDescription="@null"
+                app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
+                app:layout_constraintStart_toEndOf="@+id/img_detail_note2"
+                app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
+                app:srcCompat="@drawable/ic_star_yellow_note" />
+
+            <TextView
+                android:id="@+id/text_restaurant_detail_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/text_size_item_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_restaurant_detail_name" />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/ban_icon"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/img_restaurant_detail"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_marginTop="6dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/restaurant_info">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/restaurant_info"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@color/colorPrimary"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/restaurant_info"
+                app:layout_constraintTop_toBottomOf="@+id/restaurant_info">
 
                 <TextView
-                    android:id="@+id/text_restaurant_detail_name"
+                    android:id="@+id/text_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/text_size_item_title"
+                    android:layout_marginTop="@dimen/vertical_margin"
+
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="@string/text_call"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/img_call" />
 
                 <ImageView
-                    android:id="@+id/img_detail_note1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin_mini"
-                    android:contentDescription="@null"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
-                    app:layout_constraintStart_toEndOf="@+id/text_restaurant_detail_name"
-                    app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
-                    app:srcCompat="@drawable/ic_star_yellow_note" />
-
-                <ImageView
-                    android:id="@+id/img_detail_note2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin_mini"
-                    android:contentDescription="@null"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
-                    app:layout_constraintStart_toEndOf="@+id/img_detail_note1"
-                    app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
-                    app:srcCompat="@drawable/ic_star_yellow_note" />
-
-                <ImageView
-                    android:id="@+id/img_detail_note3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin_mini"
-                    android:contentDescription="@null"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
-                    app:layout_constraintStart_toEndOf="@+id/img_detail_note2"
-                    app:layout_constraintTop_toTopOf="@+id/text_restaurant_detail_name"
-                    app:srcCompat="@drawable/ic_star_yellow_note" />
-
-                <TextView
-                    android:id="@+id/text_restaurant_detail_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/text_size_item_description"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_restaurant_detail_name" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/btn_restaurant_detail_float_favorite"
+                    android:id="@+id/img_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    app:srcCompat="@drawable/ic_check_circle"
-                    app:backgroundTint="@color/colorWhiteBackground"
-                    android:tag="@string/btn_check"
-                    app:layout_anchorGravity="bottom|right|end"
+                    android:contentDescription="@null"
                     android:focusable="true"
-                    app:layout_constraintTop_toTopOf="@+id/restaurant_info"
-                    app:layout_constraintEnd_toEndOf="@+id/restaurant_info"
-                    app:elevation="@dimen/auth_elevation"/>
+                    app:layout_constraintEnd_toEndOf="@id/text_call"
+                    app:layout_constraintStart_toStartOf="@id/text_call"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_call" />
+
+                <TextView
+                    android:id="@+id/text_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="@dimen/vertical_margin"
+                    android:text="@string/text_like"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/text_call"
+                    app:layout_constraintTop_toBottomOf="@+id/img_like" />
+
+                <ImageView
+                    android:id="@+id/img_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:contentDescription="@null"
+                    android:focusable="true"
+                    app:layout_constraintEnd_toEndOf="@+id/text_like"
+                    app:layout_constraintStart_toEndOf="@+id/text_call"
+                    app:layout_constraintStart_toStartOf="@+id/text_like"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_not_like" />
+
+                <TextView
+                    android:id="@+id/text_website"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="@dimen/vertical_margin"
+                    android:text="@string/text_website"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/text_like"
+                    app:layout_constraintTop_toBottomOf="@+id/img_website" />
+
+                <ImageView
+                    android:id="@+id/img_website"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:contentDescription="@null"
+                    android:focusable="true"
+                    app:layout_constraintEnd_toEndOf="@+id/text_website"
+                    app:layout_constraintStart_toStartOf="@+id/text_website"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_website" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/ban_icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/restaurant_info">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="@id/restaurant_info"
-                    app:layout_constraintTop_toBottomOf="@+id/restaurant_info">
-
-                    <TextView
-                        android:id="@+id/text_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/vertical_margin"
-
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:text="@string/text_call"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/img_call" />
-
-                    <ImageView
-                        android:id="@+id/img_call"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@null"
-                        android:focusable="true"
-                        app:layout_constraintEnd_toEndOf="@id/text_call"
-                        app:layout_constraintStart_toStartOf="@id/text_call"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_call" />
-
-                    <TextView
-                        android:id="@+id/text_like"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="30dp"
-                        android:layout_marginTop="@dimen/vertical_margin"
-                        android:text="@string/text_like"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@id/text_call"
-                        app:layout_constraintTop_toBottomOf="@+id/img_like" />
-
-                    <ImageView
-                        android:id="@+id/img_like"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@null"
-                        android:focusable="true"
-                        app:layout_constraintEnd_toEndOf="@+id/text_like"
-                        app:layout_constraintStart_toEndOf="@+id/text_call"
-                        app:layout_constraintStart_toStartOf="@+id/text_like"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_not_like" />
-
-                    <TextView
-                        android:id="@+id/text_website"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="30dp"
-                        android:layout_marginTop="@dimen/vertical_margin"
-                        android:text="@string/text_website"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@id/text_like"
-                        app:layout_constraintTop_toBottomOf="@+id/img_website" />
-
-                    <ImageView
-                        android:id="@+id/img_website"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@null"
-                        android:focusable="true"
-                        app:layout_constraintEnd_toEndOf="@+id/text_website"
-                        app:layout_constraintStart_toStartOf="@+id/text_website"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_website" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </LinearLayout>
-
         </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -209,7 +210,7 @@
         android:layout_height="wrap_content"
         tools:listitem="@layout/fragment_workmate_list_item"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/img_restaurant_detail"/>
+        app:layout_constraintStart_toEndOf="@+id/restaurant_detail_info"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

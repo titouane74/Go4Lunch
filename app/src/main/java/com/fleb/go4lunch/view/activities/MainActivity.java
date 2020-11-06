@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTxtEmail = lHeaderView.findViewById(R.id.nav_txt_user_email);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.restaurantDetailActivity, R.id.nav_logout, R.id.nav_settings, R.id.nav_map,
+                R.id.nav_home, R.id.restaurantDetailActivity, R.id.nav_logout, R.id.settingsActivity, R.id.nav_map,
                 R.id.nav_restaurant_list, R.id.nav_workmate)
                 .setOpenableLayout(mDrawerLayout)
                 .build();
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(MainActivity.this, UserActivity.class));
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
     }
 

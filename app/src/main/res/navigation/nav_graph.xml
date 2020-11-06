@@ -5,21 +5,11 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/nav_map">
 
-    <fragment
-        android:id="@+id/nav_settings"
-        android:name="com.fleb.go4lunch.view.fragments.SettingsFragment"
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.fleb.go4lunch.view.activities.SettingsActivity"
         android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" >
-        <action
-            android:id="@+id/action_nav_settings_to_nav_map"
-            app:destination="@id/nav_map" />
-        <action
-            android:id="@+id/action_nav_settings_to_nav_restaurant_list"
-            app:destination="@id/nav_restaurant_list" />
-        <action
-            android:id="@+id/action_nav_settings_to_nav_workmate"
-            app:destination="@id/nav_workmate" />
-    </fragment>
+        tools:layout="@layout/activity_settings" />
     <activity
         android:id="@+id/restaurantDetailActivity"
         android:name="com.fleb.go4lunch.view.activities.RestaurantDetailActivity"
@@ -47,9 +37,6 @@
         <action
             android:id="@+id/action_nav_map_to_nav_workmate"
             app:destination="@id/nav_workmate" />
-        <action
-            android:id="@+id/action_nav_map_to_nav_settings"
-            app:destination="@id/nav_settings" />
         <action
             android:id="@+id/action_nav_map_to_nav_logout"
             app:destination="@id/nav_logout" />

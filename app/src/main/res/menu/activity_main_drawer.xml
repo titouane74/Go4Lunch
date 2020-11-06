@@ -14,7 +14,7 @@
             android:icon="@drawable/ic_menu_lunch"
             android:title="@string/menu_lunch" />
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/settingsActivity"
             android:icon="@drawable/ic_menu_settings"
             android:title="@string/menu_settings" />
         <item

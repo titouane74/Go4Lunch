@@ -51,7 +51,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="UserTheme" parent="Theme.AppCompat">
+    <style name="SettingsTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -59,14 +59,14 @@
         <item name="windowNoTitle">false</item>
     </style>
 
-    <style name="UserTheme.Button" parent="UserTheme">
-        <item name="android:textSize">@dimen/user_btn_text_size</item>
+    <style name="SettingsTheme.Button" parent="SettingsTheme">
+        <item name="android:textSize">@dimen/settings_btn_text_size</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:background">@drawable/btn_radius_primary_color</item>
         <item name="android:layout_margin">@dimen/default_margin_mini</item>
-        <item name="android:padding">@dimen/default_margin</item>
-        <item name="android:layout_marginStart">@dimen/user_btn_margin_horizontal</item>
-        <item name="android:layout_marginEnd">@dimen/user_btn_margin_horizontal</item>
+<!--        <item name="android:padding">@dimen/default_margin</item>    -->
+        <item name="android:layout_marginStart">@dimen/settings_btn_margin_horizontal</item>
+        <item name="android:layout_marginEnd">@dimen/settings_btn_margin_horizontal</item>
         <item name="android:layout_marginTop">@dimen/default_margin</item>
         <item name="android:layout_marginBottom">@dimen/default_margin</item>
     </style>

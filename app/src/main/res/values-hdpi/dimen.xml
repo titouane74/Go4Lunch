@@ -33,10 +33,10 @@
     <dimen name="auth_btn_text_align_padding">30dp</dimen>
     <dimen name="auth_elevation">10dp</dimen>
 
-    <!-- User -->
-    <dimen name="user_btn_text_size">16sp</dimen>
-    <dimen name="user_btn_margin_horizontal">40dp</dimen>
-    <dimen name="user_img_size">100dp</dimen>
+    <!-- Settings -->
+    <dimen name="settings_btn_text_size">14sp</dimen>
+    <dimen name="settings_btn_margin_horizontal">40dp</dimen>
+    <dimen name="settings_img_size">100dp</dimen>
 
     <!-- List restaurant -->
     <dimen name="text_size_item_title">18sp</dimen>
