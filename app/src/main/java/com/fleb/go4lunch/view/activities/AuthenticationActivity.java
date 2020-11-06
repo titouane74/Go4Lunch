@@ -288,10 +288,10 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         lAuthViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
             if (pWorkmateSaved.equals(ActionStatus.SAVED)) {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_created, Toast.LENGTH_SHORT).show();
-                finish();
+                this.finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             } else if (pWorkmateSaved.equals(ActionStatus.EXIST)) {
-                finish();
+                this.finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             } else {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_not_created, Toast.LENGTH_SHORT).show();

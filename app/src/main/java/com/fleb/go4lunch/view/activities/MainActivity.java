@@ -92,12 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-
-    /**
-     * Suppress the super.onBackPressed because we don't want that the user can press Back
-     */
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
