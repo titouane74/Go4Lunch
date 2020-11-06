@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.notifications;
+package com.fleb.go4lunch.workmanager;
 
 import android.content.Context;
 import android.os.Build;

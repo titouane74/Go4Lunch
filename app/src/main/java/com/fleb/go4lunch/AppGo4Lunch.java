@@ -16,6 +16,7 @@ import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PreferencesHelper;
+import com.fleb.go4lunch.workmanager.WorkerRestaurantChoiceController;
 
 /**
  * Created by Florence LE BOURNOT on 30/10/2020
@@ -49,6 +50,12 @@ public class AppGo4Lunch extends MultiDexApplication {
 
         initializeSharedPreferences();
 
+        removePreviousRestaurantChoice();
+
+    }
+
+    private void removePreviousRestaurantChoice() {
+        WorkerRestaurantChoiceController.startWorkerController(this);
     }
 
     private void initializeSharedPreferences() {

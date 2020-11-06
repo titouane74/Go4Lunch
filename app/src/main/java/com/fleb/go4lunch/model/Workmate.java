@@ -2,6 +2,8 @@ package com.fleb.go4lunch.model;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.Timestamp;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -116,12 +118,14 @@ public class Workmate {
     public static class WorkmateRestoChoice {
         public String restoId;
         public String restoName;
+        public Timestamp restoDateChoice;
 
         public WorkmateRestoChoice() {}
 
-        public WorkmateRestoChoice(String pRestoId, String pRestoName) {
+        public WorkmateRestoChoice(String pRestoId, String pRestoName, Timestamp pRestoDateChoice) {
             restoId = pRestoId;
             restoName = pRestoName;
+            restoDateChoice = pRestoDateChoice;
         }
 
         public String getRestoId() {
@@ -138,6 +142,14 @@ public class Workmate {
 
         public void setRestoName(String pRestoName) {
             restoName = pRestoName;
+        }
+
+        public Timestamp getRestoDateChoice() {
+            return restoDateChoice;
+        }
+
+        public void setRestoDateChoice(Timestamp pRestoDateChoice) {
+            restoDateChoice = pRestoDateChoice;
         }
     }
 

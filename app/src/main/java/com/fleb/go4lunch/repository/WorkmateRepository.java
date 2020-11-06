@@ -16,6 +16,7 @@ import com.fleb.go4lunch.utils.ActionStatus;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -295,17 +296,19 @@ public class WorkmateRepository {
     }
 
     private void saveWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant) {
-
         if (pWorkmate.getWorkmateRestoChoosed() == null) {
             addChoice(pWorkmate, pRestaurant);
         } else {
             removeChoice(pWorkmate, pRestaurant);
         }
+
     }
 
     private void addChoice(Workmate pWorkmate, Restaurant pRestaurant) {
+        Timestamp lTimestamp = Timestamp.now();
+
         Workmate.WorkmateRestoChoice lRestaurant = new Workmate.WorkmateRestoChoice(
-                pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName());
+                pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName(),lTimestamp);
 
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), lRestaurant)
                 .addOnCompleteListener(pTask -> {
@@ -319,8 +322,10 @@ public class WorkmateRepository {
     }
 
     private void addWorkmateToRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
+        Timestamp lDateChoice = Timestamp.now();
+
         Restaurant.WorkmatesList lWorkmatesInRestoList =
-                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
+        new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
 
         mRestaurantRef.document(pRestaurant.getRestoPlaceId())
                 .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayUnion(lWorkmatesInRestoList))
@@ -348,8 +353,9 @@ public class WorkmateRepository {
     }
 
     private void removeWorkmateFromRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
+
         Restaurant.WorkmatesList lWorkmatesInRestoList =
-                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
+        new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
 
         mRestaurantRef.document(pRestaurant.getRestoPlaceId())
                 .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
@@ -383,4 +389,6 @@ public class WorkmateRepository {
                     mLDWorkmateChoiceStatus.setValue(ActionStatus.ERROR);
                 });
     }
+
+
 }

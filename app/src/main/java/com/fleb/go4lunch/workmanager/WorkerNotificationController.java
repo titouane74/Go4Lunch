@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.notifications;
+package com.fleb.go4lunch.workmanager;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class WorkerNotificationController {
     public static final String TAG ="TAG_NOTIF";
 
-    private static final String WORK_REQUEST_NAME = "WORK_REQUEST_NAME_GO4LUNCH";
-    private static final String WORK_REQUEST_TAG = "WORK_REQUEST_TAG_GO4LUNCH";
+    private static final String WORK_REQUEST_NAME = "WORK_REQUEST_NAME_GO4LUNCH_NOTIF";
+    private static final String WORK_REQUEST_TAG = "WORK_REQUEST_TAG_GO4LUNCH_NOTIF";
     private static final int NOTIFICATION_HOUR = 19;
     private static final int NOTIFICATION_MINUTE = 10;
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;

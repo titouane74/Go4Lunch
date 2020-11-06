@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,14 +24,12 @@ import com.firebase.ui.auth.AuthUI;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.notifications.WorkerNotificationController;
+import com.fleb.go4lunch.workmanager.WorkerNotificationController;
 import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {

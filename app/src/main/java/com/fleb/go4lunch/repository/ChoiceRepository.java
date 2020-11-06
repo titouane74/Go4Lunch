@@ -3,26 +3,25 @@ package com.fleb.go4lunch.repository;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.utils.ActionStatus;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 /**
@@ -38,17 +37,82 @@ public class ChoiceRepository {
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mChoiceRef = mDb.collection(String.valueOf(Choice.Fields.Choice));
     private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
+    private CollectionReference mRestaurantRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
 
     private MutableLiveData<List<Workmate>> mLDListWorkmateComing = new MutableLiveData<>();
 //    private MutableLiveData<ActionStatus> mLDChoiceStatus = new MutableLiveData<>();
+
+    public static final int REFRESH_HOUR = 14;
 
     private List<Workmate> mWorkmateList = new ArrayList<>();
     private Restaurant mRestaurant;
 
     private Date mDate = new Date();
     @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
-    private String mDateChoice = mSdf.format(mDate);
+    private SimpleDateFormat mSdfDay = new SimpleDateFormat("yyyyMMdd");
+    private String mDateChoice = mSdfDay.format(mDate);
+
+    public void removePreviousChoice() {
+        Calendar lCalendar = Calendar.getInstance();
+        lCalendar.setTime(mDate);
+
+        lCalendar.add(Calendar.DAY_OF_MONTH,-1);
+        lCalendar.set(Calendar.HOUR_OF_DAY, REFRESH_HOUR);
+        lCalendar.set(Calendar.MINUTE, 0);
+        lCalendar.set(Calendar.SECOND, 0);
+
+        mWorkmateRef.get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        List<Workmate> lWorkmateList =  pTask.getResult().toObjects(Workmate.class);
+                        for(Workmate lWorkmate : lWorkmateList) {
+                            Log.e(TAG, "onComplete: "  + lWorkmate.getWorkmateName());
+                            if(lWorkmate.getWorkmateRestoChoosed()!=null) {
+                                Date lWorkmateDateChoice = lWorkmate.getWorkmateRestoChoosed().getRestoDateChoice().toDate();
+                                if (lWorkmateDateChoice.compareTo(lCalendar.getTime())<0) {
+                                    removeWorkmateChoice(lWorkmate, lWorkmate.getWorkmateRestoChoosed().getRestoId());
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void removeWorkmateChoice(Workmate pWorkmate, String pRestaurantId) {
+        Log.e(TAG, "removeWorkmateChoice: " );
+        Timestamp lDateChoice = pWorkmate.getWorkmateRestoChoosed().getRestoDateChoice();
+        pWorkmate.setWorkmateRestoChoosed(null);
+        sApi.setWorkmate(pWorkmate);
+        mWorkmateRef.document(pWorkmate.getWorkmateId())
+                .update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
+                .addOnCompleteListener(pTask -> {
+                    removeWorkmateFromRestaurant(pWorkmate, pRestaurantId, lDateChoice);
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "removeChoice : restaurant removed Failed");
+                });
+    }
+
+    private void removeWorkmateFromRestaurant(Workmate pWorkmate, String pRestaurantId, Timestamp pDateChoice) {
+
+        Restaurant.WorkmatesList lWorkmatesInRestoList =
+                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(),
+                        pWorkmate.getWorkmatePhotoUrl());
+
+        mRestaurantRef.document(pRestaurantId)
+                .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        Log.e(TAG, "removeWorkmateFromRestaurant: remove resto " );
+                    } else {
+                        Log.e(TAG, "removeWorkmateFromRestaurant: faile on restaurant "
+                                + pWorkmate.getWorkmateRestoChoosed().getRestoName() );
+                    }
+                })
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "onFailure: Document not saved", pE);
+             });
+    }
 
 //    private MutableLiveData<Boolean> mLDHasChoosed = new MutableLiveData<>();
 
