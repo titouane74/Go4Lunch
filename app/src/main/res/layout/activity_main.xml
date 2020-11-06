@@ -23,6 +23,7 @@
         android:background="@color/colorPrimaryLight"
         app:itemTextColor="@color/colorTextPrimary"
         app:headerLayout="@layout/nav_header_main"
+        app:itemIconTint="@color/colorWhiteBackground"
         app:menu="@menu/activity_main_drawer">
         <ImageView
             android:layout_width="match_parent"

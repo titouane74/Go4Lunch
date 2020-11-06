@@ -42,7 +42,7 @@
             android:layout_height="@dimen/logo_size_add_photo"
             android:contentDescription="@string/nav_header_desc"
             android:layout_marginTop="@dimen/vertical_margin_large"
-            app:srcCompat="@mipmap/ic_round_add_photo"
+            app:srcCompat="@drawable/ic_profile_user_png"
             android:clickable="true"
             android:focusable="true"
             android:onClick="onClick"/>
