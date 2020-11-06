@@ -113,7 +113,7 @@ public class NotifyWorker extends Worker {
 
         lBuilder.setOnlyAlertOnce(true);
 
-        switch (lNotifPriority) {
+/*        switch (lNotifPriority) {
             case NotificationCompat.PRIORITY_HIGH:
                 lBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
                 break;
@@ -128,7 +128,7 @@ public class NotifyWorker extends Worker {
                 break;
             default:
                 lBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        }
+        }*/
 
         NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(mContext);
         lNotificationManager.notify(1, lBuilder.build());

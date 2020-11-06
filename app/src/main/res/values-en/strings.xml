@@ -117,13 +117,16 @@
     <string name="map_zoom">16</string>
     <string name="default_latitude_position">48.8236549</string>
     <string name="default_longitude_position">2.4102578</string>
+    <string name="place_detail_fields">name,address_components,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
+
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to enable the location.</string>
     <string name="location_permission_denied">This application requires location permission to enable the location. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
     <string name="permission_required_toast">Location permission is required.</string>
 
-    <string name="place_detail_fields">name,address_components,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
-
-
+    <!-- SETTINGS -->
+    <string name="btn_text_change_notif_status">Activate / Deactivate the notifications</string>
+    <string name="text_setting_notif_activated">Les notifications sont : activées</string>
+    <string name="text_setting_notif_deactivated">Les notifications sont : désactivées</string>
 </resources>

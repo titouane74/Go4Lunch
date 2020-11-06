@@ -6,50 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".view.fragments.SettingsFragment">
 
+
     <TextView
-        android:id="@+id/text_settings"
-        android:layout_width="match_parent"
+        android:id="@+id/txt_setting_notif_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_text_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title"
-        app:layout_constraintTop_toBottomOf="@+id/text_settings"
-        app:layout_constraintStart_toStartOf="@+id/text_settings" />
-
-    <EditText
-        android:id="@+id/edit_text_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Message"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_title" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <Button
-        android:id="@+id/btn_channel1"
+        android:id="@+id/btn_change_notif_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send on Channel 1"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_message"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_message"
-        android:onClick="sendOnChannel1"/>
-
-    <Button
-        android:id="@+id/btn_channel2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Send on Channel 2"
-        app:layout_constraintTop_toBottomOf="@+id/btn_channel1"
-        app:layout_constraintStart_toStartOf="@+id/btn_channel1"
-        android:onClick="sendOnChannel2"/>
+        android:text="@string/btn_text_change_notif_status"
+        app:layout_constraintTop_toBottomOf="@+id/txt_setting_notif_status"
+        app:layout_constraintStart_toStartOf="@+id/txt_setting_notif_status"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

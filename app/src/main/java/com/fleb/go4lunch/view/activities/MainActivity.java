@@ -1,6 +1,7 @@
 package com.fleb.go4lunch.view.activities;
 //TODO implement the javadoc
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +9,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
         Log.e(TAG, "onCreate: " + mCurrentUser.getDisplayName() );
@@ -71,7 +75,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         configureDrawerLayoutNavigationView();
 
         Log.d(TAG, "onCreate: call WorkManagerNotificationController StarRequest" );
-        WorkerNotificationController.startWorkerController(getBaseContext());
+
+        configureWorkerNotification(getApplicationContext());
+
+    }
+
+    private void configureWorkerNotification(Context pContext){
+        NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(pContext);
+
+        if (lNotificationManager.areNotificationsEnabled()) {
+            WorkerNotificationController.startWorkerController(pContext);
+        } else {
+            WorkerNotificationController.stopWorkerController(pContext);
+        }
+    }
+    private void openNotificationSettingsForApp(Context pContext) {
+        // Links to this app's notification settings.
+        Intent intent = new Intent();
+        intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+        intent.putExtra("app_package", pContext.getPackageName());
+        intent.putExtra("app_uid", pContext.getApplicationInfo().uid);
+
+        // for Android 8 and above
+        intent.putExtra("android.provider.extra.APP_PACKAGE", pContext.getPackageName());
+
+        startActivity(intent);
     }
 
     private void configureViewModel() {
