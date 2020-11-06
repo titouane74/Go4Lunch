@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -37,8 +38,6 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG_MAIN";
 
-    //private Go4LunchApi mApi;
-
     /**
      * Firebase
      */
@@ -63,15 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
-        if (mApi == null) {
-            mApi = DI.getGo4LunchApiService();
-        }*/
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
-
-        sApi.setWorkmateId(mCurrentUser);
+        Log.e(TAG, "onCreate: " + mCurrentUser.getDisplayName() );
         Log.d(TAG, "onCreate: saveWorkmateID : " + mCurrentUser.getDisplayName() + " - " + mCurrentUser.getUid());
         configureViewModel();
 
@@ -87,13 +81,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mMainActivityViewModel = new MainActivityViewModel();
         mMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
         {
-            sApi.setWorkmate(pWorkmate);
-            Log.e(TAG, "configureViewModel: " + pWorkmate);
-            mWorkmate = pWorkmate;
-            displayDrawerData(pWorkmate);
+            if(pWorkmate!=null) {
+                mWorkmate = pWorkmate;
+                displayDrawerData(pWorkmate);
 
-            configureMenuYourLunch();
-
+                configureMenuYourLunch();
+            } else {
+                Log.e(TAG, "configureViewModel: user not found" );
+            }
         });
     }
 

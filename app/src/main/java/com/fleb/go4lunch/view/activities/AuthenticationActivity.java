@@ -272,9 +272,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             sApi.setWorkmateId(pCurrentUser);
 
             saveWorkmateIfNotExist(pCurrentUser);
-            finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-
         } else {
             Toast.makeText(this, R.string.auth_msg_sign_in_to_continue, Toast.LENGTH_SHORT).show();
         }
@@ -291,11 +288,14 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         lAuthViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
             if (pWorkmateSaved.equals(ActionStatus.SAVED)) {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_created, Toast.LENGTH_SHORT).show();
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            } else if (pWorkmateSaved.equals(ActionStatus.EXIST)) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             } else {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_not_created, Toast.LENGTH_SHORT).show();
             }
-            finish();
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         });
     }
 }

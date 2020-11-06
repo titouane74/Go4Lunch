@@ -3,8 +3,10 @@ package com.fleb.go4lunch.repository;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.facebook.internal.WebDialog;
 import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
@@ -12,6 +14,8 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.ActionStatus;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -100,28 +104,31 @@ public class WorkmateRepository {
     }
 
     public MutableLiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
-        mWorkmateRef.document(pWorkmate.getUid())
+
+        String lUrl = null;
+        if (pWorkmate.getPhotoUrl() != null) {
+            lUrl = pWorkmate.getPhotoUrl().toString();
+        }
+
+        Workmate lWorkmate = new Workmate(pWorkmate.getUid(), pWorkmate.getDisplayName(),
+                pWorkmate.getEmail(), lUrl);
+
+        mWorkmateRef.document(lWorkmate.getWorkmateId())
                 .get()
                 .addOnSuccessListener(pVoid -> {
                     if (!pVoid.exists()) {
-                        String lUrl=null;
-                        if(pWorkmate.getPhotoUrl()!= null){
-                            lUrl = pWorkmate.getPhotoUrl().toString();
-                        }
-                        Workmate lWorkmate = new Workmate(pWorkmate.getUid(),pWorkmate.getDisplayName(),
-                                pWorkmate.getEmail() ,lUrl);
-
                         mWorkmateRef.document(pWorkmate.getUid())
                                 .set(lWorkmate)
                                 .addOnSuccessListener(pDocumentReference -> {
+                                    sApi.setWorkmate(lWorkmate);
                                     mLDWorkmateSaved.setValue(ActionStatus.SAVED);
                                 })
                                 .addOnFailureListener(pE -> {
                                     Log.d(TAG, "onFailure: Document not saved", pE);
                                     mLDWorkmateSaved.setValue(ActionStatus.SAVED_FAILED);
-                                })
-                        ;
-
+                                });
+                    } else {
+                        mLDWorkmateSaved.setValue(ActionStatus.EXIST);
                     }
                 })
                 .addOnFailureListener(pE -> Log.d("TAG_AUTH_EXIST", "onFailure Save: Document not saved", pE));
@@ -129,7 +136,6 @@ public class WorkmateRepository {
     }
 
     public MutableLiveData<Workmate> getWorkmateData(String pWorkmateId) {
-
         mWorkmateRef.document(pWorkmateId)
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -137,7 +143,6 @@ public class WorkmateRepository {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         sApi.setWorkmate(lWorkmate);
                         mLDWorkmate.setValue(lWorkmate);
-
                     } else {
                         Log.d("TAG_REPO_ERROR", "getWorkmateData: " + pTask.getException());
                     }
@@ -298,7 +303,7 @@ public class WorkmateRepository {
         }
     }
 
-    private void addChoice(Workmate pWorkmate,  Restaurant pRestaurant) {
+    private void addChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         Workmate.WorkmateRestoChoice lRestaurant = new Workmate.WorkmateRestoChoice(
                 pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName());
 
@@ -313,7 +318,7 @@ public class WorkmateRepository {
                 });
     }
 
-    private void addWorkmateToRestaurant(Workmate pWorkmate,Restaurant pRestaurant) {
+    private void addWorkmateToRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
         Restaurant.WorkmatesList lWorkmatesInRestoList =
                 new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
 

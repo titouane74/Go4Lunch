@@ -12,5 +12,6 @@ public enum ActionStatus {
     NOT_CHOOSED,
     TO_SAVE,
     TO_SEARCH,
-    ERROR;
+    ERROR,
+    EXIST;
 }
