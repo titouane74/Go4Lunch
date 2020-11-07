@@ -21,9 +21,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:background="@color/colorPrimaryLight"
-        app:itemTextColor="@color/colorTextPrimary"
+        app:itemTextColor="@color/selector_drawer"
         app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="@color/colorWhiteBackground"
+        app:itemIconTint="@color/selector_drawer"
         app:menu="@menu/activity_main_drawer">
         <ImageView
             android:layout_width="match_parent"

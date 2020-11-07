@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#FF8A50</color>
     <color name="colorAccent">#FF9900</color>
     <color name="colorError">#FF5252</color>
+    <color name="colorDrawerUnabled">#932C0B</color>
     <!--NOT USED ?? -->
     <color name="colorProgressBar">#FFFFFF</color>
 
