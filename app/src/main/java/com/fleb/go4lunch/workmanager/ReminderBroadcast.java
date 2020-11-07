@@ -14,7 +14,7 @@ import com.fleb.go4lunch.model.Workmate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
+import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_1_ID;
 
 /**
  * Created by Florence LE BOURNOT on 31/10/2020
@@ -61,7 +61,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         lWorkmateList.add(lWorkmate7);
         lWorkmateList.add(lWorkmate8);
 
-        NotificationCompat.Builder lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
+        NotificationCompat.Builder lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.logo_go4lunch_orange)
                 .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                 .setContentTitle(lTitle)

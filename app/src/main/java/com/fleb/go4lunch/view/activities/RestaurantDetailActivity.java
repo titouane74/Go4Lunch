@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,12 +17,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
-import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModelFactory;
 import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -96,8 +92,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViewModel() {
-        RestaurantDetailViewModelFactory lFactory = new RestaurantDetailViewModelFactory(sApi);
-        mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
+
+        mRestaurantDetailViewModel = new ViewModelProvider(this).get(RestaurantDetailViewModel.class);
         if (mRestaurantId == null) {
             mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
                 mRestaurantId = pWorkmate.getWorkmateRestoChoosed().getRestoId();

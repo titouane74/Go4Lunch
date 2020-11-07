@@ -7,8 +7,9 @@ import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.ActionStatus;
+
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 /**
@@ -20,8 +21,8 @@ public class RestaurantDetailViewModel extends ViewModel {
     private RestaurantRepository mRestaurantRepo = new RestaurantRepository();
     private Workmate mWorkmate;
 
-    public RestaurantDetailViewModel(Go4LunchApi pApi) {
-        mWorkmate = pApi.getWorkmate();
+    public RestaurantDetailViewModel() {
+        mWorkmate = sApi.getWorkmate();
     }
 
     /**
