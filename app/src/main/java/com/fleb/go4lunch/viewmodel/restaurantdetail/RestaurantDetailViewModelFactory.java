@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.fleb.go4lunch.di.DI;
-import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.service.Go4LunchApi;
 
 /**
@@ -13,7 +11,6 @@ import com.fleb.go4lunch.service.Go4LunchApi;
  */
 public class RestaurantDetailViewModelFactory implements ViewModelProvider.Factory {
 
-    private Restaurant mRestaurant;
     private Go4LunchApi mApi;
 
     public RestaurantDetailViewModelFactory(Go4LunchApi pApi) {

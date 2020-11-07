@@ -52,22 +52,13 @@ public class MapsFragment extends Fragment implements LocationListener {
     public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    //    private Go4LunchApi mApi;
     private int mZoom;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private SupportMapFragment mMapFragment;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
+
         @SuppressLint("MissingPermission")
         @Override
         public void onMapReady(GoogleMap googleMap) throws Resources.NotFoundException {
@@ -83,7 +74,6 @@ public class MapsFragment extends Fragment implements LocationListener {
                 displayRestaurantDetail(pMarker);
                 return false;
             });
-
         }
     };
 
@@ -97,10 +87,6 @@ public class MapsFragment extends Fragment implements LocationListener {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View lView = inflater.inflate(R.layout.fragment_maps, container, false);
-//
-//        if (mApi == null) {
-//            mApi = DI.getGo4LunchApiService();
-//        }
 
         mZoom = Integer.parseInt(getString(R.string.map_zoom));
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -259,22 +245,6 @@ public class MapsFragment extends Fragment implements LocationListener {
         return lPermissionLocation == PackageManager.PERMISSION_GRANTED;
     }
 
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -303,8 +273,8 @@ public class MapsFragment extends Fragment implements LocationListener {
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(requireContext())
                 .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(R.string.btn_ok, okListener)
+                .setNegativeButton(R.string.btn_cancel, null)
                 .create()
                 .show();
 

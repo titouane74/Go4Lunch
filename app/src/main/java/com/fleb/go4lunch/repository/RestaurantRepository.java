@@ -324,8 +324,6 @@ public class RestaurantRepository {
                 + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
     }
 
-    //        return sApi.getRestaurantList();
-
     public List<Restaurant> getRestaurantList() {
         Log.d(TAG, "getRestaurantList: ");
         mRestoRef.get()

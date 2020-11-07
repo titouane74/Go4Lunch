@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.auth.AuthUI;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
 
@@ -63,10 +62,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         displayWorkmateData(mCurrentUser);
 
         Button lBtnUpdate = findViewById(R.id.user_btn_update);
-//        Button lBtnDelete = findViewById(R.id.user_btn_delete);
 
         lBtnUpdate.setOnClickListener(this);
-//        lBtnDelete.setOnClickListener(this);
 
         SettingsViewModel lSettingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         TextView textView = findViewById(R.id.txt_setting_notif_status);
@@ -80,21 +77,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.user_btn_update:
-                updateWorkmate(mCurrentUser);
-                break;
-//            case R.id.user_btn_delete:
-//                signOutFromFirebase();
-//                deleteWorkmate(mCurrentUser);
-//                break;
+        if (v.getId() == R.id.user_btn_update) {
+            updateWorkmate(mCurrentUser);
         }
-    }
-
-    public void signOutFromFirebase() {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(task -> startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class)));
     }
 
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
@@ -123,16 +108,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 })
                 .addOnFailureListener(pE -> Log.d(TAG_USER, "onComplete: FAILURE" ));
 
-    }
-
-    public void deleteWorkmate(FirebaseUser pCurrentWorkmate) {
-
-        mWorkmateRef.document( pCurrentWorkmate.getUid())
-                .delete()
-                .addOnSuccessListener(pVoid -> Log.d(TAG_USER, "onSuccess: Document deleted " ))
-                .addOnFailureListener(pE -> Log.d(TAG_USER, "onFailure: Document not deleted", pE));
-        Toast.makeText(this, R.string.user_account_deleted, Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     public void updateWorkmate(FirebaseUser pCurrentWorkmate) {

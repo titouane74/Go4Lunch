@@ -44,7 +44,6 @@ public class PermissionUtils {
          *                       cancelled.
          */
         public static RationaleDialog newInstance(int requestCode, boolean finishActivity) {
-            Log.d("TAG_UTILS", "newInstance: rationaleDialog enter");
             Bundle arguments = new Bundle();
             arguments.putInt(ARGUMENT_PERMISSION_REQUEST_CODE, requestCode);
             arguments.putBoolean(ARGUMENT_FINISH_ACTIVITY, finishActivity);
@@ -55,7 +54,6 @@ public class PermissionUtils {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Log.d("TAG_UTILS", "onCreateDialog: enter");
             Bundle arguments = getArguments();
             final int requestCode = arguments.getInt(ARGUMENT_PERMISSION_REQUEST_CODE);
             finishActivity = arguments.getBoolean(ARGUMENT_FINISH_ACTIVITY);
@@ -65,7 +63,6 @@ public class PermissionUtils {
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Log.d("TAG_UTILS", "onClick: onCreateDialog ");
                             // After click on Ok, request the permission.
                             ActivityCompat.requestPermissions(getActivity(),
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},

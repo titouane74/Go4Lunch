@@ -1,7 +1,6 @@
 package com.fleb.go4lunch.view.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -10,15 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.di.DI;
-import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantAdapter;
 import com.fleb.go4lunch.viewmodel.restaurantlist.RestaurantListViewModel;
-
-import java.util.List;
-
-import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 /**
@@ -32,8 +24,6 @@ public class RestaurantListFragment extends BaseFragment {
     private RestaurantAdapter mRestoAdapter;
     private RecyclerView mRecyclerView;
     private RestaurantListViewModel mRestaurantListViewModel;
-//    private Go4LunchApi mApi;
-    private List<Restaurant> mRestaurantList;
 
     public RestaurantListFragment() {}
 
@@ -42,11 +32,6 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void configureFragmentOnCreateView(View pView) {
-/*
-        if(mApi == null) {
-            mApi = DI.getGo4LunchApiService();
-        }
-*/
 
         mRecyclerView = pView.findViewById(R.id.restaurant_list);
 

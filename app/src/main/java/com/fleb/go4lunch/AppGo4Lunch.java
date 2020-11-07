@@ -1,6 +1,5 @@
 package com.fleb.go4lunch;
 
-import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -26,9 +25,6 @@ public class AppGo4Lunch extends MultiDexApplication {
      * Notifications
      */
     public static final String CHANNEL_1_ID = "channel1";
-    public static final String CHANNEL_2_ID = "channel2";
-    public static final String CHANNEL_3_ID = "channel3";
-    public static final String CHANNEL_4_ID = "channel4";
 
     /**
      * Shared Preferences
@@ -89,31 +85,12 @@ public class AppGo4Lunch extends MultiDexApplication {
             NotificationManager lManager = getSystemService(NotificationManager.class);
 
             NotificationChannel lChannel1 = new NotificationChannel(
-                    CHANNEL_1_ID, "Pas important",
-                    NotificationManager.IMPORTANCE_NONE);
-            lChannel1.setDescription("Notification non importante");
-
-            NotificationChannel lChannel2 = new NotificationChannel(
-                    CHANNEL_2_ID, "Faible importance",
-                    NotificationManager.IMPORTANCE_LOW);
-            lChannel2.setDescription("Notification de faible importance");
-
-            NotificationChannel lChannel3 = new NotificationChannel(
-                    CHANNEL_3_ID, "Normal",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            lChannel3.setDescription("Importance normale");
-
-            NotificationChannel lChannel4 = new NotificationChannel(
-                    CHANNEL_4_ID, "Haute importance",
+                    CHANNEL_1_ID, getString(R.string.notif_hight),
                     NotificationManager.IMPORTANCE_HIGH);
-            lChannel4.setDescription("Notification de haute importance");
-
+            lChannel1.setDescription(getString(R.string.notif_hight_importance));
 
             if (lManager != null) {
                 lManager.createNotificationChannel(lChannel1);
-                lManager.createNotificationChannel(lChannel2);
-                lManager.createNotificationChannel(lChannel3);
-                lManager.createNotificationChannel(lChannel4);
             }
         }
 

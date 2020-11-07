@@ -50,8 +50,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
-//    private Go4LunchApi sApi;
-    private Workmate mWorkmate;
+
+    //    private Go4LunchApi sApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +81,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void getIncomingIntent() {
         if (getIntent().hasExtra("placeid")) {
             mRestaurantId = getIntent().getStringExtra("placeid");
-            mWorkmate = sApi.getWorkmate();
-/*            Log.d(TAG, "getIncomingIntent: " + mWorkmate);
-            if (mWorkmate.getWorkmateRestoChoosed()==null) {
-                Toast.makeText(this, "Vous n'avez pas choisi de restaurant", Toast.LENGTH_SHORT).show();
-                finish();
-            }*/
         }
     }
 

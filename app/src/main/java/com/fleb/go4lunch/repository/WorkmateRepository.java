@@ -1,32 +1,21 @@
 package com.fleb.go4lunch.repository;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.facebook.internal.WebDialog;
-import com.fleb.go4lunch.di.DI;
-import com.fleb.go4lunch.model.Choice;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.ActionStatus;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +33,6 @@ public class WorkmateRepository {
      */
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
-    private CollectionReference mChoiceRef = mDb.collection(String.valueOf(Choice.Fields.Choice));
     private CollectionReference mRestaurantRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
     private DocumentReference mWorkmateDocRef;
 
@@ -55,8 +43,6 @@ public class WorkmateRepository {
     private List<Workmate> mWorkmateList = new ArrayList<>();
     private MutableLiveData<String> mLDWorkmateChoice = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDWorkmateChoiceStatus = new MutableLiveData<>();
-
-//    private Go4LunchApi sApi = DI.getGo4LunchApiService();
 
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
         mWorkmateRef
@@ -71,37 +57,6 @@ public class WorkmateRepository {
                     }
                 });
         return mLDWorkmateList;
-    }
-
-    private Date mDate = new Date();
-    @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
-    private String mDateChoice = mSdf.format(mDate);
-
-    private void getRestaurantChoice() {
-
-        for (Workmate lWorkmate : mWorkmateList) {
-            mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), lWorkmate.getWorkmateId())
-                    .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice);
-            mChoiceRef.get()
-                    .addOnCompleteListener(pTask -> {
-                        if (pTask.isSuccessful()) {
-                            List<Choice> lChoiceList = pTask.getResult().toObjects(Choice.class);
-                            for (Choice lChoice : lChoiceList) {
-                                if ((lChoice.getChChoiceDate().equals(mDateChoice))
-                                        && (lChoice.getChWorkmateId().equals(lWorkmate.getWorkmateId()))) {
-                                    //passer l'objet resto dans table choiceloge
-                                    Log.d(TAG, "getRestaurantChoice: " + lChoice.getChRestoName());
-                                    //TODO replace
-                                    //lWorkmate.setWorkmateRestoChoosed(lChoice.getChRestoName());
-                                }
-                            }
-                            mLDWorkmateList.postValue(mWorkmateList);
-                        }
-
-                    });
-        }
-        mLDWorkmateList.setValue(mWorkmateList);
     }
 
     public MutableLiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
@@ -235,9 +190,7 @@ public class WorkmateRepository {
     private void addRestaurantToLikes(Workmate.Likes pRestaurant) {
 
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateLikes), FieldValue.arrayUnion(pRestaurant))
-                .addOnSuccessListener(pDocumentReference -> {
-                    mLDLikeStatus.setValue(ActionStatus.ADDED);
-                })
+                .addOnSuccessListener(pDocumentReference -> mLDLikeStatus.setValue(ActionStatus.ADDED))
                 .addOnFailureListener(pE -> {
                     Log.d(TAG, "onFailure: Document not saved", pE);
                     mLDLikeStatus.setValue(ActionStatus.SAVED_FAILED);
@@ -247,9 +200,7 @@ public class WorkmateRepository {
     private void removeRestaurantFromLikes(Workmate.Likes pRestaurant) {
 
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateLikes), FieldValue.arrayRemove(pRestaurant))
-                .addOnSuccessListener(pDocumentReference -> {
-                    mLDLikeStatus.setValue(ActionStatus.REMOVED);
-                })
+                .addOnSuccessListener(pDocumentReference -> mLDLikeStatus.setValue(ActionStatus.REMOVED))
                 .addOnFailureListener(pE -> {
                     Log.d(TAG, "onFailure: Document not saved", pE);
                     mLDLikeStatus.setValue(ActionStatus.SAVED_FAILED);
@@ -308,7 +259,7 @@ public class WorkmateRepository {
         Timestamp lTimestamp = Timestamp.now();
 
         Workmate.WorkmateRestoChoice lRestaurant = new Workmate.WorkmateRestoChoice(
-                pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName(),lTimestamp);
+                pRestaurant.getRestoPlaceId(), pRestaurant.getRestoName(), lTimestamp);
 
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), lRestaurant)
                 .addOnCompleteListener(pTask -> {
@@ -322,16 +273,13 @@ public class WorkmateRepository {
     }
 
     private void addWorkmateToRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
-        Timestamp lDateChoice = Timestamp.now();
 
         Restaurant.WorkmatesList lWorkmatesInRestoList =
-        new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
+                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
 
         mRestaurantRef.document(pRestaurant.getRestoPlaceId())
                 .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayUnion(lWorkmatesInRestoList))
-                .addOnSuccessListener(pDocumentReference -> {
-                    mLDWorkmateChoiceStatus.setValue(ActionStatus.ADDED);
-                })
+                .addOnSuccessListener(pDocumentReference -> mLDWorkmateChoiceStatus.setValue(ActionStatus.ADDED))
                 .addOnFailureListener(pE -> {
                     Log.d(TAG, "onFailure: Document not saved", pE);
                     mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
@@ -343,9 +291,7 @@ public class WorkmateRepository {
         pWorkmate.setWorkmateRestoChoosed(null);
         sApi.setWorkmate(pWorkmate);
         mWorkmateDocRef.update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
-                .addOnCompleteListener(pTask -> {
-                    removeWorkmateFromRestaurant(pWorkmate, pRestaurant);
-                })
+                .addOnCompleteListener(pTask -> removeWorkmateFromRestaurant(pWorkmate, pRestaurant))
                 .addOnFailureListener(pE -> {
                     Log.d(TAG, "removeChoice : restaurant removed Failed");
                     mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
@@ -355,13 +301,11 @@ public class WorkmateRepository {
     private void removeWorkmateFromRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
 
         Restaurant.WorkmatesList lWorkmatesInRestoList =
-        new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
+                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
 
         mRestaurantRef.document(pRestaurant.getRestoPlaceId())
                 .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
-                .addOnSuccessListener(pDocumentReference -> {
-                    mLDWorkmateChoiceStatus.setValue(ActionStatus.REMOVED);
-                })
+                .addOnSuccessListener(pDocumentReference -> mLDWorkmateChoiceStatus.setValue(ActionStatus.REMOVED))
                 .addOnFailureListener(pE -> {
                     Log.d(TAG, "onFailure: Document not saved", pE);
                     mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
@@ -375,9 +319,9 @@ public class WorkmateRepository {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         sApi.setWorkmate(lWorkmate);
-                        if (lWorkmate.getWorkmateRestoChoosed() != null) {
+                        if ((lWorkmate != null) && (lWorkmate.getWorkmateRestoChoosed() != null)){
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
-                        } else {
+                        } else{
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);
                         }
                     } else {
@@ -389,6 +333,4 @@ public class WorkmateRepository {
                     mLDWorkmateChoiceStatus.setValue(ActionStatus.ERROR);
                 });
     }
-
-
 }

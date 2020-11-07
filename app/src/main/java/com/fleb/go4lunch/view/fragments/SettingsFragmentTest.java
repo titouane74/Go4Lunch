@@ -40,8 +40,6 @@ public class SettingsFragmentTest extends BaseFragment {
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
     private NotificationManagerCompat mNotificationManager;
-    private EditText mEditTextTitle;
-    private EditText mEditTextMessage;
     private Context mContext;
 
     @Override
@@ -69,8 +67,8 @@ public class SettingsFragmentTest extends BaseFragment {
         }
 
 
-        mEditTextTitle = pView.findViewById(R.id.edit_text_title);
-        mEditTextMessage = pView.findViewById(R.id.edit_text_message);
+        EditText lEditTextTitle = pView.findViewById(R.id.edit_text_title);
+        EditText lEditTextMessage = pView.findViewById(R.id.edit_text_message);
         Button lBtnChannel1 = pView.findViewById(R.id.btn_channel1);
         Button lBtnChannel2 = pView.findViewById(R.id.btn_channel2);
 

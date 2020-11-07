@@ -1,35 +1,19 @@
 package com.fleb.go4lunch.view.fragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.workmanager.ReminderBroadcast;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import static android.content.Context.ALARM_SERVICE;
-import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020

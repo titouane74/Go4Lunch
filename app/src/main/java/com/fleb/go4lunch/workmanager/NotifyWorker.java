@@ -19,7 +19,7 @@ import com.fleb.go4lunch.repository.RestaurantRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
+import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_1_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 /**
@@ -76,7 +76,7 @@ public class NotifyWorker extends Worker {
     }
 
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
-        int lNotifPriority = 0;
+
         NotificationCompat.Builder lBuilder;
 
         Log.d(TAG, "createNotification: ");
@@ -85,7 +85,7 @@ public class NotifyWorker extends Worker {
         Log.d(TAG, "createNotification: address" + pRestaurant.getRestoAddress());
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
+            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_1_ID)
                     .setSmallIcon(R.drawable.logo_go4lunch_orange)
                     .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                     .setContentTitle(lTitle)
@@ -93,7 +93,7 @@ public class NotifyWorker extends Worker {
                     .setAutoCancel(true)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE);
         } else {
-            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
+            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_1_ID)
                     .setSmallIcon(R.drawable.logo_go4lunch_small_png)
                     .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                     .setContentTitle(lTitle)
@@ -112,23 +112,6 @@ public class NotifyWorker extends Worker {
         lBuilder.setStyle(lInboxStyle);
 
         lBuilder.setOnlyAlertOnce(true);
-
-/*        switch (lNotifPriority) {
-            case NotificationCompat.PRIORITY_HIGH:
-                lBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
-                break;
-            case NotificationCompat.PRIORITY_LOW:
-                lBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
-                break;
-            case NotificationCompat.PRIORITY_MAX:
-                lBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
-                break;
-            case NotificationCompat.PRIORITY_MIN:
-                lBuilder.setPriority(NotificationCompat.PRIORITY_MIN);
-                break;
-            default:
-                lBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        }*/
 
         NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(mContext);
         lNotificationManager.notify(1, lBuilder.build());

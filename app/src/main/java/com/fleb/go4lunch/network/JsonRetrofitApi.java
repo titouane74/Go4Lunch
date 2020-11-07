@@ -1,6 +1,5 @@
 package com.fleb.go4lunch.network;
 
-
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.fleb.go4lunch.model.RestaurantPojo;
 
@@ -13,7 +12,6 @@ import retrofit2.http.Query;
  */
 public interface JsonRetrofitApi {
 
-    //String BASE_URL_TEST = "https://jsonplaceholder.typicode.com/";
     String BASE_URL_GOOGLE = "https://maps.googleapis.com/maps/api/place/";
 
     @GET("nearbysearch/json")

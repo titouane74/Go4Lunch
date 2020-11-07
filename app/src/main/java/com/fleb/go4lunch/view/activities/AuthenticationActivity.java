@@ -21,8 +21,6 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.fleb.go4lunch.R;
 
-import com.fleb.go4lunch.di.DI;
-import com.fleb.go4lunch.service.Go4LunchApi;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.AuthenticationViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;

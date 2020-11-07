@@ -136,4 +136,13 @@
     <string name="btn_text_change_notif_status">Activer / Désactiver les notifications</string>
     <string name="text_setting_notif_activated">Les notifications sont : activées</string>
     <string name="text_setting_notif_deactivated">Les notifications sont : désactivées</string>
+
+    <!-- NOTIFICATION -->
+    <string name="notif_hight_importance">Hight importance</string>
+    <string name="notif_hight">Hight</string>
+
+    <!-- General -->
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Annuler</string>
+
 </resources>

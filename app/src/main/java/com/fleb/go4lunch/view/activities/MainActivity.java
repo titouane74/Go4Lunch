@@ -88,18 +88,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             WorkerNotificationController.stopWorkerController(pContext);
         }
     }
-    private void openNotificationSettingsForApp(Context pContext) {
-        // Links to this app's notification settings.
-        Intent intent = new Intent();
-        intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-        intent.putExtra("app_package", pContext.getPackageName());
-        intent.putExtra("app_uid", pContext.getApplicationInfo().uid);
-
-        // for Android 8 and above
-        intent.putExtra("android.provider.extra.APP_PACKAGE", pContext.getPackageName());
-
-        startActivity(intent);
-    }
 
     private void configureViewModel() {
         mMainActivityViewModel = new MainActivityViewModel();

@@ -1,9 +1,7 @@
 package com.fleb.go4lunch.view.fragments;
 
-import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +17,6 @@ import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateListViewModel;
 
 public class WorkmateListFragment extends BaseFragment  {
 
-    private WorkmateListViewModel mWorkmateListViewModel;
     private WorkmateAdapter mWorkmateAdapter;
     private RecyclerView mRecyclerView;
 
@@ -47,8 +44,8 @@ public class WorkmateListFragment extends BaseFragment  {
     }
 
     private void configureViewModel() {
-        mWorkmateListViewModel = new ViewModelProvider(requireActivity()).get(WorkmateListViewModel.class);
-        mWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
+        WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity()).get(WorkmateListViewModel.class);
+        lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
             mWorkmateAdapter.setWorkmateList(pWorkmateList);
             mWorkmateAdapter.notifyDataSetChanged();
         });
