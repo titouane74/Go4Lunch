@@ -14,7 +14,7 @@
         android:id="@+id/restaurantDetailActivity"
         android:name="com.fleb.go4lunch.view.activities.RestaurantDetailActivity"
         android:label="@string/menu_lunch"
-        tools:layout="@layout/activity_restaurant" />
+        tools:layout="@layout/activity_restaurant_detail" />
 
     <fragment
         android:id="@+id/nav_logout"
