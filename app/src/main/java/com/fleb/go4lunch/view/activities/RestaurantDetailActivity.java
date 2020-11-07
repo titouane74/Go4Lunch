@@ -147,9 +147,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     switch (pActionStatus) {
                         case ADDED:
                             changeChoiceStatus(true);
+                            getRestaurantDetail();
                             break;
                         case REMOVED:
                             changeChoiceStatus(false);
+                            getRestaurantDetail();
                             break;
                         case ERROR:
                             Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();

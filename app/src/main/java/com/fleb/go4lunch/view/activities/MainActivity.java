@@ -1,5 +1,4 @@
 package com.fleb.go4lunch.view.activities;
-//TODO implement the javadoc
 
 import android.content.Context;
 import android.content.Intent;
@@ -130,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Menu lMenu = mNavigationView.getMenu();
             lMenu.getItem(1).setEnabled(false);
+            //Toast.makeText(this, getString(R.string.text_lunch_not_choosed), Toast.LENGTH_LONG).show();
         }
     }
 
