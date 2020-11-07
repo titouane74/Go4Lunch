@@ -19,7 +19,7 @@ import com.fleb.go4lunch.repository.RestaurantRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_1_ID;
+import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 /**
@@ -85,7 +85,7 @@ public class NotifyWorker extends Worker {
         Log.d(TAG, "createNotification: address" + pRestaurant.getRestoAddress());
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_1_ID)
+            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
                     .setSmallIcon(R.drawable.logo_go4lunch_orange)
                     .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                     .setContentTitle(lTitle)
@@ -93,7 +93,7 @@ public class NotifyWorker extends Worker {
                     .setAutoCancel(true)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE);
         } else {
-            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_1_ID)
+            lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)
                     .setSmallIcon(R.drawable.logo_go4lunch_small_png)
                     .setColor(ContextCompat.getColor(mContext, R.color.colorPrimary))
                     .setContentTitle(lTitle)
