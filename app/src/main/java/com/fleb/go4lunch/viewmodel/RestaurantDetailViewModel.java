@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.viewmodel.restaurantdetail;
+package com.fleb.go4lunch.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

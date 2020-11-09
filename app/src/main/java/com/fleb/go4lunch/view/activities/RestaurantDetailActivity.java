@@ -19,8 +19,8 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailViewModel;
-import com.fleb.go4lunch.viewmodel.restaurantdetail.RestaurantDetailWorkmateAdapter;
+import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
+import com.fleb.go4lunch.view.adapters.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;

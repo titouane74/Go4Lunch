@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.viewmodel.workmatelist;
+package com.fleb.go4lunch.view.adapters;
 
 import android.content.Context;
 import android.content.Intent;

@@ -26,7 +26,7 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
-import com.fleb.go4lunch.viewmodel.map.MapViewModel;
+import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

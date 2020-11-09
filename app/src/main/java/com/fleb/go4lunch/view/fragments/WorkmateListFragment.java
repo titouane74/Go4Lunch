@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateAdapter;
-import com.fleb.go4lunch.viewmodel.workmatelist.WorkmateListViewModel;
+import com.fleb.go4lunch.view.adapters.WorkmateAdapter;
+import com.fleb.go4lunch.viewmodel.WorkmateListViewModel;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020

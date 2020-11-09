@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.viewmodel.restaurantdetail;
+package com.fleb.go4lunch.view.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

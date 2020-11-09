@@ -1,4 +1,4 @@
-package com.fleb.go4lunch.viewmodel.restaurantlist;
+package com.fleb.go4lunch.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
