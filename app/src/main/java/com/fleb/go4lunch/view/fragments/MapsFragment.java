@@ -19,12 +19,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
+import com.fleb.go4lunch.view.activities.MainActivity;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.google.android.gms.location.LocationServices;
@@ -40,17 +47,27 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.List;
+import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
     public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    private String mKey = BuildConfig.MAPS_API_KEY;
 
     private int mZoom;
     private GoogleMap mMap;
@@ -116,15 +133,17 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
+
     public void configureViewModel() {
 
         MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
 
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), MapsFragment.this::setMapMarkers);
+        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
     }
 
     public void setMapMarkers(List<Restaurant> pRestaurants) {
         BitmapDescriptor lIcon;
+        Log.d(TAG, "setMapMarkers: ");
         if (mMap != null) {
             mMap.clear();
             for (Restaurant lRestaurant : pRestaurants) {
@@ -136,14 +155,20 @@ public class MapsFragment extends Fragment implements LocationListener {
                     lIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_orange);
                 }
 
-                LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
-                        lRestaurant.getRestoLocation().getLng());
-                Marker lMarker = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(lName)
-                        .icon(lIcon));
-                lMarker.setTag(lRestaurant);
+                if (lRestaurant.getRestoLocation()!= null) {
+                    LatLng latLng = new LatLng(lRestaurant.getRestoLocation().getLat(),
+                            lRestaurant.getRestoLocation().getLng());
+                    Marker lMarker = mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title(lName)
+                            .icon(lIcon));
+                    lMarker.setTag(lRestaurant);
+                } else {
+                    Log.d(TAG, "setMapMarkers: AUTOCOMPLETE LIST");
+                }
             }
+        } else {
+            Log.d(TAG, "setMapMarkers: AUTOCOMPLETE LIST - MAP NULL");
         }
     }
 
