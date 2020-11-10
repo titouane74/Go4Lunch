@@ -183,12 +183,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
 
-            @SuppressLint("ResourceType")
             @Override
             public boolean onQueryTextChange(String pString) {
                 if (pString.length() > 3) {
-                    Toast.makeText(MainActivity.this, "TODO", Toast.LENGTH_SHORT).show();
-//                    manageAutocomplete(pString);
                     if (!Places.isInitialized()) {
                         Places.initialize(getApplicationContext(), mKey);
                     }
@@ -197,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     PlacesClient lPlacesClient = Places.createClient(getApplicationContext());
 
                     mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString).observe(MainActivity.this, pRestaurantList -> {
-                        Log.e(TAG, "onQueryTextChange: return observe size : " + pRestaurantList.size() );
                         sendDataToFragment(pRestaurantList);
                     });
                 } else {
@@ -211,79 +207,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         lSearchView.setQueryHint(getString(R.string.text_hint_search));
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private void manageAutocompleteLocal(String pQuery) {
-        double lLat = sApi.getLocation().getLatitude();
-        double lLng = sApi.getLocation().getLongitude();
-
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), mKey);
-        }
-
-        // Create a new Places client instance.
-        PlacesClient placesClient = Places.createClient(this);
-
-        // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
-        // and once again when the user makes a selection (for example when calling fetchPlace()).
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-
-        // Create a RectangularBounds object.
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng(lLat, lLng),
-                new LatLng(48.8236549, 2.4102578));
-        // Use the builder to create a FindAutocompletePredictionsRequest.
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                // Call either setLocationBias() OR setLocationRestriction().
-                .setLocationBias(bounds)
-                //.setLocationRestriction(bounds)
-                .setOrigin(new LatLng(lLat, lLng))
-                .setCountries("FR")
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                .setSessionToken(token)
-                .setQuery(pQuery)
-                .build();
-
-        List<Restaurant> lRestaurantList = new ArrayList<>();
-
-        Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
-        //Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
-
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.i(TAG, prediction.getPlaceId());
-                Log.i(TAG, prediction.getPrimaryText(null).toString());
-                Log.i(TAG, prediction.getPlaceTypes().toString());
-                Toast.makeText(MainActivity.this, prediction.getPrimaryText(null) + "-" + prediction.getSecondaryText(null), Toast.LENGTH_SHORT).show();
-                Restaurant lRestaurant = new Restaurant(prediction.getPlaceId(), prediction.getPrimaryText(null).toString());
-                if (prediction.getPlaceTypes().contains("RESTAURANT")) {
-                    lRestaurantList.add(lRestaurant);
-                }
-            }
-
-
-/*            Log.d(TAG, "manageAutocomplete: size list : " + lRestaurantList.size());
-            if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("MapsFragment")) {
-                Log.d(TAG, "onQueryTextChange: MAPS : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
-                //lMapsFragment.setMapMarkers(lRestaurantList);
-                //((MapsFragment) fragment).(setMarkers(lRestaurantList));
-                MapsFragment lMapsFragment = getMapsFragmentActualInstance();
-                lMapsFragment.setMapMarkers(lRestaurantList);
-
-            } else if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("RestaurantListFragment")) {
-                Log.d(TAG, "onQueryTextChange: RESTAURANTLIST : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
-//                RestaurantListFragment lRestaurantListFragment = getRestaurantListFragment();
-//                lRestaurantListFragment.changeAndNotifyAdapterChange(lRestaurantList);
-            }*/
-
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-            }
-        });
-
     }
 
     private void sendDataToFragment(List<Restaurant> pRestaurantList) {
