@@ -212,7 +212,7 @@ public class WorkmateRepository {
         mWorkmateDocRef = mWorkmateRef.document(lWorkmate.getWorkmateId());
 
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
-            getWorkmateChoice(lWorkmate);
+            getWorkmateChoice(lWorkmate, pRestaurant);
         } else {
             saveWorkmateChoice(lWorkmate, pRestaurant);
         }
@@ -222,8 +222,10 @@ public class WorkmateRepository {
     private void saveWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         if (pWorkmate.getWorkmateRestoChoosed() == null) {
             addChoice(pWorkmate, pRestaurant);
-        } else {
+        } else if (pWorkmate.getWorkmateRestoChoosed().getRestoId().equals(pRestaurant.getRestoPlaceId())){
             removeChoice(pWorkmate, pRestaurant);
+        } else {
+            removeWorkmateFromPreviousRestaurant(pWorkmate, pRestaurant);
         }
 
     }
@@ -285,14 +287,29 @@ public class WorkmateRepository {
                 });
     }
 
-    private void getWorkmateChoice(Workmate pWorkmate) {
+    private void removeWorkmateFromPreviousRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
+
+        Restaurant.WorkmatesList lWorkmatesInRestoList =
+                new Restaurant.WorkmatesList(pWorkmate.getWorkmateId(), pWorkmate.getWorkmateName(), pWorkmate.getWorkmatePhotoUrl());
+
+        mRestaurantRef.document(pWorkmate.getWorkmateRestoChoosed().getRestoId())
+                .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
+                .addOnSuccessListener(pDocumentReference -> addChoice(pWorkmate, pRestaurant))
+                .addOnFailureListener(pE -> {
+                    Log.d(TAG, "onFailure: Document not saved", pE);
+                    mLDWorkmateChoiceStatus.setValue(ActionStatus.SAVED_FAILED);
+                });
+    }
+
+    private void getWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         mWorkmateRef.document(pWorkmate.getWorkmateId())
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         sApi.setWorkmate(lWorkmate);
-                        if ((lWorkmate != null) && (lWorkmate.getWorkmateRestoChoosed() != null)){
+                        if ((lWorkmate != null) && (lWorkmate.getWorkmateRestoChoosed() != null)
+                                && (lWorkmate.getWorkmateRestoChoosed().getRestoId().equals(pRestaurant.getRestoPlaceId()))){
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
                         } else{
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);

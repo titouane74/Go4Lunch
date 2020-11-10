@@ -415,15 +415,15 @@ public class RestaurantRepository {
         if (lMaxRestaurantList > 0) {
             mRestoRef.whereIn(String.valueOf(Restaurant.Fields.restoPlaceId), pRestaurantsId)
                     .get().addOnCompleteListener(pTask -> {
-                        if (pTask.isSuccessful()) {
-                            List<Restaurant> lRestaurantListFirestore = pTask.getResult().toObjects(Restaurant.class);
-                            if (lMaxRestaurantList != lRestaurantListFirestore.size()) {
-                                getAutoCompleteMissingRestaurant(pRestaurantList);
-                            } else {
-                                prepareAndSendRestoListForDisplay(pRestaurantList);
-                            }
-                        }
-                    }).addOnFailureListener((exception) -> {
+                if (pTask.isSuccessful()) {
+                    List<Restaurant> lRestaurantListFirestore = pTask.getResult().toObjects(Restaurant.class);
+                    if (lMaxRestaurantList != lRestaurantListFirestore.size()) {
+                        getAutoCompleteMissingRestaurant(pRestaurantList);
+                    } else {
+                        prepareAndSendRestoListForDisplay(pRestaurantList);
+                    }
+                }
+            }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     ApiException apiException = (ApiException) exception;
                     Log.e(TAG, "Place not found in Firestore : " + apiException.getStatusCode());

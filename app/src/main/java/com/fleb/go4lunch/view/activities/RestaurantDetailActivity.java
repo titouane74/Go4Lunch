@@ -47,14 +47,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private RestaurantDetailViewModel mRestaurantDetailViewModel;
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
 
-    //    private Go4LunchApi sApi;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
-
-//        mApi = DI.getGo4LunchApiService();
 
         mRestoName = findViewById(R.id.text_restaurant_detail_name);
         mRestoNote1 = findViewById(R.id.img_detail_note1);
