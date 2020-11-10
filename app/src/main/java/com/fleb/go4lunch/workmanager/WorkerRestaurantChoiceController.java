@@ -53,7 +53,7 @@ public class WorkerRestaurantChoiceController {
                 .build();
 
         long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
-        lStartTime = 2000;
+        lStartTime = 20000;
 
         // PeriodicWorkRequest
         return new PeriodicWorkRequest.Builder(RestaurantChoiceWorker.class,
