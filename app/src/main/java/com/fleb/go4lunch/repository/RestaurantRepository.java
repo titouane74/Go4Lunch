@@ -17,8 +17,6 @@ import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
@@ -30,7 +28,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -212,7 +209,6 @@ public class RestaurantRepository {
                     String lAddress = null;
                     RestaurantDetailPojo.Location lLocation = null;
                     String lDistance = null;
-                    String lPlaceId = pRestaurantListId;
                     String lName = lRestoDetResponse.getName();
 
                     if (lRestoDetResponse.getPhotos() != null && lRestoDetResponse.getPhotos().size() > 0) {
@@ -231,7 +227,7 @@ public class RestaurantRepository {
                     }
 
                     Restaurant lRestaurant = new Restaurant(
-                            lPlaceId, lName, lAddress, null, null, lDistance,
+                            pRestaurantListId, lName, lAddress, null, null, lDistance,
                             lRating, lPhoto, lLocation, null, 0, null
                     );
 
@@ -340,27 +336,7 @@ public class RestaurantRepository {
                 + "&maxwidth=" + pMaxWidth + "&key=" + pKey;
     }
 
-    public List<Restaurant> getRestaurantList() {
-
-        mRestoRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> pTask) {
-                        if (pTask.isSuccessful()) {
-                            mRestaurantList = (Objects.requireNonNull(pTask.getResult()).toObjects(Restaurant.class));
-                            Log.d(TAG, "getRestaurantList: size : " + mRestaurantList.size());
-                        } else {
-                            Log.d(TAG, "getRestaurantList: NOT SUCCESS");
-                        }
-                    }
-                })
-                .addOnFailureListener(pE -> {
-                    Log.d(TAG, "onFailure: FAILED");
-                });
-        return mRestaurantList;
-    }
-
-    public List<Restaurant> getRestaurantNotif(String pRestaurantId) {
+    public void getRestaurantNotif(String pRestaurantId) {
         mRestoRef.document(pRestaurantId)
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -368,7 +344,6 @@ public class RestaurantRepository {
                         sApi.setRestaurant(Objects.requireNonNull(pTask.getResult()).toObject(Restaurant.class));
                     }
                 });
-        return sApi.getRestaurantList();
     }
 
     public MutableLiveData<List<Restaurant>> getLDAutocompleteRestaurantList(PlacesClient pPlacesClient, String pQuery) {
@@ -439,19 +414,16 @@ public class RestaurantRepository {
         int lMaxRestaurantList = pRestaurantList.size();
         if (lMaxRestaurantList > 0) {
             mRestoRef.whereIn(String.valueOf(Restaurant.Fields.restoPlaceId), pRestaurantsId)
-                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> pTask) {
-                    if (pTask.isSuccessful()) {
-                        List<Restaurant> lRestaurantListFirestore = pTask.getResult().toObjects(Restaurant.class);
-                        if (lMaxRestaurantList != lRestaurantListFirestore.size()) {
-                            getAutoCompleteMissingRestaurant(pRestaurantList);
-                        } else {
-                            prepareAndSendRestoListForDisplay(pRestaurantList);
+                    .get().addOnCompleteListener(pTask -> {
+                        if (pTask.isSuccessful()) {
+                            List<Restaurant> lRestaurantListFirestore = pTask.getResult().toObjects(Restaurant.class);
+                            if (lMaxRestaurantList != lRestaurantListFirestore.size()) {
+                                getAutoCompleteMissingRestaurant(pRestaurantList);
+                            } else {
+                                prepareAndSendRestoListForDisplay(pRestaurantList);
+                            }
                         }
-                    }
-                }
-            }).addOnFailureListener((exception) -> {
+                    }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     ApiException apiException = (ApiException) exception;
                     Log.e(TAG, "Place not found in Firestore : " + apiException.getStatusCode());

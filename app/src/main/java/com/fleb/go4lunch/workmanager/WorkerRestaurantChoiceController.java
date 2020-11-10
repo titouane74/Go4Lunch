@@ -1,7 +1,6 @@
 package com.fleb.go4lunch.workmanager;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -21,19 +20,17 @@ public class WorkerRestaurantChoiceController {
     private static final String WORK_REQUEST_NAME = "WORK_REQUEST_NAME_GO4LUNCH_CHOICE";
     private static final String WORK_REQUEST_TAG = "WORK_REQUEST_TAG_GO4LUNCH_CHOICE";
     private static final int NOTIFICATION_HOUR = 14;
-    private static final int NOTIFICATION_MINUTE = 00;
+    private static final int NOTIFICATION_MINUTE = 0;
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
     public static void startWorkerController(Context context) {
-        Log.d(TAG, "startWorkerController: " );
+
         PeriodicWorkRequest lWorkRequest = configureRequestPeriod();
-        Log.d(TAG, "startWorkerController: enqueue the request");
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_REQUEST_NAME,
                 ExistingPeriodicWorkPolicy.REPLACE, lWorkRequest);
     }
 
     private static PeriodicWorkRequest configureRequestPeriod() {
-        Log.d(TAG, "configureRequestPeriod: " );
         long lSysTime = System.currentTimeMillis();
 
         Calendar lCalendar = Calendar.getInstance();
@@ -49,18 +46,19 @@ public class WorkerRestaurantChoiceController {
         lCalendar.set(Calendar.SECOND, 0);
         lCalendar.set(Calendar.MILLISECOND, 0);
 
-        long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
 
         // Constraints
         final Constraints lConstraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
+        long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
+        lStartTime = 2000;
+
         // PeriodicWorkRequest
         return new PeriodicWorkRequest.Builder(RestaurantChoiceWorker.class,
                 NOTIFICATION_FREQUENCY_DAY, TimeUnit.DAYS)
-//                .setInitialDelay(lStartTime, TimeUnit.MILLISECONDS)
-                .setInitialDelay(20000, TimeUnit.MILLISECONDS)
+                .setInitialDelay(lStartTime, TimeUnit.MILLISECONDS)
                 .setConstraints(lConstraints)
                 .addTag(WORK_REQUEST_TAG)
                 .build();

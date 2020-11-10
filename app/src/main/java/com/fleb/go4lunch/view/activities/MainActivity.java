@@ -1,6 +1,5 @@
 package com.fleb.go4lunch.view.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,7 +16,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -36,26 +33,16 @@ import com.fleb.go4lunch.view.fragments.MapsFragment;
 import com.fleb.go4lunch.view.fragments.RestaurantListFragment;
 import com.fleb.go4lunch.workmanager.WorkerNotificationController;
 import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.fleb.go4lunch.AppGo4Lunch.sApi;
-
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG_MAIN";
@@ -89,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
-        Log.e(TAG, "onCreate: " + mCurrentUser.getDisplayName());
+        Log.e(TAG, "onCreate: " + Objects.requireNonNull(mCurrentUser).getDisplayName());
         Log.d(TAG, "onCreate: saveWorkmateID : " + mCurrentUser.getDisplayName() + " - " + mCurrentUser.getUid());
         configureViewModel();
 
@@ -150,13 +137,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void configureMenuYourLunch() {
+        Menu lMenu = mNavigationView.getMenu();
         if (mWorkmate.getWorkmateRestoChoosed() != null) {
-            Menu lMenu = mNavigationView.getMenu();
             lMenu.getItem(1).setEnabled(true);
         } else {
-            Menu lMenu = mNavigationView.getMenu();
             lMenu.getItem(1).setEnabled(false);
-            //Toast.makeText(this, getString(R.string.text_lunch_not_choosed), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -172,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.main, menu);
 
         final SearchView lSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -193,9 +178,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // Create a new Places client instance.
                     PlacesClient lPlacesClient = Places.createClient(getApplicationContext());
 
-                    mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString).observe(MainActivity.this, pRestaurantList -> {
-                        sendDataToFragment(pRestaurantList);
-                    });
+                    mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString)
+                            .observe(MainActivity.this, pRestaurantList -> sendDataToFragment(pRestaurantList));
                 } else {
                     mMainActivityViewModel.getRestaurantList().observe(MainActivity.this, pRestaurantList -> {
                         Log.e(TAG, "onQueryTextChange: return observe size : " + pRestaurantList.size() );
@@ -210,10 +194,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sendDataToFragment(List<Restaurant> pRestaurantList) {
-        Log.e(TAG, "manageAutocomplete: size list : " + pRestaurantList.size());
+
         if (mNavController.getCurrentBackStackEntry() != null) {
             if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("MapsFragment")) {
-                Log.e(TAG, "onQueryTextChange: MAPS : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
                 //lMapsFragment.setMapMarkers(lRestaurantList);
                 //((MapsFragment) fragment).(setMarkers(lRestaurantList));
                 MapsFragment lMapsFragment = getMapsFragmentActualInstance();
@@ -224,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     lMapsFragment.setCameraOnCurrentLocation(lLatLng, Integer.parseInt(getString(R.string.map_zoom)));
                 }
             } else if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("RestaurantListFragment")) {
-                Log.e(TAG, "onQueryTextChange: RESTAURANTLIST : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
                 RestaurantListFragment lRestaurantListFragment = getRestaurantListFragmentActualInstance();
                 lRestaurantListFragment.changeAndNotifyAdapterChange(pRestaurantList);
             }
@@ -236,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MapsFragment getMapsFragmentActualInstance() {
         MapsFragment resultFragment = null;
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if (navHostFragment != null && navHostFragment.getChildFragmentManager() != null) {
+        if (navHostFragment != null) {
             List<Fragment> fragmentList = navHostFragment.getChildFragmentManager().getFragments();
             for (Fragment fragment : fragmentList) {
                 if (fragment instanceof MapsFragment) {
@@ -251,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RestaurantListFragment getRestaurantListFragmentActualInstance() {
         RestaurantListFragment resultFragment = null;
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if (navHostFragment != null && navHostFragment.getChildFragmentManager() != null) {
+        if (navHostFragment != null) {
             List<Fragment> fragmentList = navHostFragment.getChildFragmentManager().getFragments();
             for (Fragment fragment : fragmentList) {
                 if (fragment instanceof RestaurantListFragment) {

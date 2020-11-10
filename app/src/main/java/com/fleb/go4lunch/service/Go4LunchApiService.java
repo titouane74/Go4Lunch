@@ -14,15 +14,12 @@ import java.util.List;
  */
 public class Go4LunchApiService implements Go4LunchApi {
 
-    private static final String TAG = "TAG_API_SERVICE";
-
     public static final String PREF_KEY_LATITUDE = "PREF_KEY_LATITUDE";
     public static final String PREF_KEY_LONGITUDE = "PREF_KEY_LONGITUDE";
 
     private Workmate mWorkmate;
     private String mWorkmateId;
     private Restaurant mRestaurant;
-    private Restaurant mRestaurantFromList;
     private List<Restaurant> mRestaurantList;
     private Location mLocation;
 

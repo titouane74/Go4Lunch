@@ -1,7 +1,6 @@
 package com.fleb.go4lunch.viewmodel;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.LiveData;

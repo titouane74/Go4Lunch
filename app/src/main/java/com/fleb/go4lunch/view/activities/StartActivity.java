@@ -19,11 +19,6 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        //TODO voir en mentorat si on met un délai
-        /*
-        final Handler lHandler = new Handler();
-        final Runnable lRun = new Runnable() {public void run() { openActivity();}};
-        lHandler.postDelayed(lRun, 250);*/
         openActivity();
 
     }

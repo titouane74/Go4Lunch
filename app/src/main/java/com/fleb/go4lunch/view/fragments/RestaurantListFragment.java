@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.view.adapters.RestaurantAdapter;
 import com.fleb.go4lunch.viewmodel.RestaurantListViewModel;
 

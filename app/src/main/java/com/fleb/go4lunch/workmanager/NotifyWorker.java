@@ -2,7 +2,6 @@ package com.fleb.go4lunch.workmanager;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -36,13 +35,12 @@ public class NotifyWorker extends Worker {
         super(context, workerParams);
         mContext = context;
         mRestaurantRepo = new RestaurantRepository();
-        Log.d(TAG, "NotifyWorker: ");
+
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        Log.d(TAG, "doWork: ");
 
         mCurrentWorkmate = sApi.getWorkmate();
 
@@ -55,19 +53,14 @@ public class NotifyWorker extends Worker {
 
     public void prepareNotification() {
         List<Restaurant> lRestaurantList = sApi.getRestaurantList();
-        Log.d(TAG, "prepareNotification: " + lRestaurantList.size());
         for (Restaurant lRestaurant : lRestaurantList) {
-            Log.d(TAG, "doWork: " + lRestaurant.getRestoName());
             if ((lRestaurant.getRestoWkList() != null)
                     && (lRestaurant.getRestoPlaceId().equals(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId()))) {
-                Log.d(TAG, "doWork: liste non vide");
                 List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
                 List<Workmate> lListWorkmatesComing = new ArrayList<>();
                 for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
-                    Log.d(TAG, "doWork: workmate coming " + lWorkmateComing);
                     if (!mCurrentWorkmate.getWorkmateName().equals(lWorkmateComing.getWkName())) {
                         lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
-                        Log.d(TAG, "doWork: workmate add to list coming : " + lWorkmateComing.getWkName());
                     }
                 }
                 createNotification(lListWorkmatesComing, lRestaurant);
@@ -79,10 +72,8 @@ public class NotifyWorker extends Worker {
 
         NotificationCompat.Builder lBuilder;
 
-        Log.d(TAG, "createNotification: ");
         String lTitle = pRestaurant.getRestoName();
         String lMessage = pRestaurant.getRestoAddress();
-        Log.d(TAG, "createNotification: address" + pRestaurant.getRestoAddress());
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             lBuilder = new NotificationCompat.Builder(mContext, CHANNEL_4_ID)

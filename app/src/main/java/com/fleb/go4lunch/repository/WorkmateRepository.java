@@ -41,7 +41,6 @@ public class WorkmateRepository {
     private MutableLiveData<ActionStatus> mLDWorkmateSaved = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDLikeStatus = new MutableLiveData<>();
     private List<Workmate> mWorkmateList = new ArrayList<>();
-    private MutableLiveData<String> mLDWorkmateChoice = new MutableLiveData<>();
     private MutableLiveData<ActionStatus> mLDWorkmateChoiceStatus = new MutableLiveData<>();
 
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
@@ -205,32 +204,6 @@ public class WorkmateRepository {
                     Log.d(TAG, "onFailure: Document not saved", pE);
                     mLDLikeStatus.setValue(ActionStatus.SAVED_FAILED);
                 });
-    }
-
-    public MutableLiveData<String> getWorkmateRestaurantChoice(Workmate pWorkmate) {
-
-        mLDWorkmateChoice.setValue(pWorkmate.getWorkmateRestoChoosed().getRestoName());
-/*
-        mChoiceRef.whereEqualTo(String.valueOf(Choice.Fields.chWorkmateId), pWorkmateId)
-                .whereEqualTo(String.valueOf(Choice.Fields.chChoiceDate), mDateChoice)
-                .get()
-                .addOnSuccessListener(pQueryDocumentSnapshots -> {
-                    if (!pQueryDocumentSnapshots.isEmpty()) {
-                        List<DocumentSnapshot> lResult = pQueryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot lDoc : lResult) {
-                            String lWorkmateId = String.valueOf(lDoc.get(String.valueOf(Choice.Fields.chWorkmateId)));
-
-                            if (lWorkmateId.equals(pWorkmateId)) {
-                                mLDWorkmateChoice.setValue(lDoc.getString(String.valueOf(Choice.Fields.chRestoName)));
-                            }
-                        }
-                    } else {
-                        mLDWorkmateChoice.setValue("");
-                    }
-                });
-*/
-
-        return mLDWorkmateChoice;
     }
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateRestaurantChoice(Restaurant pRestaurant, ActionStatus pActionStatus) {

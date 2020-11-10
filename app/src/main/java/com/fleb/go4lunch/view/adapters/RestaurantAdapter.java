@@ -81,7 +81,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         displayRestoImg(pRestoHolder, position);
 
-        displayLogoWorkmate(pRestoHolder,position);
+        displayLogoWorkmate(pRestoHolder);
 
         pRestoHolder.itemView.setOnClickListener(v -> {
             Intent lIntentRestoDetail = new Intent(mContext, RestaurantDetailActivity.class);
@@ -90,7 +90,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         });
     }
 
-    private void displayLogoWorkmate(RestaurantHolder pRestoHolder, int pPosition) {
+    private void displayLogoWorkmate(RestaurantHolder pRestoHolder) {
         int lImgWorkmate = R.drawable.ic_workmate;
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
@@ -308,8 +308,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 mStatus.setDayCase(CASE_2_CLOSED_OPEN_AT); // Closed. Open at
                 mStatus.setDayNextOpenHour(pOpenTime);
             }
-        } else if (((pOpenTime <= lCurrentTime) && (lCurrentTime < pCloseTime))
-                || ((pCloseTime < pOpenTime) && (lCurrentTime > pOpenTime))) {
+        } else if ((lCurrentTime < pCloseTime) || ((pCloseTime < pOpenTime) && (lCurrentTime > pOpenTime))) {
             // 3 - Open until or 4 - Open. Closing soon
             lIsCloseSoon = verifyClosingSoonCase(pCloseTime, lCurrentTime);
             if (lIsCloseSoon) {
