@@ -15,13 +15,24 @@ import com.fleb.go4lunch.model.RestaurantPojo;
 import com.fleb.go4lunch.network.ApiClient;
 import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.android.SphericalUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,6 +79,7 @@ public class RestaurantRepository {
      */
     private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>();
     private MutableLiveData<Restaurant> mLDResto = new MutableLiveData<>();
+    private MutableLiveData<List<Restaurant>> mLDAutocompleteRestoList = new MutableLiveData<>();
 
     private Location mFusedLocationProvider;
     private Date mFirestoreLastUpdate = new Date();
@@ -89,7 +101,6 @@ public class RestaurantRepository {
                 .addOnFailureListener(pE -> Log.d("TAG_", "onFailure ", pE));
         return mLDResto;
     }
-
 
     public MutableLiveData<List<Restaurant>> getLDRestaurantList() {
         mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, "")));
@@ -354,4 +365,116 @@ public class RestaurantRepository {
                 });
         return sApi.getRestaurantList();
     }
+
+    public MutableLiveData<List<Restaurant>> getLDAutocompleteRestaurantList(PlacesClient pPlacesClient, String pQuery) {
+        Log.e(TAG, "getLDAutocompleteRestaurantList: ");
+        manageAutocomplete(pPlacesClient, pQuery);
+
+        return mLDAutocompleteRestoList;
+    }
+
+    public LatLngBounds toBounds(LatLng center, double radiusInMeters) {
+        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
+        LatLng southwestCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
+        LatLng northeastCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
+        return new LatLngBounds(southwestCorner, northeastCorner);
+    }
+
+    private void manageAutocomplete(PlacesClient pPlacesClient, String pQuery) {
+        double lLat = sApi.getLocation().getLatitude();
+        double lLng = sApi.getLocation().getLongitude();
+        LatLng lLatLng = new LatLng(lLat, lLng);
+
+        // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
+        // and once again when the user makes a selection (for example when calling fetchPlace()).
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+
+        // Create a RectangularBounds object.
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                toBounds(lLatLng, 1000).southwest,
+                toBounds(lLatLng, 1000).northeast);
+
+        // Use the builder to create a FindAutocompletePredictionsRequest.
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                // Call either setLocationBias() OR setLocationRestriction().
+                .setLocationBias(bounds)
+                //.setLocationRestriction(bounds)
+                .setOrigin(new LatLng(lLat, lLng))
+                .setCountries("FR")
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setSessionToken(token)
+                .setQuery(pQuery)
+                .build();
+
+        List<Restaurant> lRestaurantList = new ArrayList<>();
+        List<String> lRestaurantsId = new ArrayList<>();
+
+        Log.e(TAG, "manageAutocomplete: call findAutocomplete");
+        pPlacesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+
+            Log.e(TAG, "manageAutocomplete: findAutocomplete response size : " + response.getAutocompletePredictions().size());
+            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                Log.e(TAG, prediction.getPlaceId());
+                Log.e(TAG, prediction.getPrimaryText(null).toString());
+                Log.e(TAG, prediction.getPlaceTypes().toString());
+                Restaurant lRestaurant = new Restaurant(prediction.getPlaceId(), prediction.getPrimaryText(null).toString());
+                if (prediction.getPlaceTypes().size() > 0) {
+                    for (Place.Type lPlace : prediction.getPlaceTypes()) {
+                        if (lPlace.toString().equals("RESTAURANT")) {
+                            lRestaurantList.add(lRestaurant);
+                            lRestaurantsId.add(prediction.getPlaceId());
+                            Log.e(TAG, "manageAutocomplete: FOR c est un RESTO : " + lPlace.toString() + " : " + prediction.getPrimaryText(null).toString());
+                            break;
+                        } else {
+                            Log.e(TAG, "manageAutocomplete: FOR " + lPlace.toString());
+                        }
+                    }
+                }
+
+            }
+            Log.e(TAG, "manageAutocomplete: lRestaurant added for search : " + lRestaurantList.size());
+            getRestaurantsFromFirestore(lRestaurantList, lRestaurantsId);
+
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+            }
+        });
+    }
+
+    private void getRestaurantsFromFirestore(List<Restaurant> pRestaurantList, List<String> pRestaurantsId) {
+        int lMaxRestaurantList = pRestaurantList.size();
+        Log.e(TAG, "getRestaurantsFromFirestore: get whereIn (size) : " + lMaxRestaurantList);
+        if (lMaxRestaurantList > 0) {
+//            mRestoRef.whereIn(String.valueOf(Restaurant.Fields.restoPlaceId), pRestaurantList)
+            mRestoRef.whereIn(String.valueOf(Restaurant.Fields.restoPlaceId), pRestaurantsId)
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> pTask) {
+                    if (pTask.isSuccessful()) {
+                        List<Restaurant> lRestaurantList = pTask.getResult().toObjects(Restaurant.class);
+                        Log.e(TAG, "getRestaurantFromFirestore : onComplete: " + lRestaurantList.size());
+//                        if (lMaxRestaurantList == lRestaurantList.size()) {
+                        //TODO ajoute le calcul des distances
+                        updateDistanceInLiveDataRestaurantList(lRestaurantList);
+                        Log.e(TAG, "onComplete: LD setValue");
+                        mLDAutocompleteRestoList.setValue(lRestaurantList);
+//                        }
+                    }
+                }
+            }).addOnFailureListener((exception) -> {
+                if (exception instanceof ApiException) {
+                    ApiException apiException = (ApiException) exception;
+                    Log.e(TAG, "Place not found in Firestore : " + apiException.getStatusCode());
+                }
+            });
+        } else {
+            Log.e(TAG, "getRestaurantsFromFirestore: pas de resto a chercher");
+        }
+    }
+
+
 }

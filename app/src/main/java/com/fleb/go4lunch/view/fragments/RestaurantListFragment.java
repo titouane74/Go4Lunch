@@ -57,12 +57,7 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     private void configureViewModel() {
-        mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), pRestaurantList -> {
-//            mRestoAdapter.setRestoList(pRestaurantList);
-//            mRestoAdapter.notifyDataSetChanged();
-            changeAndNotifyAdapterChange(pRestaurantList);
-        });
-
+        mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::changeAndNotifyAdapterChange);
     }
 
     public void changeAndNotifyAdapterChange(List<Restaurant> pRestaurantList) {

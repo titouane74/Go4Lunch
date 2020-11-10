@@ -18,6 +18,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -185,9 +186,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @SuppressLint("ResourceType")
             @Override
             public boolean onQueryTextChange(String pString) {
-                if (pString.length()>3) {
+                if (pString.length() > 3) {
                     Toast.makeText(MainActivity.this, "TODO", Toast.LENGTH_SHORT).show();
-                manageAutocomplete(pString);
+//                    manageAutocomplete(pString);
+                    if (!Places.isInitialized()) {
+                        Places.initialize(getApplicationContext(), mKey);
+                    }
+
+                    // Create a new Places client instance.
+                    PlacesClient lPlacesClient = Places.createClient(getApplicationContext());
+
+                    mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString).observe(MainActivity.this, pRestaurantList -> {
+                        Log.e(TAG, "onQueryTextChange: return observe size : " + pRestaurantList.size() );
+                        sendDataToFragment(pRestaurantList);
+                    });
+                } else {
+                    mMainActivityViewModel.getRestaurantList().observe(MainActivity.this, pRestaurantList -> {
+                        Log.e(TAG, "onQueryTextChange: return observe size : " + pRestaurantList.size() );
+                        sendDataToFragment(pRestaurantList);
+                    });
                 }
                 return true;
             }
@@ -196,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void manageAutocomplete(String pQuery) {
+    private void manageAutocompleteLocal(String pQuery) {
         double lLat = sApi.getLocation().getLatitude();
         double lLng = sApi.getLocation().getLongitude();
 
@@ -220,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Call either setLocationBias() OR setLocationRestriction().
                 .setLocationBias(bounds)
                 //.setLocationRestriction(bounds)
-                .setOrigin(new LatLng(lLat,lLng))
+                .setOrigin(new LatLng(lLat, lLng))
                 .setCountries("FR")
                 .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .setSessionToken(token)
@@ -232,21 +249,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fragment navHostFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
         //Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
 
-        for (int i=0; 0<navHostFragment.getChildFragmentManager().getFragments().size();i++) {
-            Log.d(TAG, "manageAutocomplete: " + navHostFragment.getChildFragmentManager().getFragments().get(i).toString());
-        }
-
         placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 Log.i(TAG, prediction.getPlaceId());
                 Log.i(TAG, prediction.getPrimaryText(null).toString());
                 Log.i(TAG, prediction.getPlaceTypes().toString());
                 Toast.makeText(MainActivity.this, prediction.getPrimaryText(null) + "-" + prediction.getSecondaryText(null), Toast.LENGTH_SHORT).show();
                 Restaurant lRestaurant = new Restaurant(prediction.getPlaceId(), prediction.getPrimaryText(null).toString());
-                lRestaurantList.add(lRestaurant);
+                if (prediction.getPlaceTypes().contains("RESTAURANT")) {
+                    lRestaurantList.add(lRestaurant);
+                }
             }
 
-            Log.d(TAG, "manageAutocomplete: size list : " + lRestaurantList.size());
+
+/*            Log.d(TAG, "manageAutocomplete: size list : " + lRestaurantList.size());
             if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("MapsFragment")) {
                 Log.d(TAG, "onQueryTextChange: MAPS : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
                 //lMapsFragment.setMapMarkers(lRestaurantList);
@@ -258,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, "onQueryTextChange: RESTAURANTLIST : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
 //                RestaurantListFragment lRestaurantListFragment = getRestaurantListFragment();
 //                lRestaurantListFragment.changeAndNotifyAdapterChange(lRestaurantList);
-            }
+            }*/
 
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
@@ -269,10 +286,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private MapsFragment getMapsFragmentActualInstance(){
+    private void sendDataToFragment(List<Restaurant> pRestaurantList) {
+        Log.e(TAG, "manageAutocomplete: size list : " + pRestaurantList.size());
+        if (mNavController.getCurrentBackStackEntry() != null) {
+            if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("MapsFragment")) {
+                Log.e(TAG, "onQueryTextChange: MAPS : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
+                //lMapsFragment.setMapMarkers(lRestaurantList);
+                //((MapsFragment) fragment).(setMarkers(lRestaurantList));
+                MapsFragment lMapsFragment = getMapsFragmentActualInstance();
+                lMapsFragment.setMapMarkers(pRestaurantList);
+                if (pRestaurantList.size() == 1) {
+                    LatLng lLatLng = new LatLng(pRestaurantList.get(0).getRestoLocation().getLat(),
+                            pRestaurantList.get(0).getRestoLocation().getLng());
+                    lMapsFragment.setCameraOnCurrentLocation(lLatLng, Integer.parseInt(getString(R.string.map_zoom)));
+                }
+            } else if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("RestaurantListFragment")) {
+                Log.e(TAG, "onQueryTextChange: RESTAURANTLIST : " + Objects.requireNonNull(mNavController.getCurrentDestination()).getId());
+                RestaurantListFragment lRestaurantListFragment = getRestaurantListFragmentActualInstance();
+                lRestaurantListFragment.changeAndNotifyAdapterChange(pRestaurantList);
+            }
+        } else {
+            Log.e(TAG, "sendDataToFragment: navController.currentBackStackEntry NULL"  );
+        }
+    }
+
+    private MapsFragment getMapsFragmentActualInstance() {
         MapsFragment resultFragment = null;
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if(navHostFragment != null && navHostFragment.getChildFragmentManager() != null) {
+        if (navHostFragment != null && navHostFragment.getChildFragmentManager() != null) {
             List<Fragment> fragmentList = navHostFragment.getChildFragmentManager().getFragments();
             for (Fragment fragment : fragmentList) {
                 if (fragment instanceof MapsFragment) {
@@ -284,10 +325,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return resultFragment;
     }
 
-    private RestaurantListFragment getRestaurantListFragmentActualInstance(){
+    private RestaurantListFragment getRestaurantListFragmentActualInstance() {
         RestaurantListFragment resultFragment = null;
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if(navHostFragment != null && navHostFragment.getChildFragmentManager() != null) {
+        if (navHostFragment != null && navHostFragment.getChildFragmentManager() != null) {
             List<Fragment> fragmentList = navHostFragment.getChildFragmentManager().getFragments();
             for (Fragment fragment : fragmentList) {
                 if (fragment instanceof RestaurantListFragment) {

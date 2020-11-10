@@ -207,7 +207,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         setCameraOnCurrentLocation(lLatLng, mZoom);
     }
 
-    private void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
+    public void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
         try {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
         } catch (Exception pE) {
