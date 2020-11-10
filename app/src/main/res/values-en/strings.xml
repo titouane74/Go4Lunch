@@ -114,12 +114,12 @@
 
     <!-- MAPS -->
     <string name="tag_map">tag_map</string>
-    <string name="proximity_radius">300</string>
+    <string name="proximity_radius">3000</string>
     <string name="type_search">restaurant</string>
     <string name="map_zoom">16</string>
     <string name="default_latitude_position">48.8236549</string>
     <string name="default_longitude_position">2.4102578</string>
-    <string name="place_detail_fields">name,address_components,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
+    <string name="place_detail_fields">name,address_components,formatted_phone_number,geometry,icon,id,international_phone_number,rating,website,utc_offset,opening_hours,photo,vicinity,place_id</string>
 
 
     <!--    Permissions    -->
@@ -129,16 +129,16 @@
 
     <!-- SETTINGS -->
     <string name="btn_text_change_notif_status">Activate / Deactivate the notifications</string>
-    <string name="text_setting_notif_activated">Les notifications sont : activées</string>
-    <string name="text_setting_notif_deactivated">Les notifications sont : désactivées</string>
+    <string name="text_setting_notif_activated">Notifications are : activated</string>
+    <string name="text_setting_notif_deactivated">Notifications are : deactivated</string>
 
     <!-- NOTIFICATION -->
-    <string name="notif_hight_importance">Haute importance</string>
-    <string name="notif_hight">Haute</string>
+    <string name="notif_hight_importance">High importance</string>
+    <string name="notif_hight">High</string>
 
     <!-- General -->
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
-    <string name="text_hint_search">Rerchercher un restaurant</string>
+    <string name="text_hint_search">Search restaurants</string>
 
 </resources>

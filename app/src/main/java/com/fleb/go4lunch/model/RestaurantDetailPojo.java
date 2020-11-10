@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -321,6 +322,99 @@ public class RestaurantDetailPojo implements Serializable {
 
     }
 
+    /**
+     * Created by Florence LE BOURNOT on 04/10/2020
+     */
+    public static class Photo {
+
+        @SerializedName("height")
+        @Expose
+        private Integer height;
+        @SerializedName("html_attributions")
+        @Expose
+        private List<String> htmlAttributions = new ArrayList<String>();
+        @SerializedName("photo_reference")
+        @Expose
+        private String photoReference;
+        @SerializedName("width")
+        @Expose
+        private Integer width;
+
+        /**
+         *
+         * @return
+         * The height
+         */
+        public Integer getHeight() {
+            return height;
+        }
+
+        /**
+         *
+         * @param height
+         * The height
+         */
+        public void setHeight(Integer height) {
+            this.height = height;
+        }
+
+        /**
+         *
+         * @return
+         * The htmlAttributions
+         */
+        public List<String> getHtmlAttributions() {
+            return htmlAttributions;
+        }
+
+        /**
+         *
+         * @param htmlAttributions
+         * The html_attributions
+         */
+        public void setHtmlAttributions(List<String> htmlAttributions) {
+            this.htmlAttributions = htmlAttributions;
+        }
+
+        /**
+         *
+         * @return
+         * The photoReference
+         */
+        public String getPhotoReference() {
+            return photoReference;
+        }
+
+        /**
+         *
+         * @param photoReference
+         * The photo_reference
+         */
+        public void setPhotoReference(String photoReference) {
+            this.photoReference = photoReference;
+        }
+
+        /**
+         *
+         * @return
+         * The width
+         */
+        public Integer getWidth() {
+            return width;
+        }
+
+        /**
+         *
+         * @param width
+         * The width
+         */
+        public void setWidth(Integer width) {
+            this.width = width;
+        }
+
+    }
+
+
     //-----------------------------------com.fleb.go4lunch.model.Result.java-----------------------------------
     public static class Result {
 
@@ -381,6 +475,9 @@ public class RestaurantDetailPojo implements Serializable {
         @SerializedName("website")
         @Expose
         private String website;
+        @SerializedName("photos")
+        @Expose
+        private List<Photo> photos = new ArrayList<Photo>();
 
         /**
          * No args constructor for use in serialization
@@ -388,29 +485,10 @@ public class RestaurantDetailPojo implements Serializable {
          */
         public Result() {
         }
-
-        /**
-         *
-         * @param adrAddress
-         * @param formattedPhoneNumber
-         * @param types
-         * @param website
-         * @param utcOffset
-         * @param icon
-         * @param placeId
-         * @param rating
-         * @param url
-         * @param reference
-         * @param formattedAddress
-         * @param reviews
-         * @param addressComponents
-         * @param name
-         * @param geometry
-         * @param vicinity
-         * @param id
-         * @param internationalPhoneNumber
-         */
-        public Result(List<AddressComponent> addressComponents, String adrAddress, String formattedAddress, String formattedPhoneNumber, Geometry geometry, String icon, String id, String internationalPhoneNumber, String name, String placeId, Double rating, String reference, List<Review> reviews, List<String> types, String url, Integer utcOffset, String vicinity, String website) {
+        public Result(List<AddressComponent> addressComponents, String adrAddress, String formattedAddress,
+                      String formattedPhoneNumber, Geometry geometry, String icon, String id, String internationalPhoneNumber,
+                      String name, String placeId, Double rating, String reference, List<Review> reviews, List<String> types,
+                      String url, Integer utcOffset, String vicinity, String website, List<Photo> photos) {
             super();
             this.addressComponents = addressComponents;
             this.adrAddress = adrAddress;
@@ -430,6 +508,7 @@ public class RestaurantDetailPojo implements Serializable {
             this.utcOffset = utcOffset;
             this.vicinity = vicinity;
             this.website = website;
+            this.photos = photos;
         }
 
 
@@ -673,6 +752,14 @@ public class RestaurantDetailPojo implements Serializable {
         public Result withWebsite(String website) {
             this.website = website;
             return this;
+        }
+
+        public List<Photo> getPhotos() {
+            return photos;
+        }
+
+        public void setPhotos(List<Photo> photos) {
+            this.photos = photos;
         }
 
     }

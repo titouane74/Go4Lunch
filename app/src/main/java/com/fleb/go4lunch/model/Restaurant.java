@@ -16,7 +16,7 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
     private String restoDistanceText;
     private double restoRating;
     private String restoPhotoUrl;
-    private RestaurantPojo.Location restoLocation;
+    private RestaurantDetailPojo.Location restoLocation;
     private RestaurantDetailPojo.OpeningHours restoOpeningHours;
     private int restoDistance;
     private List<WorkmatesList> restoWkList;
@@ -30,7 +30,7 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress,
                       String pRestoDistanceText, double pRestoRating, String pRestoPhotoUrl,
-                      RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours,
+                      RestaurantDetailPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours,
                       int pRestoDistance, List<WorkmatesList> pRestoWkList) {
         restoPlaceId = pRestoPlaceId;
         restoName = pRestoName;
@@ -46,7 +46,7 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     public Restaurant(String pRestoPlaceId, String pRestoName, String pRestoAddress, String pRestoPhone, String pRestoWebSite,
                       String pRestoDistanceText,  double pRestoRating, String pRestoPhotoUrl,
-                      RestaurantPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours,
+                      RestaurantDetailPojo.Location pRestoLocation, RestaurantDetailPojo.OpeningHours pRestoOpeningHours,
                       int pRestoDistance, List<WorkmatesList> pRestoWkList) {
 
         restoPlaceId = pRestoPlaceId;
@@ -95,9 +95,9 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
 
     public void setRestoPhotoUrl(String pRestoPhotoUrl) { restoPhotoUrl = pRestoPhotoUrl; }
 
-    public RestaurantPojo.Location getRestoLocation() { return restoLocation; }
+    public RestaurantDetailPojo.Location getRestoLocation() { return restoLocation; }
 
-    public void setRestoLocation(RestaurantPojo.Location pRestoLocation) { restoLocation = pRestoLocation; }
+    public void setRestoLocation(RestaurantDetailPojo.Location pRestoLocation) { restoLocation = pRestoLocation; }
 
     public RestaurantDetailPojo.OpeningHours getRestoOpeningHours() { return restoOpeningHours; }
 

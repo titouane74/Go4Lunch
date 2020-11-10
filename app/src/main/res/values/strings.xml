@@ -127,7 +127,7 @@
     <string name="map_zoom">16</string>
     <string name="default_latitude_position">48.8236549</string>
     <string name="default_longitude_position">2.4102578</string>
-    <string name="place_detail_fields">name,address_components,adr_address,formatted_address,formatted_phone_number,icon,id,international_phone_number,rating,website,utc_offset,opening_hours</string>
+    <string name="place_detail_fields">name,address_components,adr_address,formatted_address,formatted_phone_number,geometry,icon,id,international_phone_number,rating,website,utc_offset,opening_hours,photo,vicinity,place_id</string>
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">L\'accès au service de localisation est nécessaire pour permettre la localisation.</string>
@@ -140,12 +140,12 @@
     <string name="text_setting_notif_deactivated">Les notifications sont : désactivées</string>
 
     <!-- NOTIFICATION -->
-    <string name="notif_hight_importance">Hight importance</string>
-    <string name="notif_hight">Hight</string>
+    <string name="notif_hight_importance">Haute importance</string>
+    <string name="notif_hight">Haute</string>
 
     <!-- General -->
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Annuler</string>
-    <string name="text_hint_search">Rerchercher un restaurant</string>
+    <string name="text_hint_search">Rechercher des restaurants</string>
 
 </resources>

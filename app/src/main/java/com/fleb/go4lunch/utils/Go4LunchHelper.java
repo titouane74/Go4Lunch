@@ -5,7 +5,10 @@ import android.content.Context;
 import android.location.Location;
 
 import com.fleb.go4lunch.R;
-import com.fleb.go4lunch.model.RestaurantPojo;
+import com.fleb.go4lunch.model.RestaurantDetailPojo;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.SphericalUtil;
 
 import java.math.RoundingMode;
 import java.text.DateFormatSymbols;
@@ -42,7 +45,7 @@ public static final String TAG = "TAG_DISTANCE";
         return lNbStarToDisplay;
     }
 
-    public static int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantPojo.Location pRestoLocation) {
+    public static int getRestaurantDistanceToCurrentLocation(Location pCurrentLocation, RestaurantDetailPojo.Location pRestoLocation) {
         Location lRestaurantLocation = new Location("fusedLocationProvider");
         lRestaurantLocation.setLatitude(pRestoLocation.getLat());
         lRestaurantLocation.setLongitude(pRestoLocation.getLng());
@@ -118,6 +121,15 @@ public static final String TAG = "TAG_DISTANCE";
             lAddress = pAddress.substring(0, pAddress.indexOf(","));
         }
         return lAddress;
+    }
+
+    public static LatLngBounds toBounds(LatLng center, double radiusInMeters) {
+        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
+        LatLng southwestCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
+        LatLng northeastCorner =
+                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
+        return new LatLngBounds(southwestCorner, northeastCorner);
     }
 
 }

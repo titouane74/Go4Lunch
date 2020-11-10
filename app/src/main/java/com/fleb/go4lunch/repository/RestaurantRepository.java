@@ -17,7 +17,6 @@ import com.fleb.go4lunch.network.JsonRetrofitApi;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
@@ -32,7 +31,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.maps.android.SphericalUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,6 +85,7 @@ public class RestaurantRepository {
 
     private Double mLatitude;
     private Double mLongitude;
+    private boolean mIsFromAutoComplete = false;
 
     private List<Restaurant> mRestaurantList = new ArrayList<>();
 
@@ -106,7 +105,6 @@ public class RestaurantRepository {
         mLatitude = Double.valueOf(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LATITUDE, "")));
         mLongitude = Double.parseDouble(Objects.requireNonNull(mPreferences.getString(PREF_KEY_LONGITUDE, "")));
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
-
         mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -182,7 +180,7 @@ public class RestaurantRepository {
                     List<RestaurantPojo.Result> lRestoResponse = Objects.requireNonNull(response.body()).getResults();
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
-                        manageRestaurantInformationsAndGetGoogleDetailRestaurant(restaurantPojo, lRestoResponse.size());
+                        manageRestaurantInformationsAndGetGoogleDetailRestaurant(restaurantPojo.getPlaceId(), lRestoResponse.size());
                     }
                 }
             }
@@ -192,17 +190,15 @@ public class RestaurantRepository {
                 Log.d("onFailure", t.toString());
             }
         });
-
     }
 
-    public void manageRestaurantInformationsAndGetGoogleDetailRestaurant(RestaurantPojo.Result pRestaurantList, int pResponseSize) {
-
+    public void manageRestaurantInformationsAndGetGoogleDetailRestaurant(String pRestaurantListId, int pResponseSize) {
         String lFields = mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS, null);
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
 
         Call<RestaurantDetailPojo> lRestaurantDetailPojoCall = mJsonRetrofitApi.getRestaurantDetail(mKey,
-                pRestaurantList.getPlaceId(), lFields);
+                pRestaurantListId, lFields);
 
         lRestaurantDetailPojoCall.enqueue(new Callback<RestaurantDetailPojo>() {
             @Override
@@ -214,22 +210,25 @@ public class RestaurantRepository {
                     String lPhoto = null;
                     double lRating = 0.0;
                     String lAddress = null;
+                    RestaurantDetailPojo.Location lLocation = null;
+                    String lDistance = null;
+                    String lPlaceId = pRestaurantListId;
+                    String lName = lRestoDetResponse.getName();
 
-                    String lPlaceId = pRestaurantList.getPlaceId();
-                    String lName = pRestaurantList.getName();
-                    if (pRestaurantList.getPhotos() != null && pRestaurantList.getPhotos().size() > 0) {
-                        lPhoto = getPhoto(pRestaurantList.getPhotos().get(0).getPhotoReference(), 400, mKey);
+                    if (lRestoDetResponse.getPhotos() != null && lRestoDetResponse.getPhotos().size() > 0) {
+                        lPhoto = getPhoto(lRestoDetResponse.getPhotos().get(0).getPhotoReference(), 400, mKey);
                     }
-                    RestaurantPojo.Location lLocation = pRestaurantList.getGeometry().getLocation();
-                    if (pRestaurantList.getVicinity() != null) {
-                        lAddress = pRestaurantList.getVicinity();
+                    if (lRestoDetResponse.getGeometry().getLocation() != null) {
+                        lLocation = lRestoDetResponse.getGeometry().getLocation();
+                        lDistance = String.valueOf(Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
+                                mFusedLocationProvider, lLocation));
                     }
-                    if (pRestaurantList.getRating() != null) {
-                        lRating = pRestaurantList.getRating();
+                    if (lRestoDetResponse.getVicinity() != null) {
+                        lAddress = lRestoDetResponse.getVicinity();
                     }
-
-                    String lDistance = String.valueOf(Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
-                            mFusedLocationProvider, pRestaurantList.getGeometry().getLocation()));
+                    if (lRestoDetResponse.getRating() != null) {
+                        lRating = lRestoDetResponse.getRating();
+                    }
 
                     Restaurant lRestaurant = new Restaurant(
                             lPlaceId, lName, lAddress, null, null, lDistance,
@@ -239,7 +238,6 @@ public class RestaurantRepository {
                     lRestaurant.setRestoOpeningHours(lRestoDetResponse.getOpeningHours());
                     lRestaurant.setRestoWebSite(lRestoDetResponse.getWebsite());
                     lRestaurant.setRestoPhone(lRestoDetResponse.getFormattedPhoneNumber());
-
                     mRestoListDetail.add(lRestaurant);
 
                     backupDataInFirestore(pResponseSize);
@@ -248,14 +246,13 @@ public class RestaurantRepository {
 
             @Override
             public void onFailure(@NonNull Call<RestaurantDetailPojo> call, @NonNull Throwable t) {
-                Log.d("TAG4_DETRESTO", "onFailure: " + t.getMessage());
+                Log.d("TAG_DETRESTO", "onFailure: " + t.getMessage());
             }
         });
-
-
     }
 
     private void backupDataInFirestore(int pResponseSize) {
+
         if (mRestoListDetail.size() == pResponseSize) {
             for (Restaurant lRestaurant : mRestoListDetail) {
                 saveRestaurantInFirestore(lRestaurant);
@@ -267,16 +264,17 @@ public class RestaurantRepository {
     }
 
     public void saveRestaurantInFirestore(Restaurant pRestaurant) {
+
         mRestoRef.document(pRestaurant.getRestoPlaceId())
                 .get()
                 .addOnSuccessListener(pDocumentSnapshot ->
                         mRestoRef.document(pRestaurant.getRestoPlaceId())
                                 .set(pRestaurant)
                                 .addOnSuccessListener(pDocumentReference ->
-                                        Log.d("TAG4_SAVE_RESTO", "onSuccess : Document saved "))
+                                        Log.d("TAG_SAVE_RESTO", "onSuccess : Document saved " + pRestaurant.getRestoName()))
                                 .addOnFailureListener(pE ->
-                                        Log.d("TAG4_SAVE_RESTO", "onFailure: Document not saved", pE)))
-                .addOnFailureListener(pE -> Log.d("TAG4_SAVE_RESTO", "onFailure Save: Document not saved", pE));
+                                        Log.d("TAG_SAVE_RESTO", "onFailure: Document not saved", pE)))
+                .addOnFailureListener(pE -> Log.d("TAG_SAVE_RESTO", "onFailure Save: Document not saved", pE));
     }
 
     private void prepareAndSendRestoListForDisplay(List<Restaurant> pRestaurantList) {
@@ -284,9 +282,16 @@ public class RestaurantRepository {
         mRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
         Collections.sort(mRestaurantList);
         Collections.reverse(mRestaurantList);
-        removeRestaurantOutOfRadiusFromList(mRestaurantList);
+        if (!mIsFromAutoComplete) {
+            removeRestaurantOutOfRadiusFromList(mRestaurantList);
+        }
         sApi.setRestaurantList(mRestaurantList);
-        mLDRestoList.setValue(mRestaurantList);
+
+        if (mIsFromAutoComplete) {
+            mLDAutocompleteRestoList.setValue(mRestaurantList);
+        } else {
+            mLDRestoList.setValue(mRestaurantList);
+        }
     }
 
     private void removeRestaurantOutOfRadiusFromList(List<Restaurant> pRestaurantList) {
@@ -336,7 +341,7 @@ public class RestaurantRepository {
     }
 
     public List<Restaurant> getRestaurantList() {
-        Log.d(TAG, "getRestaurantList: ");
+
         mRestoRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -367,19 +372,12 @@ public class RestaurantRepository {
     }
 
     public MutableLiveData<List<Restaurant>> getLDAutocompleteRestaurantList(PlacesClient pPlacesClient, String pQuery) {
-        Log.e(TAG, "getLDAutocompleteRestaurantList: ");
+
+        mIsFromAutoComplete = true;
+
         manageAutocomplete(pPlacesClient, pQuery);
 
         return mLDAutocompleteRestoList;
-    }
-
-    public LatLngBounds toBounds(LatLng center, double radiusInMeters) {
-        double distanceFromCenterToCorner = radiusInMeters * Math.sqrt(2.0);
-        LatLng southwestCorner =
-                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
-        LatLng northeastCorner =
-                SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0);
-        return new LatLngBounds(southwestCorner, northeastCorner);
     }
 
     private void manageAutocomplete(PlacesClient pPlacesClient, String pQuery) {
@@ -393,8 +391,8 @@ public class RestaurantRepository {
 
         // Create a RectangularBounds object.
         RectangularBounds bounds = RectangularBounds.newInstance(
-                toBounds(lLatLng, 1000).southwest,
-                toBounds(lLatLng, 1000).northeast);
+                Go4LunchHelper.toBounds(lLatLng, 1000).southwest,
+                Go4LunchHelper.toBounds(lLatLng, 1000).northeast);
 
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
@@ -411,31 +409,23 @@ public class RestaurantRepository {
         List<Restaurant> lRestaurantList = new ArrayList<>();
         List<String> lRestaurantsId = new ArrayList<>();
 
-        Log.e(TAG, "manageAutocomplete: call findAutocomplete");
         pPlacesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
 
-            Log.e(TAG, "manageAutocomplete: findAutocomplete response size : " + response.getAutocompletePredictions().size());
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.e(TAG, prediction.getPlaceId());
-                Log.e(TAG, prediction.getPrimaryText(null).toString());
-                Log.e(TAG, prediction.getPlaceTypes().toString());
                 Restaurant lRestaurant = new Restaurant(prediction.getPlaceId(), prediction.getPrimaryText(null).toString());
                 if (prediction.getPlaceTypes().size() > 0) {
                     for (Place.Type lPlace : prediction.getPlaceTypes()) {
                         if (lPlace.toString().equals("RESTAURANT")) {
                             lRestaurantList.add(lRestaurant);
                             lRestaurantsId.add(prediction.getPlaceId());
-                            Log.e(TAG, "manageAutocomplete: FOR c est un RESTO : " + lPlace.toString() + " : " + prediction.getPrimaryText(null).toString());
                             break;
-                        } else {
-                            Log.e(TAG, "manageAutocomplete: FOR " + lPlace.toString());
                         }
                     }
                 }
 
             }
-            Log.e(TAG, "manageAutocomplete: lRestaurant added for search : " + lRestaurantList.size());
-            getRestaurantsFromFirestore(lRestaurantList, lRestaurantsId);
+
+            getAutoCompleteRestaurantsFromFirestore(lRestaurantList, lRestaurantsId);
 
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
@@ -445,24 +435,20 @@ public class RestaurantRepository {
         });
     }
 
-    private void getRestaurantsFromFirestore(List<Restaurant> pRestaurantList, List<String> pRestaurantsId) {
+    private void getAutoCompleteRestaurantsFromFirestore(List<Restaurant> pRestaurantList, List<String> pRestaurantsId) {
         int lMaxRestaurantList = pRestaurantList.size();
-        Log.e(TAG, "getRestaurantsFromFirestore: get whereIn (size) : " + lMaxRestaurantList);
         if (lMaxRestaurantList > 0) {
-//            mRestoRef.whereIn(String.valueOf(Restaurant.Fields.restoPlaceId), pRestaurantList)
             mRestoRef.whereIn(String.valueOf(Restaurant.Fields.restoPlaceId), pRestaurantsId)
                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> pTask) {
                     if (pTask.isSuccessful()) {
-                        List<Restaurant> lRestaurantList = pTask.getResult().toObjects(Restaurant.class);
-                        Log.e(TAG, "getRestaurantFromFirestore : onComplete: " + lRestaurantList.size());
-//                        if (lMaxRestaurantList == lRestaurantList.size()) {
-                        //TODO ajoute le calcul des distances
-                        updateDistanceInLiveDataRestaurantList(lRestaurantList);
-                        Log.e(TAG, "onComplete: LD setValue");
-                        mLDAutocompleteRestoList.setValue(lRestaurantList);
-//                        }
+                        List<Restaurant> lRestaurantListFirestore = pTask.getResult().toObjects(Restaurant.class);
+                        if (lMaxRestaurantList != lRestaurantListFirestore.size()) {
+                            getAutoCompleteMissingRestaurant(pRestaurantList);
+                        } else {
+                            prepareAndSendRestoListForDisplay(pRestaurantList);
+                        }
                     }
                 }
             }).addOnFailureListener((exception) -> {
@@ -476,5 +462,15 @@ public class RestaurantRepository {
         }
     }
 
+    private void getAutoCompleteMissingRestaurant(List<Restaurant> pAutocompleteRestaurantList) {
 
+        mRestoListDetail = new ArrayList<>();
+
+        if (pAutocompleteRestaurantList.size() > 0) {
+            for (Restaurant lAutoRestaurant : pAutocompleteRestaurantList) {
+                manageRestaurantInformationsAndGetGoogleDetailRestaurant(lAutoRestaurant.getRestoPlaceId(),
+                        pAutocompleteRestaurantList.size());
+            }
+        }
+    }
 }
