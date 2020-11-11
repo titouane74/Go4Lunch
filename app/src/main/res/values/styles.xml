@@ -78,4 +78,22 @@
         <item name="android:layout_marginBottom">@dimen/default_margin</item>
     </style>
 
+    <style name="RestaurantDetailTheme" parent="Go4LunchTheme"/>
+    <style name="RestaurantDetailTheme.TextUnderIcon" parent="RestaurantDetailTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_marginTop">@dimen/resto_det_vertical_margin</item>
+    </style>
+    <style name="RestaurantDetailTheme.IconAction" parent="RestaurantDetailTheme">
+        <item name="android:layout_width">@dimen/resto_det_img_size_icon</item>
+        <item name="android:layout_height">@dimen/resto_det_img_size_icon</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+
 </resources>

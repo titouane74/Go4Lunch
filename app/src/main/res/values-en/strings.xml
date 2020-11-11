@@ -128,7 +128,7 @@
     <string name="permission_required_toast">Location permission is required.</string>
 
     <!-- SETTINGS -->
-    <string name="btn_text_change_notif_status">Activate / Deactivate the notifications</string>
+    <string name="btn_text_change_notif_status">Activate / Deactivate</string>
     <string name="text_setting_notif_activated">Notifications are : activated</string>
     <string name="text_setting_notif_deactivated">Notifications are : deactivated</string>
 
