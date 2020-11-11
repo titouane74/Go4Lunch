@@ -28,17 +28,10 @@
                 android:id="@+id/prof_user_img_logo"
                 android:layout_width="@dimen/settings_img_size"
                 android:layout_height="@dimen/settings_img_size"
-
                 android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/logo_go4lunch_white_title" />
+                app:srcCompat="@drawable/logo_go4lunch_white_title"
+                android:layout_marginEnd="@dimen/default_extra_large_margin"/>
 
-            <!-- PROGRESS BAR -->
-            <ProgressBar
-                android:id="@+id/prof_user_progress_bar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="@dimen/default_large_margin"
-                android:visibility="invisible" />
 
             <!-- PROFILE IMAGE -->
             <ImageView
@@ -46,8 +39,8 @@
                 android:layout_width="@dimen/settings_img_size"
                 android:layout_height="@dimen/settings_img_size"
                 android:contentDescription="@string/img_user"
+                android:layout_marginStart="@dimen/default_extra_large_margin"
                 app:srcCompat="@drawable/ic_profile_user_png" />
-
         </LinearLayout>
 
 
@@ -84,8 +77,9 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/default_margin"
                 android:paddingEnd="@dimen/default_margin"
-                android:textSize="@dimen/settings_btn_text_size"
-                android:textColor="@color/colorTextUnavailable"/>
+                android:text="@string/text_view_email"
+                android:textColor="@color/colorTextUnavailable"
+                android:textSize="@dimen/settings_btn_text_size" />
 
         </LinearLayout>
 
