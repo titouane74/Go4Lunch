@@ -308,7 +308,6 @@ public class RestaurantRepository {
 
     private List<Restaurant> updateDistanceInLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
         for (Restaurant lRestaurant : pRestaurantList) {
-
             int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                     mFusedLocationProvider, lRestaurant.getRestoLocation());
             String lNewDistance = Go4LunchHelper.convertDistance(lDistance);
@@ -372,8 +371,8 @@ public class RestaurantRepository {
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 // Call either setLocationBias() OR setLocationRestriction().
-                .setLocationBias(bounds)
-                //.setLocationRestriction(bounds)
+                //.setLocationBias(bounds)
+                .setLocationRestriction(bounds)
                 .setOrigin(new LatLng(lLat, lLng))
                 .setCountries("FR")
                 .setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -420,7 +419,7 @@ public class RestaurantRepository {
                     if (lMaxRestaurantList != lRestaurantListFirestore.size()) {
                         getAutoCompleteMissingRestaurant(pRestaurantList);
                     } else {
-                        prepareAndSendRestoListForDisplay(pRestaurantList);
+                        prepareAndSendRestoListForDisplay(lRestaurantListFirestore);
                     }
                 }
             }).addOnFailureListener((exception) -> {

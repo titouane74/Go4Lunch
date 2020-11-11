@@ -6,6 +6,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+<!--        <item name="android:actionBarStyle">@style/MyActionBar</item> -->
+    </style>
+    <style name="MyActionBar" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@color/colorWhiteBackground</item>
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:textColorHint">@color/colorTextUnavailable</item>
     </style>
 
     <!--NOT USED ?? -->
@@ -21,6 +27,8 @@
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
+
+
 
     <style name="StartTheme" parent="Go4LunchTheme">
         <item name="android:windowBackground">@drawable/start_background</item>

@@ -182,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .observe(MainActivity.this, pRestaurantList -> sendDataToFragment(pRestaurantList));
                 } else {
                     mMainActivityViewModel.getRestaurantList().observe(MainActivity.this, pRestaurantList -> {
-                        Log.e(TAG, "onQueryTextChange: return observe size : " + pRestaurantList.size() );
                         sendDataToFragment(pRestaurantList);
                     });
                 }
