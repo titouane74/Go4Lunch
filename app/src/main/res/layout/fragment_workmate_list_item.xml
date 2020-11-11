@@ -4,6 +4,7 @@
     android:id="@+id/item_list_workmates"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_size_height"
+    android:layout_marginTop="@dimen/default_margin"
     android:orientation="horizontal">
 
 
@@ -11,13 +12,11 @@
         android:id="@+id/item_list_workmate_img"
         android:layout_width="@dimen/img_size_workmate_width_height"
         android:layout_height="@dimen/img_size_workmate_width_height"
-        android:background="@drawable/ic_profile_user_png"
-        android:contentDescription="@string/img_user"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginTop="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin"
-        />
+        android:background="@drawable/ic_profile_user_png"
+        android:contentDescription="@string/img_user" />
 
     <LinearLayout
         android:layout_width="wrap_content"

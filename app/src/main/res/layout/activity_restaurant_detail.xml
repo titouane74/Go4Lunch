@@ -41,9 +41,7 @@
 
         <ImageView
             android:id="@+id/img_detail_note1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin_mini"
+            style="@style/RestaurantDetailTheme.IconStar"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintStart_toEndOf="@+id/text_restaurant_detail_name"
@@ -52,9 +50,7 @@
 
         <ImageView
             android:id="@+id/img_detail_note2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin_mini"
+            style="@style/RestaurantDetailTheme.IconStar"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintStart_toEndOf="@+id/img_detail_note1"
@@ -63,9 +59,7 @@
 
         <ImageView
             android:id="@+id/img_detail_note3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin_mini"
+            style="@style/RestaurantDetailTheme.IconStar"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="@+id/text_restaurant_detail_name"
             app:layout_constraintStart_toEndOf="@+id/img_detail_note2"
@@ -118,54 +112,54 @@
 
             <TextView
                 android:id="@+id/text_call"
-                android:text="@string/text_call"
                 style="@style/RestaurantDetailTheme.TextUnderIcon"
+                android:text="@string/text_call"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/img_call" />
 
             <ImageView
                 android:id="@+id/img_call"
                 style="@style/RestaurantDetailTheme.IconAction"
+                android:contentDescription="@null"
                 app:layout_constraintEnd_toEndOf="@id/text_call"
                 app:layout_constraintStart_toStartOf="@id/text_call"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_call"
-                android:contentDescription="@null"/>
+                app:srcCompat="@drawable/ic_call" />
 
             <TextView
                 android:id="@+id/text_like"
+                style="@style/RestaurantDetailTheme.TextUnderIcon"
                 android:layout_marginHorizontal="@dimen/margin_between_icon"
                 android:text="@string/text_like"
-                style="@style/RestaurantDetailTheme.TextUnderIcon"
                 app:layout_constraintStart_toEndOf="@id/text_call"
                 app:layout_constraintTop_toBottomOf="@+id/img_like" />
 
             <ImageView
                 android:id="@+id/img_like"
                 style="@style/RestaurantDetailTheme.IconAction"
+                android:contentDescription="@null"
                 app:layout_constraintEnd_toEndOf="@+id/text_like"
                 app:layout_constraintStart_toEndOf="@+id/text_call"
                 app:layout_constraintStart_toStartOf="@+id/text_like"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_not_like"
-                android:contentDescription="@null"/>
+                app:srcCompat="@drawable/ic_not_like" />
 
             <TextView
                 android:id="@+id/text_website"
+                style="@style/RestaurantDetailTheme.TextUnderIcon"
                 android:layout_marginHorizontal="@dimen/margin_between_icon"
                 android:text="@string/text_website"
-                style="@style/RestaurantDetailTheme.TextUnderIcon"
                 app:layout_constraintStart_toEndOf="@id/text_like"
                 app:layout_constraintTop_toBottomOf="@+id/img_website" />
 
             <ImageView
                 android:id="@+id/img_website"
                 style="@style/RestaurantDetailTheme.IconAction"
+                android:contentDescription="@null"
                 app:layout_constraintEnd_toEndOf="@+id/text_website"
                 app:layout_constraintStart_toStartOf="@+id/text_website"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_website"
-                android:contentDescription="@null"/>
+                app:srcCompat="@drawable/ic_website" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -178,6 +172,6 @@
         android:layout_marginTop="@dimen/vertical_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ban_icon"
-        tools:listitem="@layout/fragment_workmate_list_item"/>
+        tools:listitem="@layout/fragment_workmate_list_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

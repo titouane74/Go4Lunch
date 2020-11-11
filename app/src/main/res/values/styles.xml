@@ -50,7 +50,7 @@
         <item name="android:background">@drawable/auth_btn_radius</item>
         <item name="android:paddingStart">@dimen/auth_btn_text_align_padding</item>
         <item name="android:text">@string/sign_in_with_email</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/auth_btn_text_size</item>
     </style>
 
     <!--NOT USED ?? -->
@@ -87,12 +87,18 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:layout_marginTop">@dimen/resto_det_vertical_margin</item>
+        <item name="android:textSize">@dimen/resto_det_text_size_under_icon</item>
     </style>
     <style name="RestaurantDetailTheme.IconAction" parent="RestaurantDetailTheme">
         <item name="android:layout_width">@dimen/resto_det_img_size_icon</item>
         <item name="android:layout_height">@dimen/resto_det_img_size_icon</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
+    </style>
+    <style name="RestaurantDetailTheme.IconStar" parent="RestaurantDetailTheme">
+        <item name="android:layout_marginStart">@dimen/default_margin_mini</item>
+        <item name="android:layout_width">@dimen/img_star_size</item>
+        <item name="android:layout_height">@dimen/img_star_size</item>
     </style>
 
 

@@ -32,11 +32,15 @@
     <dimen name="auth_btn_vertical_margin">16dp</dimen>
     <dimen name="auth_btn_text_align_padding">30dp</dimen>
     <dimen name="auth_elevation">10dp</dimen>
+    <dimen name="auth_btn_text_size">12sp</dimen>
 
     <!-- Settings -->
     <dimen name="settings_btn_text_size">14sp</dimen>
     <dimen name="settings_btn_margin_horizontal">40dp</dimen>
     <dimen name="settings_img_size">100dp</dimen>
+    <dimen name="settings_margin_extra_large">14dp</dimen>
+    <dimen name="settings_layout_weight_user_info">1.8</dimen>
+    <dimen name="settings_layout_weight_btn">1.5</dimen>
 
     <!-- List restaurant -->
     <dimen name="text_size_item_title">14sp</dimen>
@@ -65,6 +69,7 @@
     <dimen name="resto_det_img_size_icon">20dp</dimen>
     <dimen name="resto_det_vertical_margin">8dp</dimen>
     <dimen name="resto_det_img_size_resto_width_height">180dp</dimen>
+    <dimen name="resto_det_text_size_under_icon">14sp</dimen>
 
     <!-- List workmate -->
     <dimen name="margin_start_item">18dp</dimen>
