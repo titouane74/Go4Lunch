@@ -35,7 +35,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="@dimen/text_size_item_title"
+            android:textSize="@dimen/resto_list_det_text_size_item_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,7 +73,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin_mini"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="@dimen/text_size_item_description"
+            android:textSize="@dimen/resto_list_det_text_size_item_description"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_restaurant_detail_name" />
 
@@ -83,7 +83,7 @@
         android:id="@+id/btn_restaurant_detail_float_favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/resto_det_fab_margin"
         android:clickable="true"
         android:focusable="true"
         android:tag="@string/btn_check"
@@ -98,8 +98,8 @@
         android:id="@+id/ban_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/vertical_margin"
-        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginTop="@dimen/default_vertical_margin"
+        android:layout_marginBottom="@dimen/default_vertical_margin"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/restaurant_info">
@@ -129,7 +129,7 @@
             <TextView
                 android:id="@+id/text_like"
                 style="@style/RestaurantDetailTheme.TextUnderIcon"
-                android:layout_marginHorizontal="@dimen/margin_between_icon"
+                android:layout_marginHorizontal="@dimen/resto_det_margin_between_icon"
                 android:text="@string/text_like"
                 app:layout_constraintStart_toEndOf="@id/text_call"
                 app:layout_constraintTop_toBottomOf="@+id/img_like" />
@@ -147,7 +147,7 @@
             <TextView
                 android:id="@+id/text_website"
                 style="@style/RestaurantDetailTheme.TextUnderIcon"
-                android:layout_marginHorizontal="@dimen/margin_between_icon"
+                android:layout_marginHorizontal="@dimen/resto_det_margin_between_icon"
                 android:text="@string/text_website"
                 app:layout_constraintStart_toEndOf="@id/text_like"
                 app:layout_constraintTop_toBottomOf="@+id/img_website" />
@@ -169,7 +169,7 @@
         android:id="@+id/restaurant_detail_workmate_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/vertical_margin"
+        android:layout_marginTop="@dimen/default_vertical_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ban_icon"
         tools:listitem="@layout/fragment_workmate_list_item" />

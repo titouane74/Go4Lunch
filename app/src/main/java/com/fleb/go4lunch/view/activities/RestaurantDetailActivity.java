@@ -175,7 +175,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
         mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
-                    if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
+                    if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeChoiceStatus(true);
                     } else {
                         changeChoiceStatus(false);
@@ -191,10 +191,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void changeChoiceStatus(boolean pIsChoosed) {
         if (pIsChoosed) {
             mRestoBtnFloatChecked.setImageResource(R.drawable.ic_check_circle);
-            mRestoBtnFloatChecked.setTag(ActionStatus.IS_CHOOSED);
+            mRestoBtnFloatChecked.setTag(ActionStatus.IS_CHOSEN);
         } else {
             mRestoBtnFloatChecked.setImageResource(R.drawable.ic_uncheck_circle);
-            mRestoBtnFloatChecked.setTag(ActionStatus.NOT_CHOOSED);
+            mRestoBtnFloatChecked.setTag(ActionStatus.NOT_CHOSEN);
         }
     }
 
@@ -207,7 +207,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
         mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
-                    if (pActionStation.equals(ActionStatus.IS_CHOOSED)) {
+                    if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeLikeStatus(true);
                     } else {
                         changeLikeStatus(false);
@@ -240,10 +240,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void changeLikeStatus(boolean pIsChoosed) {
         if (pIsChoosed) {
             mRestoLike.setImageResource(R.drawable.ic_like);
-            mRestoLike.setTag(ActionStatus.IS_CHOOSED);
+            mRestoLike.setTag(ActionStatus.IS_CHOSEN);
         } else {
             mRestoLike.setImageResource(R.drawable.ic_not_like);
-            mRestoLike.setTag(ActionStatus.NOT_CHOOSED);
+            mRestoLike.setTag(ActionStatus.NOT_CHOSEN);
         }
     }
 

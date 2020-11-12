@@ -241,9 +241,9 @@ public class WorkmateRepository {
                 break;
             case TO_SEARCH:
                 if (lIsFound) {
-                    mLDLikeStatus.setValue(ActionStatus.IS_CHOOSED);
+                    mLDLikeStatus.setValue(ActionStatus.IS_CHOSEN);
                 } else {
-                    mLDLikeStatus.setValue(ActionStatus.NOT_CHOOSED);
+                    mLDLikeStatus.setValue(ActionStatus.NOT_CHOSEN);
                 }
                 break;
             default:
@@ -406,12 +406,12 @@ public class WorkmateRepository {
                         sApi.setWorkmate(lWorkmate);
                         if ((lWorkmate != null) && (lWorkmate.getWorkmateRestoChoosed() != null)
                                 && (lWorkmate.getWorkmateRestoChoosed().getRestoId().equals(pRestaurant.getRestoPlaceId()))){
-                            mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOOSED);
+                            mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOSEN);
                         } else{
-                            mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);
+                            mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOSEN);
                         }
                     } else {
-                        mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOOSED);
+                        mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOSEN);
                     }
                 })
                 .addOnFailureListener(pE -> mLDWorkmateChoiceStatus.setValue(ActionStatus.ERROR));

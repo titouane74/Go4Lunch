@@ -24,14 +24,14 @@
         <item
             android:id="@+id/nav_map"
             android:title="@string/menu_map"
-            android:visible="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/nav_restaurant_list"
             android:title="@string/menu_restaurant_list"
-            android:visible="false"/>
+            android:visible="false" />
         <item
             android:id="@+id/nav_workmate"
             android:title="@string/menu_workmate_list"
-            android:visible="false"/>
+            android:visible="false" />
     </group>
 </menu>

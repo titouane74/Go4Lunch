@@ -7,12 +7,4 @@
     android:theme="@style/StartTheme"
     tools:context=".view.activities.StartActivity">
 
-    <ProgressBar
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/default_extra_large_margin"
-        android:elevation="50dp"
-        />
-
 </LinearLayout>

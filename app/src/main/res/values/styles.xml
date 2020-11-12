@@ -6,34 +6,18 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-<!--        <item name="android:actionBarStyle">@style/MyActionBar</item> -->
-    </style>
-    <style name="MyActionBar" parent="Widget.AppCompat.SearchView">
-        <item name="queryBackground">@color/colorWhiteBackground</item>
-        <item name="android:textColor">@color/colorTextBlack</item>
-        <item name="android:textColorHint">@color/colorTextUnavailable</item>
-    </style>
-
-    <!--NOT USED ?? -->
-    <style name="Go4LunchTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Go4LunchTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
 
     <style name="Go4LunchTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
-
-
     <style name="StartTheme" parent="Go4LunchTheme">
         <item name="android:windowBackground">@drawable/start_background</item>
     </style>
-
 
     <style name="AuthenticationTheme" parent="Go4LunchTheme">
         <item name="colorPrimary">@color/colorTextPrimary</item>
@@ -51,12 +35,6 @@
         <item name="android:paddingStart">@dimen/auth_btn_text_align_padding</item>
         <item name="android:text">@string/sign_in_with_email</item>
         <item name="android:textSize">@dimen/auth_btn_text_size</item>
-    </style>
-
-    <!--NOT USED ?? -->
-    <style name="AuthenticationTheme.NoActionBar" parent="Go4LunchTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="SettingsTheme" parent="Theme.AppCompat">
@@ -81,6 +59,7 @@
     </style>
 
     <style name="RestaurantDetailTheme" parent="Go4LunchTheme"/>
+
     <style name="RestaurantDetailTheme.TextUnderIcon" parent="RestaurantDetailTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -91,17 +70,26 @@
         <item name="android:layout_marginTop">@dimen/resto_det_vertical_margin</item>
         <item name="android:textSize">@dimen/resto_det_text_size_under_icon</item>
     </style>
+
     <style name="RestaurantDetailTheme.IconAction" parent="RestaurantDetailTheme">
         <item name="android:layout_width">@dimen/resto_det_img_size_icon</item>
         <item name="android:layout_height">@dimen/resto_det_img_size_icon</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
+
     <style name="RestaurantDetailTheme.IconStar" parent="RestaurantDetailTheme">
         <item name="android:layout_marginStart">@dimen/default_margin_mini</item>
-        <item name="android:layout_width">@dimen/img_star_size</item>
-        <item name="android:layout_height">@dimen/img_star_size</item>
+        <item name="android:layout_width">@dimen/resto_list_det_img_star_size</item>
+        <item name="android:layout_height">@dimen/resto_list_det_img_star_size</item>
     </style>
 
+    <style name="RestaurantListTheme" parent="Go4LunchTheme"/>
+
+    <style name="RestaurantListTheme.IconStar" parent="RestaurantDetailTheme">
+        <item name="android:layout_marginEnd">@dimen/resto_list_margin_end_item_description</item>
+        <item name="android:layout_width">@dimen/resto_list_det_img_star_size</item>
+        <item name="android:layout_height">@dimen/resto_list_det_img_star_size</item>
+    </style>
 
 </resources>

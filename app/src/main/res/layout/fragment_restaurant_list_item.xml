@@ -5,10 +5,10 @@
     android:id="@+id/item_restaurant_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_horizontal_border"
-    android:layout_marginTop="@dimen/margin_vertical_between_item"
-    android:layout_marginEnd="@dimen/margin_horizontal_border"
-    android:layout_marginBottom="@dimen/margin_vertical_between_item"
+    android:layout_marginStart="@dimen/resto_list_margin_horizontal_border"
+    android:layout_marginTop="@dimen/resto_list_margin_vertical_between_item"
+    android:layout_marginEnd="@dimen/resto_list_margin_horizontal_border"
+    android:layout_marginBottom="@dimen/resto_list_margin_vertical_between_item"
     android:orientation="vertical"
     tools:context=".view.activities.MainActivity">
 
@@ -17,38 +17,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="@dimen/percent_center_guideline" />
+        app:layout_constraintGuide_percent="@dimen/resto_list_percent_center_guideline" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/right_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="@dimen/percent_right_guideline" />
+        app:layout_constraintGuide_percent="@dimen/resto_list_percent_right_guideline" />
 
 
     <TextView
         android:id="@+id/text_restaurant_name"
-        android:layout_width="@dimen/zero_dp"
+        android:layout_width="@dimen/default_zero_dp"
         android:layout_height="wrap_content"
         android:text="@string/text_resto_list_name"
         android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/text_size_item_title"
+        android:textSize="@dimen/resto_list_det_text_size_item_title"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/center_guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/center_guideline"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_restaurant_address"
-        android:layout_width="@dimen/zero_dp"
+        android:layout_width="@dimen/default_zero_dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_restaurant_name"
-        android:layout_marginTop="@dimen/margin_vertical_between_item_description"
+        android:layout_marginTop="@dimen/resto_list_margin_vertical_between_item_description"
         android:singleLine="false"
         android:text="@string/text_resto_list_address"
         android:textColor="@color/colorTextRestaurantInformation"
-        android:textSize="@dimen/text_size_item_description"
+        android:textSize="@dimen/resto_list_det_text_size_item_description"
         app:layout_constraintEnd_toStartOf="@id/center_guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_restaurant_name" />
@@ -58,9 +58,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_restaurant_address"
-        android:layout_marginTop="@dimen/margin_vertical_between_item_description"
+        android:layout_marginTop="@dimen/resto_list_margin_vertical_between_item_description"
         android:textColor="@color/colorTextRestaurantInformation"
-        android:textSize="@dimen/text_size_item_description"
+        android:textSize="@dimen/resto_list_det_text_size_item_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_restaurant_address" />
 
@@ -72,17 +72,17 @@
         android:layout_marginEnd="@dimen/default_margin"
         android:text="@string/text_resto_list_distance"
         android:textColor="@color/colorTextDistance"
-        android:textSize="@dimen/text_size_item_title"
-        app:layout_constraintStart_toStartOf="@+id/center_guideline"
+        android:textSize="@dimen/resto_list_det_text_size_item_title"
         app:layout_constraintEnd_toStartOf="@id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/center_guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_workmate"
-        android:layout_width="@dimen/img_workmate_size"
-        android:layout_height="@dimen/img_workmate_size"
+        android:layout_width="@dimen/resto_list_img_workmate_size"
+        android:layout_height="@dimen/resto_list_img_workmate_size"
         android:layout_below="@+id/text_distance"
-        android:layout_marginTop="@dimen/margin_vertical_top_img_workmate"
+        android:layout_marginTop="@dimen/resto_list_margin_vertical_top_img_workmate"
         android:contentDescription="@null"
         app:layout_constraintEnd_toStartOf="@id/text_nb_workmates"
         app:layout_constraintTop_toBottomOf="@id/text_distance" />
@@ -92,20 +92,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/img_workmate"
-        android:layout_marginEnd="@dimen/margin_end_item_description"
+        android:layout_marginEnd="@dimen/resto_list_margin_end_item_description"
         android:layout_toEndOf="@+id/img_workmate"
         android:text="@string/text_resto_list_nb_workmate"
         android:textColor="@color/colorTextRestaurantInformation"
-        android:textSize="@dimen/text_size_item_nb_workmate"
+        android:textSize="@dimen/resto_list_text_size_item_nb_workmate"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/img_workmate"
         app:layout_constraintEnd_toStartOf="@id/right_guideline" />
 
     <ImageView
         android:id="@+id/img_star_note_1"
-        android:layout_width="@dimen/img_star_size"
-        android:layout_height="@dimen/img_star_size"
-        android:layout_marginEnd="@dimen/margin_end_item_description"
+        style="@style/RestaurantListTheme.IconStar"
         android:contentDescription="@null"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -113,9 +111,7 @@
 
     <ImageView
         android:id="@+id/img_star_note_2"
-        android:layout_width="@dimen/img_star_size"
-        android:layout_height="@dimen/img_star_size"
-        android:layout_marginEnd="@dimen/margin_end_item_description"
+        style="@style/RestaurantListTheme.IconStar"
         android:contentDescription="@null"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -123,9 +119,7 @@
 
     <ImageView
         android:id="@+id/img_star_note_3"
-        android:layout_width="@dimen/img_star_size"
-        android:layout_height="@dimen/img_star_size"
-        android:layout_marginEnd="@dimen/margin_end_item_description"
+        style="@style/RestaurantListTheme.IconStar"
         android:contentDescription="@null"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -133,9 +127,9 @@
 
 
     <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/img_size_resto_width_height"
-        android:layout_height="@dimen/img_size_resto_width_height"
-        app:cardCornerRadius="@dimen/corner_radius_img_resto"
+        android:layout_width="@dimen/resto_list_img_size_resto_width_height"
+        android:layout_height="@dimen/resto_list_img_size_resto_width_height"
+        app:cardCornerRadius="@dimen/resto_list_corner_radius_img_resto"
         app:layout_constraintStart_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="parent">
 

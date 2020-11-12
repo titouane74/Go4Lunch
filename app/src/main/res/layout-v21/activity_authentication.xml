@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/authentification"
+    android:id="@+id/authentication"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/lunch_portrait"
@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/auth_img_logo"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/zero_dp"
+        android:layout_height="@dimen/default_zero_dp"
         android:layout_margin="@dimen/default_margin"
         android:contentDescription="@string/img_desc_logo"
         app:layout_constraintHeight_percent="@dimen/auth_img_logo_height"
@@ -50,7 +50,7 @@
 
             <ImageView
                 android:id="@+id/btn_start_login_email_logo"
-                android:layout_width="@dimen/auth_btn_logo_witdh"
+                android:layout_width="@dimen/auth_btn_logo_width"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
                 android:contentDescription="@string/desc_logo_email"
@@ -82,7 +82,7 @@
 
             <ImageView
                 android:id="@+id/btn_start_login_google_logo"
-                android:layout_width="@dimen/auth_btn_logo_witdh"
+                android:layout_width="@dimen/auth_btn_logo_width"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
                 android:contentDescription="@string/desc_logo_google"
@@ -114,7 +114,7 @@
 
             <ImageView
                 android:id="@+id/btn_start_login_facebook_logo"
-                android:layout_width="@dimen/auth_btn_logo_witdh"
+                android:layout_width="@dimen/auth_btn_logo_width"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
                 android:contentDescription="@string/desc_logo_facebook"
@@ -147,7 +147,7 @@
 
             <ImageView
                 android:id="@+id/btn_start_login_twitter_logo"
-                android:layout_width="@dimen/auth_btn_logo_witdh"
+                android:layout_width="@dimen/auth_btn_logo_width"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/default_margin"
                 android:contentDescription="@string/desc_logo_twitter"
