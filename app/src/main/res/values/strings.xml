@@ -131,5 +131,6 @@
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Annuler</string>
     <string name="text_hint_search">Rechercher des restaurants</string>
+    <string name="error_on_save">Erreur lors de la sauvegarde</string>
 
 </resources>

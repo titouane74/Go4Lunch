@@ -124,6 +124,27 @@ public class WorkmateRepository {
     }
 
     /**
+     * Update Firestore with the new username
+     * @param pWorkmate : object : workmate
+     * @param pNewUserName : string : new user name
+     * @return : object ActionStatus : result of the update
+     */
+    public MutableLiveData<ActionStatus> updateWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
+
+        mWorkmateRef.document(pWorkmate.getWorkmateId())
+                .update(String.valueOf(Workmate.Fields.workmateName),pNewUserName)
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        pWorkmate.setWorkmateName(pNewUserName);
+                        sApi.setWorkmate(pWorkmate);
+                        mLDWorkmateSaved.setValue(ActionStatus.SAVED);
+                    }
+                })
+                .addOnFailureListener(pE -> mLDWorkmateSaved.setValue(ActionStatus.SAVED_FAILED));
+        return mLDWorkmateSaved;
+    }
+
+    /**
      * Manage if the demand is to be get or save
      * @param pWorkmate : object : workmate who likes
      * @param pRestaurant : object : restaurant which is liked

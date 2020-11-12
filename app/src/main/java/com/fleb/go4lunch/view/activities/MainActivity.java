@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
         mCurrentUser = lAuth.getCurrentUser();
-        Log.e(TAG, "onCreate: " + Objects.requireNonNull(mCurrentUser).getDisplayName());
-        Log.d(TAG, "onCreate: saveWorkmateID : " + mCurrentUser.getDisplayName() + " - " + mCurrentUser.getUid());
+
+        Log.d(TAG, "onCreate: saveWorkmateID : " + Objects.requireNonNull(mCurrentUser).getDisplayName() + " - " + mCurrentUser.getUid());
         configureViewModel();
 
         configureToolBar();
