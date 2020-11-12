@@ -25,27 +25,46 @@ public class RestaurantDetailViewModel extends ViewModel {
         mWorkmate = sApi.getWorkmate();
     }
 
-    /**
-     * Access to WorkmateRepository
-     */
+//     Access to WorkmateRepository
 
+    /**
+     * Get or save the workmate restaurant choice
+     * @param pRestaurant: object : restaurant
+     * @param pActionStatus : enum : action to do
+     * @return : enum : result of the action
+     */
     public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
         return mWorkmateRepo.getOrSaveWorkmateRestaurantChoice(pRestaurant, pActionStatus);
     }
+
+    /**
+     * Get or save the workmate restaurant like
+     * @param pRestaurant: object : restaurant
+     * @param pActionStatus : enum : action to do
+     * @return : enum : result of the action
+     */
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
         return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(mWorkmate,pRestaurant, pActionStatus);
     }
 
+    /**
+     * Get  workmate informations
+     * @return : object : workmate
+     */
     public MutableLiveData<Workmate> getWorkmateData() {
         return mWorkmateRepo.getWorkmateData(mWorkmate.getWorkmateId());
     }
 
+
+//     Access to RestaurantRepository
+
     /**
-     * Access to RestaurantRepository
+     * Get detail restaurant
+     * @return : object : restaurant
      */
     public MutableLiveData<Restaurant> getRestaurantDetail(String pRestaurantId) {
-        return mRestaurantRepo.getRestaurantDetail(pRestaurantId);
+        return mRestaurantRepo.getLDRestaurantDetail(pRestaurantId);
     }
 
 }

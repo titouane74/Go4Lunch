@@ -9,10 +9,15 @@ import retrofit2.http.Query;
 
 /**
  * Created by Florence LE BOURNOT on 04/10/2020
+ *
+ * Retrofit Api to get informations from Google
  */
 public interface JsonRetrofitApi {
 
     String BASE_URL_GOOGLE = "https://maps.googleapis.com/maps/api/place/";
+    String TXT_PHOTO_REF_GOOGLE = "photo?photoreference=";
+    String TXT_MAX_WIDTH_GOOGLE = "&maxwidth=";
+    String TXT_KEY_GOOGLE = "&key=";
 
     @GET("nearbysearch/json")
     Call<RestaurantPojo> getNearByPlaces(

@@ -24,6 +24,11 @@ public class SettingsViewModel extends ViewModel {
         return mText;
     }
 
+    /**
+     * Display the right text for the notification activated or not
+     * @param pContext : object : context
+     * @return : string : text to display
+     */
     public LiveData<String> getTextNotifStatus(Context pContext) {
         NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(pContext);
 

@@ -2,6 +2,8 @@ package com.fleb.go4lunch.model;
 
 /**
  * Created by Florence LE BOURNOT on 15/10/2020
+ *
+ * Model which is used to prepare the display of the opening hours in the restaurant list
  */
 public class DayOpeningHours {
 

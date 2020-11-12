@@ -30,7 +30,6 @@
     <string name="user_account_updated">Account updated</string>
     <string name="user_account_deleted">account deleted</string>
 
-
     <!--DRAWER-->
     <string name="menu_hungry">I\'M HUNGRY!</string>
     <string name="menu_lunch">YOUR LUNCH</string>
@@ -50,8 +49,6 @@
     <string name="menu_workmate_list">Workmates</string>
 
     <!--AUTHENTIFICATION ACTIVITY-->
-    <string name="logo_text_go4lunch">Go4Lunch</string>
-    <string name="logo_text">Find a nice restaurant and invite your co-workers for lunch!</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_twitter">Sign in with Twitter</string>
@@ -64,13 +61,6 @@
     <string name="auth_account_not_created">Failed to create account</string>
     <string name="auth_msg_sign_in_to_continue">Please sign in to continue.</string>
 
-
-
-    <string name="nav_host_fragment">nav_host_fragment</string>
-    <string name="text_initializing">Initializing…</string>
-
-    <string name="section_image_ratio">1:1</string>
-
     <!-- RESTAURANT DETAIL -->
     <string name="btn_check">CHECK</string>
     <string name="text_call">CALL</string>
@@ -80,7 +70,6 @@
     <string name="text_no_phone_number">No phone number</string>
     <string name="text_resto_added_to_favorite">Restaurant added to your favorites</string>
     <string name="text_resto_removed_from_favorite">Restaurant removed from your favorites</string>
-
 
     <!-- RESTAURANT LIST -->
     <string name="tag_restaurant_list">tag_restaurant_list</string>
@@ -107,11 +96,6 @@
     <string name="text_workmate_eating">is eating</string>
     <string name="text_workmate_joining">is joining!</string>
 
-    <!-- YOUR LUNCH -->
-    <string name="text_lunch_not_choosed">Vous n\'avez pas encore choisi de restaurant</string>
-    <string name="text_lunch_title">You\'re eating at :</string>
-
-
     <!-- MAPS -->
     <string name="tag_map">tag_map</string>
     <string name="proximity_radius">3000</string>
@@ -120,7 +104,6 @@
     <string name="default_latitude_position">48.8236549</string>
     <string name="default_longitude_position">2.4102578</string>
     <string name="place_detail_fields">name,address_components,formatted_phone_number,geometry,icon,id,international_phone_number,rating,website,utc_offset,opening_hours,photo,vicinity,place_id</string>
-
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to enable the location.</string>
@@ -136,7 +119,7 @@
     <string name="notif_hight_importance">High importance</string>
     <string name="notif_hight">High</string>
 
-    <!-- General -->
+    <!-- GENERAL -->
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
     <string name="text_hint_search">Search restaurants</string>

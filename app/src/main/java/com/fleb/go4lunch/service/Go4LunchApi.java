@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 26/10/2020
+ *
+ * Go4Lunch API Service
  */
 public interface Go4LunchApi {
 
@@ -37,4 +39,5 @@ public interface Go4LunchApi {
 
     void saveLocationInSharedPreferences(Location pLocation);
 
+    double getLocationFromSharedPreferences(String pTypeLocation);
 }

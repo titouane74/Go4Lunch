@@ -5,6 +5,9 @@ import java.util.List;
 
 /**
  * Created by Florence LE BOURNOT on 16/09/2020
+ *
+ * Model of a restaurant
+ *
  */
 public class Restaurant implements Serializable, Comparable<Restaurant> {
 

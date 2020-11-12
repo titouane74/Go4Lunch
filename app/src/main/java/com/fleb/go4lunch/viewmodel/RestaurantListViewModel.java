@@ -16,6 +16,10 @@ public class RestaurantListViewModel extends ViewModel {
         mRepository = new RestaurantRepository();
     }
 
+    /**
+     * Get restaurant list
+     * @return : list object : restaurant list
+     */
     public LiveData<List<Restaurant>>  getRestaurantList() {
         return mRepository.getLDRestaurantList();
     }

@@ -15,6 +15,10 @@ public class WorkmateListViewModel extends ViewModel {
 
     public WorkmateListViewModel() {    }
 
+    /**
+     * Get workmate list
+     * @return : list object : workmate list
+     */
     public LiveData<List<Workmate>> getWorkmateList() {
         return mWorkmateRepo.getLDWorkmateListData();
     }

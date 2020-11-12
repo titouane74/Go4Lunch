@@ -36,12 +36,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.fleb.go4lunch.AppGo4Lunch.ERROR_ON_FAILURE_LISTENER;
+
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG_USER = "TAG_USER";
     private FirebaseUser mCurrentUser;
 
     private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
     private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
+
+    private SettingsViewModel mSettingsViewModel;
 
     private ImageView mImgUser;
     private TextView mTxtEmail;
@@ -65,9 +69,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         lBtnUpdate.setOnClickListener(this);
 
-        SettingsViewModel lSettingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         TextView textView = findViewById(R.id.txt_setting_notif_status);
-        lSettingsViewModel.getTextNotifStatus(this).observe(this, textView::setText);
+        mSettingsViewModel.getTextNotifStatus(this).observe(this, textView::setText);
 
         Button lBtnChangeNotifStatus = findViewById(R.id.btn_change_notif_status);
 
@@ -82,16 +86,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Display the workmate information
+     * @param pCurrentWorkmate : object : FirebaseUser information
+     */
     public void displayWorkmateData(FirebaseUser pCurrentWorkmate) {
 
         mWorkmateRef.document(pCurrentWorkmate.getUid())
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        Log.d(TAG_USER, "onComplete: SUCCESSFUL" );
                         DocumentSnapshot pDocSnap = pTask.getResult();
                         if (Objects.requireNonNull(pDocSnap).exists()) {
-                            Log.d(TAG_USER, "onComplete: SUCCESSFUL and EXIST" );
                             Workmate lWorkmate = pDocSnap.toObject(Workmate.class);
                             String lPhotoUrl = Objects.requireNonNull(lWorkmate).getWorkmatePhotoUrl();
                             if (lPhotoUrl != null) {
@@ -106,10 +112,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         Log.d(TAG_USER, "onComplete: NOT SUCCESSFUL" );
                     }
                 })
-                .addOnFailureListener(pE -> Log.d(TAG_USER, "onComplete: FAILURE" ));
+                .addOnFailureListener(pE -> Log.e(TAG_USER, ERROR_ON_FAILURE_LISTENER + pE));
 
     }
 
+    /**
+     * Update the workmate in Firestore
+     * @param pCurrentWorkmate : object : workmate
+     */
     public void updateWorkmate(FirebaseUser pCurrentWorkmate) {
 
         String lWorkmateName = mTxtName.getText().toString();
@@ -120,11 +130,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         mWorkmateRef.document( pCurrentWorkmate.getUid())
                 .update(lWorkmate)
                 .addOnSuccessListener(pVoid -> Log.d(TAG_USER, "onSuccess: Document updated " ))
-                .addOnFailureListener(pE -> Log.d(TAG_USER, "onFailure: Document not updated", pE));
+                .addOnFailureListener(pE -> Log.e(TAG_USER, ERROR_ON_FAILURE_LISTENER + pE));
         Toast.makeText(this, R.string.user_account_updated, Toast.LENGTH_SHORT).show();
         finish();
     }
 
+    /**
+     * Open the default system window for the notification parameter
+     */
     private void openNotificationSettingsForApp() {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

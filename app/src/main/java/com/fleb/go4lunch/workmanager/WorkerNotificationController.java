@@ -23,16 +23,28 @@ public class WorkerNotificationController {
     private static final int NOTIFICATION_MINUTE = 0;
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
+    /**
+     * Start the controller for the generation of notification if they are activated
+     * @param context : object : context
+     */
     public static void startWorkerController(Context context) {
         PeriodicWorkRequest lWorkRequest = configureRequestPeriod();
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_REQUEST_NAME,
                 ExistingPeriodicWorkPolicy.REPLACE, lWorkRequest);
     }
 
+    /**
+     * Stop the controller for the generation of the notification if they are deactivated
+     * @param context : object : context
+     */
     public static void stopWorkerController(Context context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(WORK_REQUEST_TAG);
     }
 
+    /**
+     * configure the request periodic work
+     * @return : object : periodicworkrequest
+     */
     private static PeriodicWorkRequest configureRequestPeriod() {
         long lSysTime = System.currentTimeMillis();
 
@@ -56,6 +68,7 @@ public class WorkerNotificationController {
                 .build();
 
         long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
+        //TODO to reinitialize
         lStartTime = 20000;
 
         // PeriodicWorkRequest

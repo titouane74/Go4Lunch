@@ -100,6 +100,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Ask the restaurant detail to Firestore
+     */
     private void getRestaurantDetail() {
 
         mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
@@ -111,8 +114,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             displayChoiceStatus();
             displayLikeStatus();
         });
-
     }
+
+    /**
+     * Display the restaurant informations
+     */
     private void setInfoRestaurant() {
         mRestoName.setText(mRestaurant.getRestoName());
         mRestoAddress.setText(mRestaurant.getRestoAddress());
@@ -137,6 +143,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestoBtnFloatChecked.setOnClickListener(v -> saveChoiceRestaurant());
     }
 
+    /**
+     * Save the workmate restaurant choice
+     */
     private void saveChoiceRestaurant() {
         mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
                 .observe(this, pActionStatus -> {
@@ -157,6 +166,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Display the status of the workmate choice
+     */
     private void displayChoiceStatus() {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
@@ -172,6 +184,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Chane the status of the wormate choice
+     * @param pIsChoosed : boolean : the restaurant is choosed or not
+     */
     private void changeChoiceStatus(boolean pIsChoosed) {
         if (pIsChoosed) {
             mRestoBtnFloatChecked.setImageResource(R.drawable.ic_check_circle);
@@ -182,6 +198,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Display if the restaurant is liked by the workmate
+     */
     private void displayLikeStatus() {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
@@ -196,6 +215,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Save the workmate choice if he likes or not the restaurant
+     */
     private void saveLikeRestaurant() {
         mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
                 .observe(this, pActionStatus -> {
@@ -209,6 +231,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Change the display like status
+     * @param pIsChoosed : boolean : is liked or not by the workmate
+     */
     private void changeLikeStatus(boolean pIsChoosed) {
         if (pIsChoosed) {
             mRestoLike.setImageResource(R.drawable.ic_like);
@@ -219,6 +245,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Open the website
+     * @param pWebSite : string : url to open
+     */
     private void openWebSite(String pWebSite) {
         if (pWebSite != null) {
             Intent lIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pWebSite));
@@ -228,6 +258,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Open the dialer
+     * @param pPhone : string : phone number to display
+     */
     private void openDialer(String pPhone) {
         if ((pPhone != null) && (pPhone.trim().length() > 0)) {
             Intent lIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Uri.encode(pPhone)));
@@ -237,6 +271,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Display the rating with stars
+     * @param pRating : double : rating of the restaurant
+     */
     private void displayRating(double pRating) {
         int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()), pRating);
         switch (lnbStarToDisplay) {

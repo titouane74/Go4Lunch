@@ -51,6 +51,9 @@ public class NotifyWorker extends Worker {
         return Result.success();
     }
 
+    /**
+     * Prepare the notification for the current user if he choosed a restaurant
+     */
     public void prepareNotification() {
         List<Restaurant> lRestaurantList = sApi.getRestaurantList();
         for (Restaurant lRestaurant : lRestaurantList) {
@@ -68,6 +71,11 @@ public class NotifyWorker extends Worker {
         }
     }
 
+    /**
+     * Create the notification
+     * @param pWorkmateComing : list object : workmate list coming to the same restaurant
+     * @param pRestaurant : objetc : restaurant choosed by the workmate
+     */
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
 
         NotificationCompat.Builder lBuilder;

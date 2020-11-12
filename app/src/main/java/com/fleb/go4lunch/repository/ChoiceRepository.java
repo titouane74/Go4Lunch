@@ -13,11 +13,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.fleb.go4lunch.AppGo4Lunch.ERROR_ON_FAILURE_LISTENER;
+import static com.fleb.go4lunch.AppGo4Lunch.ERROR_UNKNOWN;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 /**
  * Created by Florence LE BOURNOT on 25/10/2020
+ *
+ * Repository which manage the cleaning choices each day at the same time 14:00
+ *
  */
+
 public class ChoiceRepository {
 
     public static final String TAG = "TAG_CHOICE";
@@ -33,6 +39,9 @@ public class ChoiceRepository {
 
     private Date mDate = new Date();
 
+    /**
+     * Select all the workmates who have a choice to remove
+     */
     public void removePreviousChoice() {
         Calendar lCalendar = Calendar.getInstance();
         lCalendar.setTime(mDate);
@@ -58,16 +67,28 @@ public class ChoiceRepository {
                 });
     }
 
+    /**
+     * Remove the previous restaurant choice that the workmate has made
+     * @param pWorkmate : object : workmate concerned by the update
+     * @param pRestaurantId : string : id of the restaurant choosed by the workmate
+     */
     private void removeWorkmateChoice(Workmate pWorkmate, String pRestaurantId) {
 
         pWorkmate.setWorkmateRestoChoosed(null);
         sApi.setWorkmate(pWorkmate);
         mWorkmateRef.document(pWorkmate.getWorkmateId())
                 .update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
-                .addOnCompleteListener(pTask -> removeWorkmateFromRestaurant(pWorkmate, pRestaurantId))
-                .addOnFailureListener(pE -> Log.d(TAG, "removeChoice : restaurant removed Failed"));
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) removeWorkmateFromRestaurant(pWorkmate, pRestaurantId);
+                })
+                .addOnFailureListener(pE -> Log.e(TAG, ERROR_ON_FAILURE_LISTENER + pE));
     }
 
+    /**
+     * Remove the workmate in the restaurant list of workmate who's coming to eat
+     * @param pWorkmate : object : workmate who's gonna be removed
+     * @param pRestaurantId : string : id of the restaurant choosed by the workmate
+     */
     private void removeWorkmateFromRestaurant(Workmate pWorkmate, String pRestaurantId) {
 
         Restaurant.WorkmatesList lWorkmatesInRestoList =
@@ -77,13 +98,10 @@ public class ChoiceRepository {
         mRestaurantRef.document(pRestaurantId)
                 .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
                 .addOnCompleteListener(pTask -> {
-                    if (pTask.isSuccessful()) {
-                        Log.e(TAG, "removeWorkmateFromRestaurant: remove resto " );
-                    } else {
-                        Log.e(TAG, "removeWorkmateFromRestaurant: faile on restaurant "
-                                + pWorkmate.getWorkmateRestoChoosed().getRestoName() );
+                    if (!pTask.isSuccessful()) {
+                        Log.e(TAG, ERROR_UNKNOWN + " on " + pWorkmate.getWorkmateRestoChoosed().getRestoName() );
                     }
                 })
-                .addOnFailureListener(pE -> Log.d(TAG, "onFailure: Document not saved", pE));
+                .addOnFailureListener(pE -> Log.e(TAG, ERROR_ON_FAILURE_LISTENER + pE));
     }
 }

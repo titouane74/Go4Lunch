@@ -16,6 +16,11 @@ public class AuthenticationViewModel extends ViewModel {
 
     public AuthenticationViewModel() { }
 
+    /**
+     * Save the firebase user and workmate in Firestore
+     * @param pUser : object : FirebaseUser
+     * @return : enum : result of the action
+     */
     public LiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pUser) {
 
         return mWorkmateRepo.saveWorkmateFirebaseProfile(pUser);

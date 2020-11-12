@@ -60,6 +60,10 @@ public class RestaurantListFragment extends BaseFragment {
         mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::changeAndNotifyAdapterChange);
     }
 
+    /**
+     * Inform the recycler view adapter when there's new data
+     * @param pRestaurantList : list object : restaurant list
+     */
     public void changeAndNotifyAdapterChange(List<Restaurant> pRestaurantList) {
         mRestoAdapter.setRestoList(pRestaurantList);
         mRestoAdapter.notifyDataSetChanged();

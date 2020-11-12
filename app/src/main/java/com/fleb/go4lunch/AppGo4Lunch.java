@@ -35,7 +35,14 @@ public class AppGo4Lunch extends MultiDexApplication {
     public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
     public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
 
-    public static final String TAG="TAG_NOTIF";
+    /**
+     * Applications errors/success
+     */
+    public static final String ERROR_ON_FAILURE_LISTENER = "OnFailure : ";
+    public static final String ERROR_UNKNOWN = "Error : ";
+
+    public static final String TAG = "TAG_NOTIF";
+
 
     public static Go4LunchApi sApi = DI.getGo4LunchApiService();
     public static SharedPreferences mPreferences;
@@ -52,10 +59,16 @@ public class AppGo4Lunch extends MultiDexApplication {
 
     }
 
+    /**
+     * Initiate the start of the cleaning choice restaurant
+     */
     private void removePreviousRestaurantChoice() {
         WorkerRestaurantChoiceController.startWorkerController(this);
     }
 
+    /**
+     * Initilize and load Shared Preferences
+     */
     private void initializeSharedPreferences() {
 
         PreferencesHelper.loadPreferences(this);
@@ -80,8 +93,10 @@ public class AppGo4Lunch extends MultiDexApplication {
         }
     }
 
+    /**
+     * Create notification channels
+     */
     private void createNotificationChannels() {
-        Log.d(TAG, "createNotificationChannels: " );
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationManager lManager = getSystemService(NotificationManager.class);

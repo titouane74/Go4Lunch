@@ -57,8 +57,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
 
-//    private Go4LunchApi mApi;
-
     Button mBtnLoginGoogle, mBtnLoginFacebook, mBtnLoginEmail, mBtnLoginTwitter;
     FirebaseUser mCurrentUser;
     CallbackManager mCallbackManager;
@@ -67,8 +65,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
-
-//        mApi = DI.getGo4LunchApiService();
 
         mBtnLoginGoogle = findViewById(R.id.btn_start_login_google);
         mBtnLoginFacebook = findViewById(R.id.btn_start_login_facebook);
@@ -234,8 +230,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                 } catch (ApiException e) {
                     Toast.makeText(getApplicationContext(), getString(R.string.error_unknown_error)
                             + " : " + e, Toast.LENGTH_SHORT).show();
-
-                    // ...
                 }
             } else {
                 Log.w(TAG_AUTHENTICATION, Objects.requireNonNull(lException).toString());
@@ -260,6 +254,10 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         }
     }
 
+    /**
+     * Update the user interface
+     * @param pCurrentUser : object : FirebaseUser
+     */
     private void updateUI(FirebaseUser pCurrentUser) {
 
         if (pCurrentUser != null) {
@@ -280,6 +278,10 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         super.onBackPressed();
     }
 
+    /**
+     * Save workmate informations if not exist in Firestore
+     * @param pCurrentWorkmate : object : FirebaseUser to save in Firestore
+     */
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
 
         AuthenticationViewModel lAuthViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);

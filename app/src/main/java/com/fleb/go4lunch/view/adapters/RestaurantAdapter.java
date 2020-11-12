@@ -38,6 +38,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     private DayOpeningHours mStatus;
     private Context mContext;
 
+    /**
+     * Declarations for the opening hours display
+     */
     public static final int CASE_0_CLOSED_TODAY_OPEN_AT = 0;
     public static final int CASE_1_CLOSED_OPEN_AT_ON = 1;
     public static final int CASE_2_CLOSED_OPEN_AT = 2;
@@ -90,6 +93,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         });
     }
 
+    /**
+     * Display the workmate logo
+     * @param pRestoHolder : object : restaurant holder
+     */
     private void displayLogoWorkmate(RestaurantHolder pRestoHolder) {
         int lImgWorkmate = R.drawable.ic_workmate;
 
@@ -103,6 +110,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 .into(pRestoHolder.mWorkmateImg);
     }
 
+    /**
+     * Display the opening hours
+     * @param pRestoHolder : object : restaurant holder
+     * @param pPosition : int : position in the adapter
+     */
     private void displayOpeningHour(RestaurantHolder pRestoHolder, int pPosition) {
         if (mRestoList.get(pPosition).getRestoOpeningHours() != null) {
 
@@ -121,6 +133,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
+    /**
+     * Display the restaurant image
+     * @param pRestoHolder : object : restaurant holder
+     * @param pPosition : int : position in the adapter
+     */
     private void displayRestoImg(RestaurantHolder pRestoHolder, int pPosition) {
         if (mRestoList.get(pPosition).getRestoPhotoUrl() != null) {
             Glide.with(pRestoHolder.mRestoImage.getContext())
@@ -135,6 +152,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
+    /**
+     * Display the rating
+     * @param pRestoHolder : object : restaurant holder
+     * @param pPosition : int : position in the adapter
+     */
     private void displayRating(RestaurantHolder pRestoHolder, int pPosition) {
         int lImgStar = R.drawable.ic_star_yellow_note;
 
@@ -171,6 +193,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
+    /**
+     * Get the restaurant opening hours status : open or not with the description
+     * @param pContext : object : context
+     * @param pRestaurant : object : restaurant
+     * @return : object : DayOpeningHours : information on the opening hour at the moment
+     */
     private DayOpeningHours getRestaurantOpeningHoursStatus(Context pContext, Restaurant pRestaurant) {
         String lStringNextOpenDay = null;
         String lStringTime = null;
@@ -213,6 +241,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         return mStatus;
     }
 
+    /**
+     * Search the next opening day
+     * @param pRestoHoursList : list object : list of all the opening hours of the restaurant
+     * @param pCurrentDay : int : current day of week
+     */
     private void searchNextOpenDay(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pCurrentDay) {
         int lAddDay = 0;
         int lSearchDay = pCurrentDay;
@@ -240,6 +273,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
+    /**
+     * Get the service informations of the opening day
+     * @param pRestoHoursList : list object : list of all the opening hours of the restaurant
+     * @param pDay : int : day of week
+     */
     private void getServiceDay(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pDay) {
         int lNumService = 0;
         int lService1CloseTime = 0;
@@ -271,6 +309,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
+    /**
+     * Define the case of the restaurant opening hours to display
+     * @param pOpenTime : int : opening time
+     * @param pCloseTime : int : closing time
+     * @param pService1CloseTime : int : closing time of the first service of the day
+     */
     private void defineCase(int pOpenTime, int pCloseTime, int pService1CloseTime) {
         boolean lIsCloseSoon;
         int lCurrentTime = Go4LunchHelper.getCurrentTime();
@@ -320,10 +364,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         } else if (pCloseTime <= lCurrentTime) {
             mStatus.setDayCase(CASE_1_CLOSED_OPEN_AT_ON);  //Closed
         } else {
-            Log.d(TAG, "defineCase: nothing changed ");
+            Log.i(TAG, "defineCase: nothing changed ");
         }
     }
 
+    /**
+     * Get the next opne day
+     * @param pRestoHoursList : list object : list of all the opening hours of the restaurant
+     * @param mStatus : object : dayopeninhours status
+     * @param pDay : int : day
+     * @return : object : DayOpeningHours : information on the opening hour at the moment
+     */
     private DayOpeningHours getNextOpenDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
                                            DayOpeningHours mStatus,
                                            int pDay) {
@@ -338,6 +389,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         return mStatus;
     }
 
+    /**
+     * Search previous opening day for the restaurant which are open until 1:00
+     * @param pRestoHoursList : list object : list of all the opening hours of the restaurant
+     * @param pDay : int : day
+     * @return : int : previous opening day
+     */
     private int searchPreviousDay(RestaurantDetailPojo.OpeningHours pRestoHoursList,
                                   int pDay) {
         int lMaxPeriod = pRestoHoursList.getPeriods().size();
@@ -351,6 +408,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         return 9;
     }
 
+    /**
+     * Search the service informations
+     * @param pRestoHoursList : list object : list of all the opening hours of the restaurant
+     * @param pIndex : int : index
+     * @param pOpenDay : int : open day
+     * @return : object : DayOpeningHours : information on the opening hour at the moment
+     */
     private DayOpeningHours searchServices(RestaurantDetailPojo.OpeningHours pRestoHoursList, int pIndex, int pOpenDay) {
 
         //Find the next service which is not on the same day
@@ -370,6 +434,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         return mStatus;
     }
 
+    /**
+     * Verify if the restaurant is going to close soon
+     * Update the restaurant status is open or not
+     * @param pCloseTime : int : close time
+     * @param pCurrentTime : int : current time
+     * @return : boolean : true if closing soon
+     */
     private boolean verifyClosingSoonCase(int pCloseTime, int pCurrentTime) {
 
         pCloseTime = Go4LunchHelper.convertTimeInMinutes(pCloseTime);
@@ -385,6 +456,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
         }
     }
 
+    /**
+     * Get the text description in function of the case of the restaurant
+     * @param pContext : object : Context
+     * @param pCase : int : case of the restaurant
+     * @param pTime : string : time for closing or opening
+     * @param pNextOpenDay : string : next opening day
+     * @return string : the descrtiption
+     */
     private String getTextDescription(Context pContext, int pCase, @Nullable String pTime, @Nullable String pNextOpenDay) {
         Resources lResources = pContext.getResources();
         switch (pCase) {

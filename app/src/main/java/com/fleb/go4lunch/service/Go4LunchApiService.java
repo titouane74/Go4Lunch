@@ -8,9 +8,14 @@ import com.fleb.go4lunch.utils.PreferencesHelper;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
+import java.util.Objects;
+
+import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
 
 /**
  * Created by Florence LE BOURNOT on 26/10/2020
+ *
+ * Go4Lunch API Service
  */
 public class Go4LunchApiService implements Go4LunchApi {
 
@@ -82,5 +87,10 @@ public class Go4LunchApiService implements Go4LunchApi {
     public void saveLocationInSharedPreferences(Location pLocation) {
         PreferencesHelper.saveStringPreferences(PREF_KEY_LATITUDE, String.valueOf(pLocation.getLatitude()));
         PreferencesHelper.saveStringPreferences(PREF_KEY_LONGITUDE, String.valueOf(pLocation.getLongitude()));
+    }
+
+    @Override
+    public double getLocationFromSharedPreferences(String pTypeLocation) {
+        return  Double.parseDouble(Objects.requireNonNull(mPreferences.getString(pTypeLocation, "")));
     }
 }

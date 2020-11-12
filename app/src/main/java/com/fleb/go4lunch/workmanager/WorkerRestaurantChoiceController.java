@@ -23,6 +23,10 @@ public class WorkerRestaurantChoiceController {
     private static final int NOTIFICATION_MINUTE = 0;
     private static final int NOTIFICATION_FREQUENCY_DAY = 1;
 
+    /**
+     * Start the controller for the cleaning restaurant choice
+     * @param context : object : context
+     */
     public static void startWorkerController(Context context) {
 
         PeriodicWorkRequest lWorkRequest = configureRequestPeriod();
@@ -30,6 +34,10 @@ public class WorkerRestaurantChoiceController {
                 ExistingPeriodicWorkPolicy.REPLACE, lWorkRequest);
     }
 
+    /**
+     * configure the request periodic work
+     * @return : object : periodicworkrequest
+     */
     private static PeriodicWorkRequest configureRequestPeriod() {
         long lSysTime = System.currentTimeMillis();
 
@@ -53,6 +61,7 @@ public class WorkerRestaurantChoiceController {
                 .build();
 
         long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
+        //TODO to réinitialize
         lStartTime = 20000;
 
         // PeriodicWorkRequest

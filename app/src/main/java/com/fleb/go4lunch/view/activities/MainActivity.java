@@ -84,12 +84,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         configureDrawerLayoutNavigationView();
 
-        Log.d(TAG, "onCreate: call WorkManagerNotificationController StarRequest");
-
         configureWorkerNotification(getApplicationContext());
-
     }
 
+    /**
+     * Configure the work manager for the notifications
+     * @param pContext : object : context
+     */
     private void configureWorkerNotification(Context pContext) {
         NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(pContext);
 
@@ -136,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * Configure the menu Your lunch. Is disabled if the workmate hasn't choosed a restaurant
+     */
     private void configureMenuYourLunch() {
         Menu lMenu = mNavigationView.getMenu();
         if (mWorkmate.getWorkmateRestoChoosed() != null) {
@@ -155,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+    /**
+     * Manage the autocomplete prediction
+     * @param menu : object : menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -192,6 +201,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Send the data retrieve from the autocomplete request to the active fragment for the display update
+     * @param pRestaurantList : list object : restaurant list
+     */
     private void sendDataToFragment(List<Restaurant> pRestaurantList) {
 
         if (mNavController.getCurrentBackStackEntry() != null) {
@@ -214,6 +227,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Retrieve the actual instance of the MapsFragment
+     * @return : object : mapsfragment instance
+     */
     private MapsFragment getMapsFragmentActualInstance() {
         MapsFragment resultFragment = null;
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -229,6 +246,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return resultFragment;
     }
 
+    /**
+     * Retrieve the actual instance of the RestaurantListFragment
+     * @return : object : RestaurantListFragment instance
+     */
     private RestaurantListFragment getRestaurantListFragmentActualInstance() {
         RestaurantListFragment resultFragment = null;
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);

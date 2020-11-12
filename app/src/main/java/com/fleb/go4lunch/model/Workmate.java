@@ -9,6 +9,9 @@ import java.util.Objects;
 
 /**
  * Created by Florence LE BOURNOT on 16/09/2020
+ *
+ * Model of a workmate
+ *
  */
 public class Workmate {
 

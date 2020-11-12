@@ -19,19 +19,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.PermissionUtils;
-import com.fleb.go4lunch.view.activities.MainActivity;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.google.android.gms.location.LocationServices;
@@ -47,19 +41,11 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.List;
-import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 public class MapsFragment extends Fragment implements LocationListener {
@@ -141,9 +127,12 @@ public class MapsFragment extends Fragment implements LocationListener {
         lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
     }
 
+    /**
+     * Set the markers on the map
+     * @param pRestaurants : list object : restaurant list
+     */
     public void setMapMarkers(List<Restaurant> pRestaurants) {
         BitmapDescriptor lIcon;
-        Log.d(TAG, "setMapMarkers: ");
         if (mMap != null) {
             mMap.clear();
             for (Restaurant lRestaurant : pRestaurants) {
@@ -163,15 +152,15 @@ public class MapsFragment extends Fragment implements LocationListener {
                             .title(lName)
                             .icon(lIcon));
                     lMarker.setTag(lRestaurant);
-                } else {
-                    Log.d(TAG, "setMapMarkers: AUTOCOMPLETE LIST");
                 }
             }
-        } else {
-            Log.d(TAG, "setMapMarkers: AUTOCOMPLETE LIST - MAP NULL");
         }
     }
 
+    /**
+     * Open the restaurant detail when click on the marker
+     * @param pMarker : object : marker
+     */
     private void displayRestaurantDetail(Marker pMarker) {
         Context lContext = requireContext();
         Restaurant lRestaurant = (Restaurant) pMarker.getTag();
@@ -182,6 +171,9 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
+    /**
+     * Get the current location
+     */
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
         Task<Location> task = mFusedLocationClient.getLastLocation();
@@ -197,6 +189,10 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
+    /**
+     * Save the location and configure the view model and move the camera to the location
+     * @param pLocation
+     */
     public void saveLocation(Location pLocation) {
         double lLongitude = pLocation.getLongitude();
         double lLatitude = pLocation.getLatitude();
@@ -207,6 +203,11 @@ public class MapsFragment extends Fragment implements LocationListener {
         setCameraOnCurrentLocation(lLatLng, mZoom);
     }
 
+    /**
+     * Set camera to the location
+     * @param latLng : object : latLng : new location
+     * @param zoom : int : intensity of the zoom
+     */
     public void setCameraOnCurrentLocation(LatLng latLng, int zoom) {
         try {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));

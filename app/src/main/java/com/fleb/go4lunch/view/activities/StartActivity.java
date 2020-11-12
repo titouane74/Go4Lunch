@@ -2,7 +2,6 @@ package com.fleb.go4lunch.view.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class StartActivity extends AppCompatActivity {
 
-    private static final String TAG_START = "TAG_START";
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
@@ -27,11 +25,9 @@ public class StartActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
-            Log.d(TAG_START, "onStart: User connecté");
         } else {
             startActivity(new Intent(getApplicationContext(), AuthenticationActivity.class));
             finish();
-            Log.d(TAG_START, "onStart: User null");
         }
     }
 
