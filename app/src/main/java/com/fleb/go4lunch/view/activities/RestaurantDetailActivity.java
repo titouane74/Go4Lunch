@@ -223,8 +223,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 .observe(this, pActionStatus -> {
                     if (pActionStatus.equals(ActionStatus.ADDED)) {
                         changeLikeStatus(true);
+                        Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
                     } else if (pActionStatus.equals(ActionStatus.REMOVED)) {
                         changeLikeStatus(false);
+                        Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
                     } else if (pActionStatus.equals(ActionStatus.ERROR)) {
                         Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                     }
