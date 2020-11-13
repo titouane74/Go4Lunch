@@ -68,21 +68,21 @@ public class RestaurantRepository {
     /**
      * Firebase declarations
      */
-    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
-    private CollectionReference mRestoLastUpdRef = mDb.collection(String.valueOf(FirestoreUpdateFields.RestaurantLastUpdate));
+    private final FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+    private final CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
+    private final CollectionReference mRestoLastUpdRef = mDb.collection(String.valueOf(FirestoreUpdateFields.RestaurantLastUpdate));
     /**
      * Google  / Retrofit declarations
      */
-    private String mKey = BuildConfig.MAPS_API_KEY;
+    private final String mKey = BuildConfig.MAPS_API_KEY;
     private JsonRetrofitApi mJsonRetrofitApi;
 
     /**
      * MutableLiveData Declarations
      */
-    private MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>();
-    private MutableLiveData<Restaurant> mLDResto = new MutableLiveData<>();
-    private MutableLiveData<List<Restaurant>> mLDAutocompleteRestoList = new MutableLiveData<>();
+    private final MutableLiveData<List<Restaurant>> mLDRestoList = new MutableLiveData<>();
+    private final MutableLiveData<Restaurant> mLDResto = new MutableLiveData<>();
+    private final MutableLiveData<List<Restaurant>> mLDAutocompleteRestoList = new MutableLiveData<>();
 
     private Date mFirestoreLastUpdate = new Date();
 
@@ -97,7 +97,7 @@ public class RestaurantRepository {
     /**
      * Get from Firestore the restaurant detail
      * @param pRestaurantId : string : restaurant id to get
-     * @return : mutable live data object : restaurant informations
+     * @return : mutable live data object : restaurant information
      */
     public MutableLiveData<Restaurant> getLDRestaurantDetail(String pRestaurantId) {
         mRestoRef.document(pRestaurantId)
@@ -113,7 +113,7 @@ public class RestaurantRepository {
 
     /**
      * Manage the recovery of the restaurant list
-     * if it's the first start of the application the data are retrieved from Google and Firestore is uptaded
+     * if it's the first start of the application the data are retrieved from Google and Firestore is updated
      * if it's the first connection on a monday, the data are retrieved from Google and Firestore is updated
      * (the Firestore last update date is before now)
      * in the other case, the data are retrieved from Firestore
@@ -145,7 +145,7 @@ public class RestaurantRepository {
                                 @SuppressLint("SimpleDateFormat")
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-                                // The dates are different and we are on a monday we retieve informations from Google
+                                // The dates are different and we are on a monday we retrieve information from Google
                                 if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
                                     // 2 = Monday
                                     //TODO for the moment deactivate the google call
@@ -204,7 +204,7 @@ public class RestaurantRepository {
                     List<RestaurantPojo.Result> lRestoResponse = Objects.requireNonNull(response.body()).getResults();
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
-                        manageRestaurantInformationsAndGetGoogleDetailRestaurant(restaurantPojo.getPlaceId(), lRestoResponse.size());
+                        manageRestaurantInformationAndGetGoogleDetailRestaurant(restaurantPojo.getPlaceId(), lRestoResponse.size());
                     }
                 }
             }
@@ -217,11 +217,11 @@ public class RestaurantRepository {
     }
 
     /**
-     * Get and manage the restaurant detail informations from Google
+     * Get and manage the restaurant detail information from Google
      * @param pRestaurantListId : string : id of the restaurant
      * @param pResponseSize : int : size of the restaurant list
      */
-    public void manageRestaurantInformationsAndGetGoogleDetailRestaurant(String pRestaurantListId, int pResponseSize) {
+    public void manageRestaurantInformationAndGetGoogleDetailRestaurant(String pRestaurantListId, int pResponseSize) {
         String lFields = mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS, null);
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
@@ -235,7 +235,7 @@ public class RestaurantRepository {
                 if (response.isSuccessful()) {
                     RestaurantDetailPojo.Result lRestoDetResponse = Objects.requireNonNull(response.body()).getResult();
 
-                    //Manage restaurant informations
+                    //Manage restaurant information
                     String lPhoto = null;
                     double lRating = 0.0;
                     String lAddress = null;
@@ -378,7 +378,7 @@ public class RestaurantRepository {
         mRestoLastUpdRef.document(String.valueOf(FirestoreUpdateFields.dateLastUpdateListResto))
                 .set(lLastUpdate)
                 .addOnSuccessListener(pDocumentReference ->
-                        Log.d(TAG, "onSuccess : date uppdated "))
+                        Log.d(TAG, "onSuccess : date updated "))
                 .addOnFailureListener(pE ->
                         Log.e(TAG, ERROR_ON_FAILURE_LISTENER + pE));
     }
@@ -414,7 +414,7 @@ public class RestaurantRepository {
 
     /**
      * Manage the autocomplete prediction: generate the request, get and filter the result
-     * Call also the data from Firestore to be compared if all the informations are already stored
+     * Call also the data from Firestore to be compared if all the information are already stored
      * @param pPlacesClient : object : placesClient
      * @param pQuery : string : query to be put in the request to autocomplete
      */
@@ -472,11 +472,11 @@ public class RestaurantRepository {
     }
 
     /**
-     * Get from Firestore the restaurant list retrieved from the autocompleted prediction result
+     * Get from Firestore the restaurant list retrieved from the autocomplete prediction result
      * If all the restaurant are in Firestore, the list is prepared and send for the display
      * If there's some restaurant missing, the list is submitted to Google to have their details
      * @param pRestaurantList : list object : restaurant list from the autocomplete prediction
-     * @param pRestaurantsId : list strinf : restaurant id from the autocomplete prediction
+     * @param pRestaurantsId : list string : restaurant id from the autocomplete prediction
      */
     private void getAutoCompleteRestaurantsFromFirestore(List<Restaurant> pRestaurantList, List<String> pRestaurantsId) {
         int lMaxRestaurantList = pRestaurantList.size();
@@ -503,7 +503,7 @@ public class RestaurantRepository {
     }
 
     /**
-     * Retrieve restaurant deatil information from Google
+     * Retrieve restaurant detail information from Google
      * @param pAutocompleteRestaurantList : list object : autocomplete prediction restaurant list
      */
     private void getAutoCompleteMissingRestaurant(List<Restaurant> pAutocompleteRestaurantList) {
@@ -512,7 +512,7 @@ public class RestaurantRepository {
 
         if (pAutocompleteRestaurantList.size() > 0) {
             for (Restaurant lAutoRestaurant : pAutocompleteRestaurantList) {
-                manageRestaurantInformationsAndGetGoogleDetailRestaurant(lAutoRestaurant.getRestoPlaceId(),
+                manageRestaurantInformationAndGetGoogleDetailRestaurant(lAutoRestaurant.getRestoPlaceId(),
                         pAutocompleteRestaurantList.size());
             }
         }

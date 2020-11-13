@@ -21,6 +21,8 @@ import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.util.List;
 
+import static com.facebook.share.internal.ShareConstants.PLACE_ID;
+
 
 /**
  * Created by Florence LE BOURNOT on 22/09/2020
@@ -28,7 +30,7 @@ import java.util.List;
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateHolder> {
 
     private List<Workmate> mWorkmateList;
-    private Workmate.WorkmateRestoChoice mRestaurantChoosed;
+    private Workmate.WorkmateRestoChoice mRestaurantChosen;
 
     public void setWorkmateList(List<Workmate> pWorkmateList) {
         mWorkmateList = pWorkmateList;
@@ -50,10 +52,10 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
         Context lContext = pWorkmateHolder.itemView.getContext();
 
-        if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
-            mRestaurantChoosed = mWorkmateList.get(position).getWorkmateRestoChoosed();
+        if (mWorkmateList.get(position).getWorkmateRestoChosen() != null) {
+            mRestaurantChosen = mWorkmateList.get(position).getWorkmateRestoChosen();
             lTxtWorkmate = mWorkmateList.get(position).getWorkmateName()
-            + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChoosed.getRestoName() + ")";
+            + " " + lContext.getString(R.string.text_workmate_eating) + " (" + mRestaurantChosen.getRestoName() + ")";
             pWorkmateHolder.mTxtViewName.setTextColor(lContext.getResources().getColor(R.color.colorTextBlack));
             pWorkmateHolder.mTxtViewName.setTypeface(null, Typeface.NORMAL);
         } else {
@@ -70,10 +72,10 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
                 .into(pWorkmateHolder.mImgViewWorkmate);
 
         pWorkmateHolder.itemView.setOnClickListener(v -> {
-            if (mWorkmateList.get(position).getWorkmateRestoChoosed() != null) {
+            if (mWorkmateList.get(position).getWorkmateRestoChosen() != null) {
                 Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-                mRestaurantChoosed =  mWorkmateList.get(position).getWorkmateRestoChoosed();
-                lIntentRestoDetail.putExtra("placeid", mRestaurantChoosed.getRestoId());
+                mRestaurantChosen =  mWorkmateList.get(position).getWorkmateRestoChosen();
+                lIntentRestoDetail.putExtra(PLACE_ID, mRestaurantChosen.getRestoId());
                 lContext.startActivity(lIntentRestoDetail);
             }
         });
@@ -91,8 +93,8 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     static class WorkmateHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTxtViewName;
-        private ImageView mImgViewWorkmate;
+        private final TextView mTxtViewName;
+        private final ImageView mImgViewWorkmate;
 
         public WorkmateHolder(@NonNull View itemView) {
             super(itemView);

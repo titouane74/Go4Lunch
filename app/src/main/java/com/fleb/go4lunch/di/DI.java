@@ -8,7 +8,7 @@ import com.fleb.go4lunch.service.Go4LunchApi;
  */
 public class DI {
 
-    private static Go4LunchApi mService = new Go4LunchApiService();
+    private static final Go4LunchApi mService = new Go4LunchApiService();
 
     public static Go4LunchApi getGo4LunchApiService(){ return mService; }
 

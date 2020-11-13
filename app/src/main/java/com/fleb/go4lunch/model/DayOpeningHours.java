@@ -5,6 +5,7 @@ package com.fleb.go4lunch.model;
  *
  * Model which is used to prepare the display of the opening hours in the restaurant list
  */
+
 public class DayOpeningHours {
 
     private int dayCurrentOpenDay;

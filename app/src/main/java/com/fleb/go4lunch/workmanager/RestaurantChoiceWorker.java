@@ -14,8 +14,7 @@ import com.fleb.go4lunch.repository.ChoiceRepository;
  */
 public class RestaurantChoiceWorker extends Worker {
 
-    public static final String TAG = "TAG_RESTOCH";
-    private ChoiceRepository mChoiceRepo;
+    private final ChoiceRepository mChoiceRepo;
 
     public RestaurantChoiceWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);

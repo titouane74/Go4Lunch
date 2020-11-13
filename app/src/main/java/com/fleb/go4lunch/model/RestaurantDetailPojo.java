@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Created by Florence LE BOURNOT on 06/10/2020
  */
+@SuppressWarnings("JavaDoc")
 public class RestaurantDetailPojo implements Serializable {
     @SerializedName("html_attributions")
     @Expose
@@ -332,7 +333,7 @@ public class RestaurantDetailPojo implements Serializable {
         private Integer height;
         @SerializedName("html_attributions")
         @Expose
-        private List<String> htmlAttributions = new ArrayList<String>();
+        private List<String> htmlAttributions = new ArrayList<>();
         @SerializedName("photo_reference")
         @Expose
         private String photoReference;
@@ -477,7 +478,7 @@ public class RestaurantDetailPojo implements Serializable {
         private String website;
         @SerializedName("photos")
         @Expose
-        private List<Photo> photos = new ArrayList<Photo>();
+        private List<Photo> photos = new ArrayList<>();
 
         /**
          * No args constructor for use in serialization

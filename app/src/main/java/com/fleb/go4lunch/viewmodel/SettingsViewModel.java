@@ -11,16 +11,15 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.WorkmateRepository;
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
  */
 public class SettingsViewModel extends ViewModel {
 
-    private MutableLiveData<String> mNotificationStatus;
+    private final MutableLiveData<String> mNotificationStatus;
 
-    private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
+    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
 
     public SettingsViewModel() {
         mNotificationStatus = new MutableLiveData<>();
@@ -45,11 +44,11 @@ public class SettingsViewModel extends ViewModel {
     }
 
     /**
-     * Retrieve workmate informations from Firestore
+     * Retrieve workmate information from Firestore
      * @param pWorkmateId : string : workmate id
      * @return : object : workmate
      */
-    public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
+    public LiveData<Workmate> getWorkmateData(String pWorkmateId) {
         return mWorkmateRepo.getWorkmateData(pWorkmateId);
     }
 

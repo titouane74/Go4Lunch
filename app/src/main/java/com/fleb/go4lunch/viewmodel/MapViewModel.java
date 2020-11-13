@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MapViewModel extends ViewModel {
 
-    private RestaurantRepository mRepository ;
+    private final RestaurantRepository mRepository ;
 
     public MapViewModel() {
         mRepository = new RestaurantRepository();

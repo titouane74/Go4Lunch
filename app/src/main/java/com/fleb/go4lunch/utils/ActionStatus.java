@@ -15,5 +15,5 @@ public enum ActionStatus {
     TO_SAVE,
     TO_SEARCH,
     ERROR,
-    EXIST;
+    EXIST
 }

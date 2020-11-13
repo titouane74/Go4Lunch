@@ -31,13 +31,13 @@ public class ChoiceRepository {
     /**
      * Firebase declarations
      */
-    private FirebaseFirestore mDb = FirebaseFirestore.getInstance();
-    private CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
-    private CollectionReference mRestaurantRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
+    private final FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+    private final CollectionReference mWorkmateRef = mDb.collection(String.valueOf(Workmate.Fields.Workmate));
+    private final CollectionReference mRestaurantRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
 
     public static final int REFRESH_HOUR = 14;
 
-    private Date mDate = new Date();
+    private final Date mDate = new Date();
 
     /**
      * Select all the workmates who have a choice to remove
@@ -56,10 +56,10 @@ public class ChoiceRepository {
                     if (pTask.isSuccessful()) {
                         List<Workmate> lWorkmateList =  pTask.getResult().toObjects(Workmate.class);
                         for(Workmate lWorkmate : lWorkmateList) {
-                            if(lWorkmate.getWorkmateRestoChoosed()!=null) {
-                                Date lWorkmateDateChoice = lWorkmate.getWorkmateRestoChoosed().getRestoDateChoice().toDate();
+                            if(lWorkmate.getWorkmateRestoChosen()!=null) {
+                                Date lWorkmateDateChoice = lWorkmate.getWorkmateRestoChosen().getRestoDateChoice().toDate();
                                 if (lWorkmateDateChoice.compareTo(lCalendar.getTime())<0) {
-                                    removeWorkmateChoice(lWorkmate, lWorkmate.getWorkmateRestoChoosed().getRestoId());
+                                    removeWorkmateChoice(lWorkmate, lWorkmate.getWorkmateRestoChosen().getRestoId());
                                 }
                             }
                         }
@@ -70,14 +70,14 @@ public class ChoiceRepository {
     /**
      * Remove the previous restaurant choice that the workmate has made
      * @param pWorkmate : object : workmate concerned by the update
-     * @param pRestaurantId : string : id of the restaurant choosed by the workmate
+     * @param pRestaurantId : string : id of the restaurant chosen by the workmate
      */
     private void removeWorkmateChoice(Workmate pWorkmate, String pRestaurantId) {
 
-        pWorkmate.setWorkmateRestoChoosed(null);
+        pWorkmate.setWorkmateRestoChosen(null);
         sApi.setWorkmate(pWorkmate);
         mWorkmateRef.document(pWorkmate.getWorkmateId())
-                .update(String.valueOf(Workmate.Fields.workmateRestoChoosed), FieldValue.delete())
+                .update(String.valueOf(Workmate.Fields.workmateRestoChosen), FieldValue.delete())
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) removeWorkmateFromRestaurant(pWorkmate, pRestaurantId);
                 })
@@ -87,7 +87,7 @@ public class ChoiceRepository {
     /**
      * Remove the workmate in the restaurant list of workmate who's coming to eat
      * @param pWorkmate : object : workmate who's gonna be removed
-     * @param pRestaurantId : string : id of the restaurant choosed by the workmate
+     * @param pRestaurantId : string : id of the restaurant chosen by the workmate
      */
     private void removeWorkmateFromRestaurant(Workmate pWorkmate, String pRestaurantId) {
 
@@ -99,7 +99,7 @@ public class ChoiceRepository {
                 .update(String.valueOf(Restaurant.Fields.restoWkList), FieldValue.arrayRemove(lWorkmatesInRestoList))
                 .addOnCompleteListener(pTask -> {
                     if (!pTask.isSuccessful()) {
-                        Log.e(TAG, ERROR_UNKNOWN + " on " + pWorkmate.getWorkmateRestoChoosed().getRestoName() );
+                        Log.e(TAG, ERROR_UNKNOWN + " on " + pWorkmate.getWorkmateRestoChosen().getRestoName() );
                     }
                 })
                 .addOnFailureListener(pE -> Log.e(TAG, ERROR_ON_FAILURE_LISTENER + pE));

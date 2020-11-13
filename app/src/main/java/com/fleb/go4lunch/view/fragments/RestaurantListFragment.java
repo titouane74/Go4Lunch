@@ -25,7 +25,6 @@ import java.util.List;
 
 public class RestaurantListFragment extends BaseFragment {
 
-    public static final String TAG = "TAG_RESTOLIST";
     private RestaurantAdapter mRestoAdapter;
     private RecyclerView mRecyclerView;
     private RestaurantListViewModel mRestaurantListViewModel;

@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 /**
  * Created by Florence LE BOURNOT on 04/10/2020
  *
- * Retrofit Api to get informations from Google
+ * Retrofit Api to get information from Google
  */
 public interface JsonRetrofitApi {
 

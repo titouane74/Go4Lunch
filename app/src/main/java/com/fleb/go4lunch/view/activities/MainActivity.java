@@ -47,7 +47,9 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG_MAIN";
 
-    private String mKey = BuildConfig.MAPS_API_KEY;
+    private final String mKey = BuildConfig.MAPS_API_KEY;
+    public static final String MAP_FRAGMENT = "MapsFragment";
+    public static final String RESTO_LIST_FRAGMENT = "RestaurantListFragment";
 
     /**
      * Firebase
@@ -138,11 +140,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Configure the menu Your lunch. Is disabled if the workmate hasn't choosed a restaurant
+     * Configure the menu Your lunch. Is disabled if the workmate hasn't chosen a restaurant
      */
     private void configureMenuYourLunch() {
         Menu lMenu = mNavigationView.getMenu();
-        if (mWorkmate.getWorkmateRestoChoosed() != null) {
+        if (mWorkmate.getWorkmateRestoChosen() != null) {
             lMenu.getItem(1).setEnabled(true);
         } else {
             lMenu.getItem(1).setEnabled(false);
@@ -190,9 +192,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString)
                             .observe(MainActivity.this, pRestaurantList -> sendDataToFragment(pRestaurantList));
                 } else {
-                    mMainActivityViewModel.getRestaurantList().observe(MainActivity.this, pRestaurantList -> {
-                        sendDataToFragment(pRestaurantList);
-                    });
+                    mMainActivityViewModel.getRestaurantList().observe(MainActivity.this,
+                            pRestaurantList -> sendDataToFragment(pRestaurantList));
                 }
                 return true;
             }
@@ -208,9 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void sendDataToFragment(List<Restaurant> pRestaurantList) {
 
         if (mNavController.getCurrentBackStackEntry() != null) {
-            if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("MapsFragment")) {
-                //lMapsFragment.setMapMarkers(lRestaurantList);
-                //((MapsFragment) fragment).(setMarkers(lRestaurantList));
+            if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains(MAP_FRAGMENT)) {
                 MapsFragment lMapsFragment = getMapsFragmentActualInstance();
                 lMapsFragment.setMapMarkers(pRestaurantList);
                 if (pRestaurantList.size() == 1) {
@@ -218,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             pRestaurantList.get(0).getRestoLocation().getLng());
                     lMapsFragment.setCameraOnCurrentLocation(lLatLng, Integer.parseInt(getString(R.string.map_zoom)));
                 }
-            } else if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains("RestaurantListFragment")) {
+            } else if (mNavController.getCurrentBackStackEntry().getDestination().toString().contains(RESTO_LIST_FRAGMENT)) {
                 RestaurantListFragment lRestaurantListFragment = getRestaurantListFragmentActualInstance();
                 lRestaurantListFragment.changeAndNotifyAdapterChange(pRestaurantList);
             }
@@ -297,10 +296,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
 
-        //Contient un navigationitemselectedlistener
         NavigationUI.setupWithNavController(mNavigationView, mNavController);
 
-        //Bottom navigation
         BottomNavigationView lBottomNav = findViewById(R.id.nav_bottom);
         //When drawer and bottomnav are identical
         NavigationUI.setupWithNavController(lBottomNav, mNavController);

@@ -17,9 +17,9 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
  */
 public class RestaurantDetailViewModel extends ViewModel {
 
-    private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
-    private RestaurantRepository mRestaurantRepo = new RestaurantRepository();
-    private Workmate mWorkmate;
+    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
+    private final RestaurantRepository mRestaurantRepo = new RestaurantRepository();
+    private final Workmate mWorkmate;
 
     public RestaurantDetailViewModel() {
         mWorkmate = sApi.getWorkmate();
@@ -49,7 +49,7 @@ public class RestaurantDetailViewModel extends ViewModel {
     }
 
     /**
-     * Get  workmate informations
+     * Get  workmate information
      * @return : object : workmate
      */
     public MutableLiveData<Workmate> getWorkmateData() {

@@ -26,9 +26,8 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
  */
 public class NotifyWorker extends Worker {
 
-    public static final String TAG = "TAG_NOTIF";
-    private Context mContext;
-    private RestaurantRepository mRestaurantRepo;
+    private final Context mContext;
+    private final RestaurantRepository mRestaurantRepo;
     private Workmate mCurrentWorkmate;
 
     public NotifyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -44,21 +43,21 @@ public class NotifyWorker extends Worker {
 
         mCurrentWorkmate = sApi.getWorkmate();
 
-        if ((mCurrentWorkmate != null) && (mCurrentWorkmate.getWorkmateRestoChoosed() != null)) {
-            mRestaurantRepo.getRestaurantNotif(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId());
+        if ((mCurrentWorkmate != null) && (mCurrentWorkmate.getWorkmateRestoChosen() != null)) {
+            mRestaurantRepo.getRestaurantNotif(mCurrentWorkmate.getWorkmateRestoChosen().getRestoId());
             prepareNotification();
         }
         return Result.success();
     }
 
     /**
-     * Prepare the notification for the current user if he choosed a restaurant
+     * Prepare the notification for the current user if he choose a restaurant
      */
     public void prepareNotification() {
         List<Restaurant> lRestaurantList = sApi.getRestaurantList();
         for (Restaurant lRestaurant : lRestaurantList) {
             if ((lRestaurant.getRestoWkList() != null)
-                    && (lRestaurant.getRestoPlaceId().equals(mCurrentWorkmate.getWorkmateRestoChoosed().getRestoId()))) {
+                    && (lRestaurant.getRestoPlaceId().equals(mCurrentWorkmate.getWorkmateRestoChosen().getRestoId()))) {
                 List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
                 List<Workmate> lListWorkmatesComing = new ArrayList<>();
                 for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
@@ -74,7 +73,7 @@ public class NotifyWorker extends Worker {
     /**
      * Create the notification
      * @param pWorkmateComing : list object : workmate list coming to the same restaurant
-     * @param pRestaurant : objetc : restaurant choosed by the workmate
+     * @param pRestaurant : object : restaurant chosen by the workmate
      */
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
 

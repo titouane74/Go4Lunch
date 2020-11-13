@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class AuthenticationViewModel extends ViewModel {
 
-    private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
+    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
 
     public AuthenticationViewModel() { }
 

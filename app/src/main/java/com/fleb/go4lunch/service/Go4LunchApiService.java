@@ -49,8 +49,8 @@ public class Go4LunchApiService implements Go4LunchApi {
     }
 
     @Override
-    public void setRestaurant(Restaurant prestaurant) {
-        mRestaurant = prestaurant;
+    public void setRestaurant(Restaurant pRestaurant) {
+        mRestaurant = pRestaurant;
     }
 
     @Override

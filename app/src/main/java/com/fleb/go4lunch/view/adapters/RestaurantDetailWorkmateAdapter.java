@@ -65,8 +65,8 @@ public class RestaurantDetailWorkmateAdapter extends RecyclerView.Adapter<Restau
 
     static class WorkmateHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTxtViewName;
-        private ImageView mImgViewWorkmate;
+        private final TextView mTxtViewName;
+        private final ImageView mImgViewWorkmate;
 
         public WorkmateHolder(@NonNull View itemView) {
             super(itemView);

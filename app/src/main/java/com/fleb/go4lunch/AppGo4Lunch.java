@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
@@ -41,10 +40,7 @@ public class AppGo4Lunch extends MultiDexApplication {
     public static final String ERROR_ON_FAILURE_LISTENER = "OnFailure : ";
     public static final String ERROR_UNKNOWN = "Error : ";
 
-    public static final String TAG = "TAG_NOTIF";
-
-
-    public static Go4LunchApi sApi = DI.getGo4LunchApiService();
+    public static final Go4LunchApi sApi = DI.getGo4LunchApiService();
     public static SharedPreferences mPreferences;
 
     @Override
@@ -67,7 +63,7 @@ public class AppGo4Lunch extends MultiDexApplication {
     }
 
     /**
-     * Initilize and load Shared Preferences
+     * Initialize and load Shared Preferences
      */
     private void initializeSharedPreferences() {
 
@@ -102,24 +98,24 @@ public class AppGo4Lunch extends MultiDexApplication {
             NotificationManager lManager = getSystemService(NotificationManager.class);
 
             NotificationChannel lChannel1 = new NotificationChannel(
-            CHANNEL_1_ID, "Pas important",
+            CHANNEL_1_ID, getString(R.string.notif_not),
                     NotificationManager.IMPORTANCE_NONE);
-            lChannel1.setDescription("Notification non importante");
+            lChannel1.setDescription(getString(R.string.notif_not_important));
 
             NotificationChannel lChannel2 = new NotificationChannel(
-                    CHANNEL_2_ID, "Faible importance",
+                    CHANNEL_2_ID, getString(R.string.notif_lower),
                     NotificationManager.IMPORTANCE_LOW);
-            lChannel2.setDescription("Notification de faible importance");
+            lChannel2.setDescription(getString(R.string.notif_lower_importance));
 
             NotificationChannel lChannel3 = new NotificationChannel(
-                    CHANNEL_3_ID, "Normal",
+                    CHANNEL_3_ID, getString(R.string.notif_normal),
                     NotificationManager.IMPORTANCE_DEFAULT);
-            lChannel3.setDescription("Importance normale");
+            lChannel3.setDescription(getString(R.string.notif_normal_importance));
 
             NotificationChannel lChannel4 = new NotificationChannel(
-                    CHANNEL_4_ID, "Haute importance",
+                    CHANNEL_4_ID, getString(R.string.notif_high),
                     NotificationManager.IMPORTANCE_HIGH);
-                lChannel4.setDescription("Notification de haute importance");
+                lChannel4.setDescription(getString(R.string.notif_high_importance));
 
 
             if (lManager != null) {

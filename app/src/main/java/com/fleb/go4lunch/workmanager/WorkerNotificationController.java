@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
  * Created by Florence LE BOURNOT on 03/11/2020
  */
 public class WorkerNotificationController {
-    public static final String TAG ="TAG_NOTIF";
 
     private static final String WORK_REQUEST_NAME = "WORK_REQUEST_NAME_GO4LUNCH_NOTIF";
     private static final String WORK_REQUEST_TAG = "WORK_REQUEST_TAG_GO4LUNCH_NOTIF";
@@ -43,7 +42,7 @@ public class WorkerNotificationController {
 
     /**
      * configure the request periodic work
-     * @return : object : periodicworkrequest
+     * @return : object : periodic work request
      */
     private static PeriodicWorkRequest configureRequestPeriod() {
         long lSysTime = System.currentTimeMillis();

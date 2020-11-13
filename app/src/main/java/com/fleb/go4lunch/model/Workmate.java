@@ -19,7 +19,7 @@ public class Workmate {
     private String workmateName;
     private String workmateEmail;
     private String workmatePhotoUrl;
-    private WorkmateRestoChoice workmateRestoChoosed;
+    private WorkmateRestoChoice workmateRestoChosen;
     private List<Likes> workmateLikes;
 
     public Workmate() {}
@@ -43,21 +43,21 @@ public class Workmate {
     }
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                    WorkmateRestoChoice pWorkmateRestoChoosed ) {
+                    WorkmateRestoChoice pWorkmateRestoChosen) {
         this.workmateId = pWorkmateId;
         this.workmateName = pWorkmateName;
         this.workmateEmail = pWorkmateEmail;
         this.workmatePhotoUrl = pWorkmatePhotoUrl;
-        this.workmateRestoChoosed = pWorkmateRestoChoosed;
+        this.workmateRestoChosen = pWorkmateRestoChosen;
     }
 
     public Workmate(String pWorkmateId, String pWorkmateName, String pWorkmateEmail, String pWorkmatePhotoUrl,
-                    WorkmateRestoChoice pWorkmateRestoChoosed, List<Likes> pWorkmateLikes) {
+                    WorkmateRestoChoice pWorkmateRestoChosen, List<Likes> pWorkmateLikes) {
         workmateId = pWorkmateId;
         workmateName = pWorkmateName;
         workmateEmail = pWorkmateEmail;
         workmatePhotoUrl = pWorkmatePhotoUrl;
-        workmateRestoChoosed = pWorkmateRestoChoosed;
+        workmateRestoChosen = pWorkmateRestoChosen;
         workmateLikes = pWorkmateLikes;
     }
 
@@ -73,9 +73,9 @@ public class Workmate {
 
     public void setWorkmatePhotoUrl(@Nullable String pWorkmatePhotoUrl) { workmatePhotoUrl = pWorkmatePhotoUrl; }
 
-    public WorkmateRestoChoice getWorkmateRestoChoosed() { return workmateRestoChoosed; }
+    public WorkmateRestoChoice getWorkmateRestoChosen() { return workmateRestoChosen; }
 
-    public void setWorkmateRestoChoosed(WorkmateRestoChoice pWorkmateRestoChoosed) { workmateRestoChoosed = pWorkmateRestoChoosed; }
+    public void setWorkmateRestoChosen(WorkmateRestoChoice pWorkmateRestoChosen) { workmateRestoChosen = pWorkmateRestoChosen; }
 
     public String getWorkmateId() { return workmateId; }
 
@@ -162,8 +162,8 @@ public class Workmate {
         workmateName,
         workmateEmail,
         workmatePhotoUrl,
-        workmateRestoChoosed,
-        workmateLikes;
+        workmateRestoChosen,
+        workmateLikes
     }
 
 }

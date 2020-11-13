@@ -41,6 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/wk_list_item_divider_height_size"
             android:layout_marginTop="@dimen/default_margin"
-            android:background="@color/colorDiviseur" />
+            android:background="@color/colorDivider" />
     </LinearLayout>
 </RelativeLayout>

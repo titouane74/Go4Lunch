@@ -273,13 +273,8 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
     /**
-     * Save workmate informations if not exist in Firestore
+     * Save workmate information if not exist in Firestore
      * @param pCurrentWorkmate : object : FirebaseUser to save in Firestore
      */
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {

@@ -23,12 +23,11 @@ import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
 import com.fleb.go4lunch.view.adapters.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import static com.facebook.share.internal.ShareConstants.PLACE_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 public class RestaurantDetailActivity extends AppCompatActivity {
-
-    public static final String TAG="TAG_RD";
 
     private Restaurant mRestaurant;
     private String mRestaurantId;
@@ -71,8 +70,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void getIncomingIntent() {
-        if (getIntent().hasExtra("placeid")) {
-            mRestaurantId = getIntent().getStringExtra("placeid");
+        if (getIntent().hasExtra(PLACE_ID)) {
+            mRestaurantId = getIntent().getStringExtra(PLACE_ID);
         }
     }
 
@@ -92,7 +91,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mRestaurantDetailViewModel = new ViewModelProvider(this).get(RestaurantDetailViewModel.class);
         if (mRestaurantId == null) {
             mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
-                mRestaurantId = pWorkmate.getWorkmateRestoChoosed().getRestoId();
+                mRestaurantId = pWorkmate.getWorkmateRestoChosen().getRestoId();
                 getRestaurantDetail();
             });
         } else {
@@ -117,7 +116,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * Display the restaurant informations
+     * Display the restaurant information
      */
     private void setInfoRestaurant() {
         mRestoName.setText(mRestaurant.getRestoName());
@@ -185,11 +184,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * Chane the status of the wormate choice
-     * @param pIsChoosed : boolean : the restaurant is choosed or not
+     * Chane the status of the workmate choice
+     * @param pIsChosen : boolean : the restaurant is chosen or not
      */
-    private void changeChoiceStatus(boolean pIsChoosed) {
-        if (pIsChoosed) {
+    private void changeChoiceStatus(boolean pIsChosen) {
+        if (pIsChosen) {
             mRestoBtnFloatChecked.setImageResource(R.drawable.ic_check_circle);
             mRestoBtnFloatChecked.setTag(ActionStatus.IS_CHOSEN);
         } else {
@@ -235,10 +234,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     /**
      * Change the display like status
-     * @param pIsChoosed : boolean : is liked or not by the workmate
+     * @param pIsChosen : boolean : is liked or not by the workmate
      */
-    private void changeLikeStatus(boolean pIsChoosed) {
-        if (pIsChoosed) {
+    private void changeLikeStatus(boolean pIsChosen) {
+        if (pIsChosen) {
             mRestoLike.setImageResource(R.drawable.ic_like);
             mRestoLike.setTag(ActionStatus.IS_CHOSEN);
         } else {

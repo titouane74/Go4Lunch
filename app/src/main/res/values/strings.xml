@@ -18,25 +18,18 @@
     <string name="error_no_internet">Aucune connexion internet !</string>
     <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
     <string name="connection_succeed">Authentification réussie !</string>
-    <string name="btn_login_text_logged">Afficher le profil</string>
-    <string name="btn_login_text_not_logged">Connexion</string>
     <string name="user_connected">Utilisateur connecté</string>
     <string name="error_msg_email_user_exists">Un compte existe déjà avec la même adresse e-mail mais des informations de connexion différentes. Connectez-vous à l\'aide d\'un fournisseur associé à cette adresse e-mail.</string>
-    <string name="btn_signout">Déconnexion</string>
     <string name="img_desc_logo">Logo</string>
 
     <!-- USER ACTIVITY -->
-    <string name="user_activity_label">Compte utilisateur</string>
     <string name="text_input_username">Nom d\'utilisateur</string>
     <string name="text_view_email">Adresse mail</string>
     <string name="btn_update_account">Mettre à jour le nom d\'utilisateur</string>
-    <string name="btn_delete_account">Supprimer mon compte</string>
-    <string name="btn_sign_out_account">Déconnexion</string>
     <string name="info_no_email_found">Auncune adresse mail</string>
     <string name="info_no_username_found">Aucun nom d\'utilisateur</string>
     <string name="img_user">Image utilisateur</string>
     <string name="user_account_updated">Compte mis à jour</string>
-    <string name="user_account_deleted">Compte supprimé</string>
 
     <!--DRAWER-->
     <string name="menu_hungry">J\'AI FAIM!</string>
@@ -44,8 +37,6 @@
     <string name="menu_logout">DECONNEXION</string>
     <string name="menu_settings">PARAMETRES</string>
     <string name="menu_available_workmates">Collègues disponibles</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -80,17 +71,14 @@
     <string name="text_resto_removed_from_favorite">Restaurant retiré de vos favoris</string>
 
     <!-- RESTAURANT LIST -->
-    <string name="tag_restaurant_list">tag_restaurant_list</string>
     <string name="text_resto_list_name">Le Zinc</string>
     <string name="text_resto_list_address">12 rue du Poissonnier</string>
     <string name="text_resto_list_distance">120m</string>
     <string name="text_resto_list_nb_workmate">2</string>
-    <string name="text_resto_list_clos">Ferme</string>
     <string name="max_level_one_star">1.67</string>
     <string name="max_level_two_star">3.34</string>
     <string name="max_level_three_star">5</string>
     <string name="nb_star">3</string>
-    <string name="text_resto_closed">Fermé</string>
     <string name="text_resto_closed_open_at_on">le</string>
     <string name="text_resto_closed_today">Fermé aujourd\'hui. Ouvre à</string>
     <string name="text_resto_closed_open_at">Fermé. Ouvre à</string>
@@ -124,8 +112,14 @@
     <string name="text_setting_notif_deactivated">Les notifications sont : désactivées</string>
 
     <!-- NOTIFICATION -->
-    <string name="notif_hight_importance">Haute importance</string>
-    <string name="notif_hight">Haute</string>
+    <string name="notif_high_importance">Notification de haute importance</string>
+    <string name="notif_high">Haute</string>
+    <string name="notif_normal_importance">Notification d\'importance normal</string>
+    <string name="notif_normal">Normal</string>
+    <string name="notif_lower_importance">Notification de faible importance</string>
+    <string name="notif_lower">Faible</string>
+    <string name="notif_not_important">Notification pas importante</string>
+    <string name="notif_not">Pas importante</string>
 
     <!-- GENERAL -->
     <string name="btn_ok">OK</string>

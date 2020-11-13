@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
  * Created by Florence LE BOURNOT on 03/11/2020
  */
 public class WorkerRestaurantChoiceController {
-    public static final String TAG ="TAG_NOTIF";
 
     private static final String WORK_REQUEST_NAME = "WORK_REQUEST_NAME_GO4LUNCH_CHOICE";
     private static final String WORK_REQUEST_TAG = "WORK_REQUEST_TAG_GO4LUNCH_CHOICE";
@@ -36,7 +35,7 @@ public class WorkerRestaurantChoiceController {
 
     /**
      * configure the request periodic work
-     * @return : object : periodicworkrequest
+     * @return : object : periodic work request
      */
     private static PeriodicWorkRequest configureRequestPeriod() {
         long lSysTime = System.currentTimeMillis();
@@ -61,7 +60,7 @@ public class WorkerRestaurantChoiceController {
                 .build();
 
         long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
-        //TODO to réinitialize
+        //TODO to reinitialize
         lStartTime = 20000;
 
         // PeriodicWorkRequest

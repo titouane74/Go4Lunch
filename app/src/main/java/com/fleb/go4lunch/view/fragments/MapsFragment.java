@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fleb.go4lunch.BuildConfig;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
@@ -53,14 +52,14 @@ public class MapsFragment extends Fragment implements LocationListener {
     public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    private String mKey = BuildConfig.MAPS_API_KEY;
+    public static final String PLACER_ID = "placeid";
 
     private int mZoom;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private SupportMapFragment mMapFragment;
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         @SuppressLint("MissingPermission")
         @Override
@@ -166,7 +165,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         Restaurant lRestaurant = (Restaurant) pMarker.getTag();
         if (lRestaurant != null) {
             Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-            lIntentRestoDetail.putExtra("placeid", lRestaurant.getRestoPlaceId());
+            lIntentRestoDetail.putExtra(PLACER_ID, lRestaurant.getRestoPlaceId());
             lContext.startActivity(lIntentRestoDetail);
         }
     }
@@ -191,7 +190,7 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     /**
      * Save the location and configure the view model and move the camera to the location
-     * @param pLocation
+     * @param pLocation : object : location
      */
     public void saveLocation(Location pLocation) {
         double lLongitude = pLocation.getLongitude();

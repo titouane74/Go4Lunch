@@ -77,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
      */
     public void displayWorkmateData() {
 
-        mSettingsViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate -> {
+        mSettingsViewModel.getWorkmateData(mCurrentUser.getUid()).observe(this, pWorkmate -> {
             mWorkmate = pWorkmate;
             if (pWorkmate.getWorkmatePhotoUrl() != null) {
                 Glide.with(SettingsActivity.this)

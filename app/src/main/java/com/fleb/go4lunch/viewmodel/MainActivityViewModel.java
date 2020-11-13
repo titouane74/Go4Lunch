@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class MainActivityViewModel extends ViewModel {
 
-    private WorkmateRepository mWorkmateRepo = new WorkmateRepository();
-    private RestaurantRepository mRestaurantRepo = new RestaurantRepository();
+    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
+    private final RestaurantRepository mRestaurantRepo = new RestaurantRepository();
 
     /**
-     * Retrieve workmate informations from Firestore
+     * Retrieve workmate information from Firestore
      * @param pWorkmateId : string : workmate id
      * @return : object : workmate
      */

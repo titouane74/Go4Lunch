@@ -14,10 +14,10 @@ public class RestaurantPojo implements Serializable {
 
     @SerializedName("html_attributions")
     @Expose
-    private List<Object> htmlAttributions = new ArrayList<Object>();
+    private List<Object> htmlAttributions = new ArrayList<>();
     @SerializedName("results")
     @Expose
-    private List<Result> results = new ArrayList<Result>();
+    private List<Result> results = new ArrayList<>();
     @SerializedName("status")
     @Expose
     private String status;
@@ -166,7 +166,7 @@ public class RestaurantPojo implements Serializable {
         private Boolean openNow;
         @SerializedName("weekday_text")
         @Expose
-        private List<Object> weekdayText = new ArrayList<Object>();
+        private List<Object> weekdayText = new ArrayList<>();
 
         /**
          *
@@ -215,7 +215,7 @@ public class RestaurantPojo implements Serializable {
         private Integer height;
         @SerializedName("html_attributions")
         @Expose
-        private List<String> htmlAttributions = new ArrayList<String>();
+        private List<String> htmlAttributions = new ArrayList<>();
         @SerializedName("photo_reference")
         @Expose
         private String photoReference;
@@ -318,7 +318,7 @@ public class RestaurantPojo implements Serializable {
         private OpeningHours openingHours;
         @SerializedName("photos")
         @Expose
-        private List<Photo> photos = new ArrayList<Photo>();
+        private List<Photo> photos = new ArrayList<>();
         @SerializedName("place_id")
         @Expose
         private String placeId;
@@ -333,7 +333,7 @@ public class RestaurantPojo implements Serializable {
         private String scope;
         @SerializedName("types")
         @Expose
-        private List<String> types = new ArrayList<String>();
+        private List<String> types = new ArrayList<>();
         @SerializedName("vicinity")
         @Expose
         private String vicinity;

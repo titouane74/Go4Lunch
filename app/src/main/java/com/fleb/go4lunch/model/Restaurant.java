@@ -172,7 +172,7 @@ public class Restaurant implements Serializable, Comparable<Restaurant> {
         restoLocation,
         restoOpeningHours,
         restoDistance,
-        restoWkList;
+        restoWkList
     }
 
 }

@@ -10,25 +10,18 @@
     <string name="error_no_internet">No internet connection !</string>
     <string name="error_unknown_error">An unknown error has occurred&#8230;</string>
     <string name="connection_succeed">Successful authentication !</string>
-    <string name="btn_login_text_logged">Display profil</string>
-    <string name="btn_login_text_not_logged">Connection</string>
     <string name="user_connected">User connected</string>
     <string name="error_msg_email_user_exists">An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.</string>
-    <string name="btn_signout">Logout</string>
     <string name="img_desc_logo">Logo</string>
 
     <!-- USER ACTIVITY -->
-    <string name="user_activity_label">User account</string>
     <string name="text_input_username">Username</string>
     <string name="text_view_email">Email address</string>
     <string name="btn_update_account">Update username</string>
-    <string name="btn_delete_account">Delete my account</string>
-    <string name="btn_sign_out_account">Logout</string>
     <string name="info_no_email_found">No email address</string>
     <string name="info_no_username_found">No username</string>
     <string name="img_user">User image</string>
     <string name="user_account_updated">Account updated</string>
-    <string name="user_account_deleted">account deleted</string>
 
     <!--DRAWER-->
     <string name="menu_hungry">I\'M HUNGRY!</string>
@@ -36,8 +29,6 @@
     <string name="menu_logout">LOGOUT</string>
     <string name="menu_settings">SETTINGS</string>
     <string name="menu_available_workmates">Available workmates</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -48,7 +39,7 @@
     <string name="menu_restaurant_list">List View</string>
     <string name="menu_workmate_list">Workmates</string>
 
-    <!--AUTHENTIFICATION ACTIVITY-->
+    <!--AUTHENTICATION ACTIVITY-->
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_twitter">Sign in with Twitter</string>
@@ -72,17 +63,14 @@
     <string name="text_resto_removed_from_favorite">Restaurant removed from your favorites</string>
 
     <!-- RESTAURANT LIST -->
-    <string name="tag_restaurant_list">tag_restaurant_list</string>
     <string name="text_resto_list_name">Le Zinc</string>
     <string name="text_resto_list_address">French - 12 rue du Faubourg Poissonnière</string>
     <string name="text_resto_list_distance">12 m</string>
     <string name="text_resto_list_nb_workmate">2</string>
-    <string name="text_resto_list_clos">Clos</string>
     <string name="max_level_one_star">1.67</string>
     <string name="max_level_two_star">3.34</string>
     <string name="max_level_three_star">5</string>
     <string name="nb_star">3</string>
-    <string name="text_resto_closed">Closed</string>
     <string name="text_resto_closed_today">Closed today. Open at</string>
     <string name="text_resto_closed_open_at">Closed. Open at</string>
     <string name="text_resto_closed_open_at_on">on</string>
@@ -116,8 +104,14 @@
     <string name="text_setting_notif_deactivated">Notifications are : deactivated</string>
 
     <!-- NOTIFICATION -->
-    <string name="notif_hight_importance">High importance</string>
-    <string name="notif_hight">High</string>
+    <string name="notif_high_importance">Notification with high importance</string>
+    <string name="notif_high">High</string>
+    <string name="notif_normal_importance">Notification with a normal importance</string>
+    <string name="notif_normal">Normal</string>
+    <string name="notif_lower_importance">Notification with a lower importance</string>
+    <string name="notif_lower">Lower</string>
+    <string name="notif_not_important">Notification not important</string>
+    <string name="notif_not">Not important</string>
 
     <!-- GENERAL -->
     <string name="btn_ok">OK</string>

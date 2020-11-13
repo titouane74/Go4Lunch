@@ -18,7 +18,7 @@
     <dimen name="nav_header_logo_size_add_photo">72dp</dimen>
     <dimen name="main_logo_size_height">104dp</dimen>
 
-    <!-- Authentification -->
+    <!-- Authentication -->
     <dimen name="auth_img_logo_height">0.50</dimen>
     <dimen name="auth_horizontal_margin_large">30dp</dimen>
     <dimen name="auth_btn_height">50dp</dimen>
