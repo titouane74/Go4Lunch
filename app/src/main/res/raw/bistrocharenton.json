@@ -1,0 +1,266 @@
+{
+   "html_attributions" : [],
+   "result" : {
+      "address_components" : [
+         {
+            "long_name" : "123",
+            "short_name" : "123",
+            "types" : [ "street_number" ]
+         },
+         {
+            "long_name" : "Rue de Paris",
+            "short_name" : "Rue de Paris",
+            "types" : [ "route" ]
+         },
+         {
+            "long_name" : "Charenton-le-Pont",
+            "short_name" : "Charenton-le-Pont",
+            "types" : [ "locality", "political" ]
+         },
+         {
+            "long_name" : "Val-de-Marne",
+            "short_name" : "Val-de-Marne",
+            "types" : [ "administrative_area_level_2", "political" ]
+         },
+         {
+            "long_name" : "Île-de-France",
+            "short_name" : "IDF",
+            "types" : [ "administrative_area_level_1", "political" ]
+         },
+         {
+            "long_name" : "France",
+            "short_name" : "FR",
+            "types" : [ "country", "political" ]
+         },
+         {
+            "long_name" : "94220",
+            "short_name" : "94220",
+            "types" : [ "postal_code" ]
+         }
+      ],
+      "adr_address" : "\u003cspan class=\"street-address\"\u003e123 Rue de Paris\u003c/span\u003e, \u003cspan class=\"postal-code\"\u003e94220\u003c/span\u003e \u003cspan class=\"locality\"\u003eCharenton-le-Pont\u003c/span\u003e, \u003cspan class=\"country-name\"\u003eFrance\u003c/span\u003e",
+      "formatted_address" : "123 Rue de Paris, 94220 Charenton-le-Pont, France",
+      "formatted_phone_number" : "01 43 96 09 09",
+      "geometry" : {
+         "location" : {
+            "lat" : 48.82463149999999,
+            "lng" : 2.4085737
+         },
+         "viewport" : {
+            "northeast" : {
+               "lat" : 48.8260324802915,
+               "lng" : 2.410000480291502
+            },
+            "southwest" : {
+               "lat" : 48.8233345197085,
+               "lng" : 2.407302519708499
+            }
+         }
+      },
+      "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+      "international_phone_number" : "+33 1 43 96 09 09",
+      "name" : "Le Bistrot De Charenton",
+      "opening_hours" : {
+         "open_now" : false,
+         "periods" : [
+            {
+               "close" : {
+                  "day" : 2,
+                  "time" : "1345"
+               },
+               "open" : {
+                  "day" : 2,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 2,
+                  "time" : "2145"
+               },
+               "open" : {
+                  "day" : 2,
+                  "time" : "1930"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 3,
+                  "time" : "1345"
+               },
+               "open" : {
+                  "day" : 3,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 3,
+                  "time" : "2145"
+               },
+               "open" : {
+                  "day" : 3,
+                  "time" : "1930"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 4,
+                  "time" : "1345"
+               },
+               "open" : {
+                  "day" : 4,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 4,
+                  "time" : "2145"
+               },
+               "open" : {
+                  "day" : 4,
+                  "time" : "1930"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 5,
+                  "time" : "1345"
+               },
+               "open" : {
+                  "day" : 5,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 5,
+                  "time" : "2145"
+               },
+               "open" : {
+                  "day" : 5,
+                  "time" : "1930"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 6,
+                  "time" : "1345"
+               },
+               "open" : {
+                  "day" : 6,
+                  "time" : "1200"
+               }
+            },
+            {
+               "close" : {
+                  "day" : 6,
+                  "time" : "2145"
+               },
+               "open" : {
+                  "day" : 6,
+                  "time" : "1930"
+               }
+            }
+         ],
+         "weekday_text" : [
+            "lundi: Fermé",
+            "mardi: 12:00 – 13:45, 19:30 – 21:45",
+            "mercredi: 12:00 – 13:45, 19:30 – 21:45",
+            "jeudi: 12:00 – 13:45, 19:30 – 21:45",
+            "vendredi: 12:00 – 13:45, 19:30 – 21:45",
+            "samedi: 12:00 – 13:45, 19:30 – 21:45",
+            "dimanche: Fermé"
+         ]
+      },
+      "photos" : [
+         {
+            "height" : 2268,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/103078615462609419020\"\u003eMc BRey\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAAGOOj-ttjnts7HsawSOQkwlQ-iFzbnzZzYcwRy47diwsmiy397h8TumIRn4F6RsO_eoLY3t8jwwa9dojUepnrN7vgupuFOp30fpNeC4gO565pB39BSF0lhwhycfJY7Ms-EhAtuJ2CSM_klAdKiD-vIK7gGhQDyAGZ0VpBq4n58tR_TphqtKrniQ",
+            "width" : 4032
+         },
+         {
+            "height" : 3024,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/106162149295134622436\"\u003eAndy Criscuolo\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAA44hjnYBrgsiuGzb3vL291HbIM7P8nGDZeNJ9GxYeR-sPd7vYdmZWQHjg4PoOt9GES2qJWJzndpdTAuEo7VEYm81S9NZLHObAXjOdiWMYH2smkDpxAHMyczKEHlfLAD31EhAc-sJBKoD06CsZx-LzQ-xBGhQXcuQc38xiEjMNa3x_FsEnvh50cg",
+            "width" : 4032
+         },
+         {
+            "height" : 3648,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/115456608510914560777\"\u003eJosée C\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAArP1PAIwRzV36xB54JT037YU4_tkLHQPoC5pSciG8Onb4zt8m3PA_DdwIq5aB6HIXFdro3lWZQuB_nMdXEyjoorWU8EOAFbYL5aQrPcp7ow4oJ2ZhTKa7qlC3eBzuEWoFEhAAz_MKMcWffnFqa9C4recgGhS6DhCS0Fz2OTd0VOWc-fvPqk8iwg",
+            "width" : 2736
+         },
+         {
+            "height" : 2592,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/110448669776284375140\"\u003eS Cali\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAAd3SQH3XV12T9Cvm6yt0bm0seM0fwSRLLpApB4IgWnySYwTFVpV0kMjSt1ha_p0cuF8P_OLYMGZwgiFcJZpu0u209C915sCF68_gta9nhzrtt2RVDieHrw-y6bQCEB5xBEhBO-ro6PaVko7TXeqE4cwnrGhSqaMP4UEcc4CYvvct59cI5cCVH0A",
+            "width" : 4608
+         },
+         {
+            "height" : 3096,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/106842347084906771444\"\u003eMélinda FOURMAUX\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAAbo8iYOG0_UtDFjB9aOgrkAFShot3f9EeV2-iYZY_phqE_tQ7-nKy08U1Bo4KXG5o6HUD-bn-MtXqR8JBTEHXtpdnHlmpEiHQmHsnsufmX8MN-q_HF3OGnW9L6hgqQBS7EhD0n1V9udaUkVpryqw5zOtcGhS6IJwhPzmPk4xEEqR0fVU39Dpv-g",
+            "width" : 5504
+         },
+         {
+            "height" : 2268,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/103078615462609419020\"\u003eMc BRey\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAAnUJCPPB-zDFWPoR9DCuSNz5lRyOTc-1qNajzVpv8oeMigngIHa8NQ-4MyGJOTsZDElrNvO0470mYL4dDo7ieUTteqEzJItZQoHw3u2k93lcWzJg4wSIa9jQWxf0Gz_HDEhAMXyPlvnDGGt2qhTjw3gOMGhT0uvlbXzvt6ONcljhy68q8S8ymNg",
+            "width" : 4032
+         },
+         {
+            "height" : 1836,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/111695774614854594200\"\u003eNicolas Anglerot\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAApLG_Yc3iy4Xlj0xvXmuXrcvfVWk3kLbl_fNde_VwjU-Ocd_vA3IGkVc-Syx4Q0mNuPJvCz0PKxM9_woroa7LZZdL-gMwwkx_cc0ap8zk6Kja8zyWlTIDOdrfdjI_gR0ZEhDEib8jr8Dbftv2MZwQ1RXvGhSSaHEvlbIELNGrp2dcVDhDeWWP3w",
+            "width" : 3264
+         },
+         {
+            "height" : 3024,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/112853466679057505745\"\u003eGogoci Dan\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRZAAAASs_vJnRu4Alt82ivykANYb795BwPAAn7zwYquOkRNFA5ANnovplX7V1tZ_q4IwvUYCIJd62Nm0-Vio4VTKqu40VX7vh34bjrowRXW3cpStNnd2TR9c9IIyhP3xo5ZgJPEhBCY01_MvoK81-rbSBoRa7qGhR24-Vx_lAH4L8KQ9GqajnK0gt9VA",
+            "width" : 4032
+         },
+         {
+            "height" : 3407,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/103078615462609419020\"\u003eMc BRey\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAA2To8uS_gAP-kduPcbvgTsCJk5Md5CXxWzFKxur03Uu1YHlGTy9ERtvSAHC64D1sdmro4y6uiMl9ObKw4JnpPvb6nzHBXEKmoqFpBrHErHyKr0i6O40HZtmOW-zQ1RY8TEhAOJ9-ngxzkvd3DPCviLcjQGhR5-tGeX91DH0U88ZB673Ar6lWnhw",
+            "width" : 2260
+         },
+         {
+            "height" : 3343,
+            "html_attributions" : [
+               "\u003ca href=\"https://maps.google.com/maps/contrib/103078615462609419020\"\u003eMc BRey\u003c/a\u003e"
+            ],
+            "photo_reference" : "CmRaAAAAnAmIom3ZX2gFGol3NIAGxz2q-6-AxW4njC3anhJS-IEfx8mkG8Nz10PttI7DZS975P5VYgjlJXH3y7_I_5drBTa00y0rlmKnkoBeLCwIPcyN8szT3BYFMpZcyFBFGSx2EhCgvNcLfHPVyCoVGlLs_u9vGhSh0dJ6ErLAtH5n_KV1dMffElMEjg",
+            "width" : 2228
+         }
+      ],
+      "place_id" : "ChIJvUWY-Fdy5kcRbR9D8o1Xh5A",
+      "rating" : 4.6,
+      "utc_offset" : 60,
+      "vicinity" : "123 Rue de Paris, Charenton-le-Pont",
+      "website" : "http://bistrotdecharenton.com/"
+   },
+   "status" : "OK"
+}

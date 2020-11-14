@@ -277,7 +277,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * @param pRating : double : rating of the restaurant
      */
     private void displayRating(double pRating) {
-        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay((getApplicationContext()), pRating);
+        int lnbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(pRating);
         switch (lnbStarToDisplay) {
             case 1:
                 mRestoNote2.setVisibility(View.INVISIBLE);

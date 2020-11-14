@@ -175,8 +175,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
                 .apply(RequestOptions.centerCropTransform())
                 .into(pRestoHolder.mRestoNote3);
 
-        int lNbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(mContext,
-                mRestoList.get(pPosition).getRestoRating());
+        int lNbStarToDisplay = Go4LunchHelper.ratingNumberOfStarToDisplay(mRestoList.get(pPosition).getRestoRating());
         switch (lNbStarToDisplay) {
             case 1:
                 pRestoHolder.mRestoNote2.setVisibility(View.INVISIBLE);

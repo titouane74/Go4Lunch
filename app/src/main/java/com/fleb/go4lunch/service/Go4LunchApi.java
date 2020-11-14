@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface Go4LunchApi {
 
-    void setWorkmateId(FirebaseUser pUser) ;
+    void setWorkmateId(String pUserId) ;
 
     String getWorkmateId();
 
@@ -30,8 +30,6 @@ public interface Go4LunchApi {
     void setRestaurantList(List<Restaurant> pRestaurantList);
 
     List<Restaurant> getRestaurantList();
-
-    Restaurant getRestaurantFromList(String pRestaurantName);
 
     void setLocation(Location pLocation);
 

@@ -1,10 +1,7 @@
 package com.fleb.go4lunch.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.location.Location;
-
-import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.RestaurantDetailPojo;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -28,29 +25,23 @@ import static com.fleb.go4lunch.network.JsonRetrofitApi.TXT_PHOTO_REF_GOOGLE;
 public class Go4LunchHelper {
 
     public static final String TXT_PROVIDER = "fusedLocationProvider";
+    public static final double MAX_LEVEL_ONE_STAR = 1.67;
+    public static final double MAX_LEVEL_TWO_STAR = 3.34;
 
     /**
      * Indicates the number of star note to display in function of the rating note
-     * @param pContext : object : Context
      * @param pNote : double : rating note
      * @return int : number of star to display
      */
-    public static int ratingNumberOfStarToDisplay(Context pContext, double pNote) {
+    public static int ratingNumberOfStarToDisplay(double pNote) {
 
-        int lMaxNote = Integer.parseInt(pContext.getResources().getString(R.string.max_level_three_star));
-        int lNbNote = Integer.parseInt(pContext.getResources().getString(R.string.nb_star));
-        double lMaxLevelOneStar = Double.parseDouble(pContext.getResources().getString(R.string.max_level_one_star));
-        double lMaxLevelTwoStar = Double.parseDouble(pContext.getResources().getString(R.string.max_level_two_star));
-        double lNote;
         int lNbStarToDisplay;
 
-        lNote = (pNote / lMaxNote) * lNbNote;
-
-        if (lNote == 0) {
+        if (pNote == 0) {
             lNbStarToDisplay = 0;
-        } else if (lNote > 0 && lNote <= lMaxLevelOneStar) {
+        } else if (pNote > 0 && pNote <= MAX_LEVEL_ONE_STAR) {
             lNbStarToDisplay = 1;
-        } else if (lNote > lMaxLevelOneStar && lNote <= lMaxLevelTwoStar) {
+        } else if (pNote > MAX_LEVEL_ONE_STAR && pNote <= MAX_LEVEL_TWO_STAR) {
             lNbStarToDisplay = 2;
         } else {
             lNbStarToDisplay = 3;
