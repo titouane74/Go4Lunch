@@ -28,7 +28,7 @@ import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.util.List;
 
-import static com.facebook.share.internal.ShareConstants.PLACE_ID;
+import static com.fleb.go4lunch.view.activities.RestaurantDetailActivity.RESTO_PLACE_ID;
 
 /**
  * Created by Florence LE BOURNOT on 26/09/2020
@@ -90,7 +90,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         pRestoHolder.itemView.setOnClickListener(v -> {
             Intent lIntentRestoDetail = new Intent(mContext, RestaurantDetailActivity.class);
-            lIntentRestoDetail.putExtra(PLACE_ID, mRestoList.get(position).getRestoPlaceId());
+            lIntentRestoDetail.putExtra(RESTO_PLACE_ID, mRestoList.get(position).getRestoPlaceId());
             mContext.startActivity(lIntentRestoDetail);
         });
     }

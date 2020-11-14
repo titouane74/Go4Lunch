@@ -21,7 +21,7 @@ import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
 
 import java.util.List;
 
-import static com.facebook.share.internal.ShareConstants.PLACE_ID;
+import static com.fleb.go4lunch.view.activities.RestaurantDetailActivity.RESTO_PLACE_ID;
 
 
 /**
@@ -75,7 +75,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
             if (mWorkmateList.get(position).getWorkmateRestoChosen() != null) {
                 Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
                 mRestaurantChosen =  mWorkmateList.get(position).getWorkmateRestoChosen();
-                lIntentRestoDetail.putExtra(PLACE_ID, mRestaurantChosen.getRestoId());
+                lIntentRestoDetail.putExtra(RESTO_PLACE_ID, mRestaurantChosen.getRestoId());
                 lContext.startActivity(lIntentRestoDetail);
             }
         });

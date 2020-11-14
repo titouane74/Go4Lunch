@@ -46,14 +46,13 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
+import static com.fleb.go4lunch.view.activities.RestaurantDetailActivity.RESTO_PLACE_ID;
 
 public class MapsFragment extends Fragment implements LocationListener {
 
-    public static final String TAG = "TAG_";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    public static final String PLACER_ID = "placeid";
-
+    public static final String  TAG = "TAG_MAP";
     private int mZoom;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -165,7 +164,7 @@ public class MapsFragment extends Fragment implements LocationListener {
         Restaurant lRestaurant = (Restaurant) pMarker.getTag();
         if (lRestaurant != null) {
             Intent lIntentRestoDetail = new Intent(lContext, RestaurantDetailActivity.class);
-            lIntentRestoDetail.putExtra(PLACER_ID, lRestaurant.getRestoPlaceId());
+            lIntentRestoDetail.putExtra(RESTO_PLACE_ID, lRestaurant.getRestoPlaceId());
             lContext.startActivity(lIntentRestoDetail);
         }
     }

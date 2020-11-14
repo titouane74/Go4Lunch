@@ -23,11 +23,11 @@ import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
 import com.fleb.go4lunch.view.adapters.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import static com.facebook.share.internal.ShareConstants.PLACE_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
-
 public class RestaurantDetailActivity extends AppCompatActivity {
+
+    public static final String RESTO_PLACE_ID = "placeid";
 
     private Restaurant mRestaurant;
     private String mRestaurantId;
@@ -66,12 +66,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         getIncomingIntent();
 
         configureViewModel();
-
     }
 
     private void getIncomingIntent() {
-        if (getIntent().hasExtra(PLACE_ID)) {
-            mRestaurantId = getIntent().getStringExtra(PLACE_ID);
+        if (getIntent().hasExtra(RESTO_PLACE_ID)) {
+            mRestaurantId = getIntent().getStringExtra(RESTO_PLACE_ID);
         }
     }
 
