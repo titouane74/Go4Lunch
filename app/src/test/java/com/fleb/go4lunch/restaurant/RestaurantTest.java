@@ -49,4 +49,56 @@ public class RestaurantTest {
         assertNull(mContextMocked);
 
     }
+
+    @Test
+    public void setAndGetRestaurantIdWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantNameWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantAddressWithSuccess() { }
+
+    @Test
+    public void setAndGetPhoneWithSuccess() { }
+
+    @Test
+    public void setAndGetwebSiteWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantDistanceInTextWithSuccess() { }
+
+    @Test
+    public void setAndGetRatingWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantPhotoUrlWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantLocationWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantOpeningHoursWithSuccess() { }
+
+    @Test
+    public void setAndGetRestaurantDistanceInMetersWithSuccess() { }
+
+    @Test
+    public void setAndGetWorkmatesListComingToEatWithSuccess() { }
+
+    @Test
+    public void compareTwoRestaurantDistancesWithSuccess() { }
+
+    @Test
+    public void givenTwoRestaurantDistance_whenEquals_ThenSucceed() { }
+
+    @Test
+    public void setAndGetWorkmateIdFromWorkmatesListComingToEatWithSuccess() { }
+
+    @Test
+    public void setAndGetWorkmateNameFromWorkmatesListComingToEatWithSuccess() { }
+
+    @Test
+    public void setAndGetWorkmatePhotoUrlFromWorkmatesListComingToEatWithSuccess() { }
+
 }

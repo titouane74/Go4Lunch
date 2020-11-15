@@ -19,6 +19,8 @@ public class MainActivityViewModel extends ViewModel {
     private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
     private final RestaurantRepository mRestaurantRepo = new RestaurantRepository();
 
+    public MainActivityViewModel() {}
+
     /**
      * Retrieve workmate information from Firestore
      * @param pWorkmateId : string : workmate id

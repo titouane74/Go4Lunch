@@ -121,28 +121,4 @@ public class RestaurantUtils {
         return lWeekdayText;
     }
 
-    //----------------------------------------------------------------------------
-
-    public static  List<Restaurant> getJsonListOfRestaurantDetail(Context pContext) {
-        List<Restaurant> lRestaurantList = new ArrayList<>();
-
-        int[] lListRawFile = {R.raw.tanteeugenie, R.raw.bistrocharenton, R.raw.enlai, R.raw.family26, R.raw.ptitboulanger};
-        for (int lFileNumber : lListRawFile) {
-            String lFileString = readRawFile(pContext.getResources().openRawResource(lFileNumber));
-            Restaurant lRestaurant = new Gson().fromJson(lFileString, Restaurant.class);
-            lRestaurantList.add(lRestaurant);
-        }
-
-        return lRestaurantList;
-    }
-
-    public static String readRawFile(InputStream inputStream) {
-        try {
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes, 0, bytes.length);
-            return new String(bytes);
-        } catch (IOException e) {
-            return null;
-        }
-    }
 }
