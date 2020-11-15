@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.view.adapters.RestaurantAdapter;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.viewmodel.RestaurantListViewModel;
 
 import java.util.List;
@@ -27,7 +30,9 @@ public class RestaurantListFragment extends BaseFragment {
 
     private RestaurantAdapter mRestoAdapter;
     private RecyclerView mRecyclerView;
-    private RestaurantListViewModel mRestaurantListViewModel;
+//    private RestaurantListViewModel mRestaurantListViewModel;
+
+    private Go4LunchViewModel mGo4LunchViewModel;
 
     public RestaurantListFragment() {}
 
@@ -51,12 +56,17 @@ public class RestaurantListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
+
+        Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
+        mGo4LunchViewModel = new ViewModelProvider(requireActivity(),lFactory).get(Go4LunchViewModel.class);
+
+//        mRestaurantListViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListViewModel.class);
 
     }
 
     private void configureViewModel() {
-        mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::changeAndNotifyAdapterChange);
+//        mRestaurantListViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::changeAndNotifyAdapterChange);
+        mGo4LunchViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::changeAndNotifyAdapterChange);
     }
 
     /**

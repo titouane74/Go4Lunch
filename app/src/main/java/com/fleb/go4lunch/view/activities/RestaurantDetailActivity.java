@@ -19,6 +19,9 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
 import com.fleb.go4lunch.view.adapters.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,7 +46,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private FloatingActionButton mRestoBtnFloatChecked;
     private RecyclerView mRecyclerView;
 
-    private RestaurantDetailViewModel mRestaurantDetailViewModel;
+//    private RestaurantDetailViewModel mRestaurantDetailViewModel;
+    private Go4LunchViewModel mGo4LunchViewModel;
+
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
 
     @Override
@@ -87,9 +92,14 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private void initializeViewModel() {
 
-        mRestaurantDetailViewModel = new ViewModelProvider(this).get(RestaurantDetailViewModel.class);
+
+        Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
+        mGo4LunchViewModel = new ViewModelProvider(this,lFactory).get(Go4LunchViewModel.class);
+
+//        mRestaurantDetailViewModel = new ViewModelProvider(this).get(RestaurantDetailViewModel.class);
         if (mRestaurantId == null) {
-            mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
+//            mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
+            mGo4LunchViewModel.getWorkmateData().observe(this, pWorkmate -> {
                 mRestaurantId = pWorkmate.getWorkmateRestoChosen().getRestoId();
                 getRestaurantDetail();
             });
@@ -103,7 +113,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      */
     private void getRestaurantDetail() {
 
-        mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
+//        mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
+            mGo4LunchViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
             mWorkmateAdapter.setWorkmateList(pRestaurant.getRestoWkList());
             mWorkmateAdapter.notifyDataSetChanged();
             mRestaurant = pRestaurant;
@@ -145,7 +156,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Save the workmate restaurant choice
      */
     private void saveChoiceRestaurant() {
-        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
+//        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
+        mGo4LunchViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
                 .observe(this, pActionStatus -> {
                     switch (pActionStatus) {
                         case ADDED:
@@ -168,10 +180,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Display the status of the workmate choice
      */
     private void displayChoiceStatus() {
-        if (mRestaurantDetailViewModel == null) {
+//        if (mRestaurantDetailViewModel == null) {
+        if (mGo4LunchViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+//        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+        mGo4LunchViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeChoiceStatus(true);
@@ -200,10 +214,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Display if the restaurant is liked by the workmate
      */
     private void displayLikeStatus() {
-        if (mRestaurantDetailViewModel == null) {
+//        if (mRestaurantDetailViewModel == null) {
+            if (mGo4LunchViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+//        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+        mGo4LunchViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeLikeStatus(true);
@@ -217,7 +233,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Save the workmate choice if he likes or not the restaurant
      */
     private void saveLikeRestaurant() {
-        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
+//        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
+        mGo4LunchViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
                 .observe(this, pActionStatus -> {
                     if (pActionStatus.equals(ActionStatus.ADDED)) {
                         changeLikeStatus(true);

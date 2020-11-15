@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -31,6 +32,9 @@ import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.view.fragments.MapsFragment;
 import com.fleb.go4lunch.view.fragments.RestaurantListFragment;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.workmanager.WorkerNotificationController;
 import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 import com.google.android.gms.maps.model.LatLng;
@@ -67,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mTxtName;
     private TextView mTxtEmail;
 
-    private MainActivityViewModel mMainActivityViewModel;
+    //    private MainActivityViewModel mMainActivityViewModel;
+    private Go4LunchViewModel mGo4LunchViewModel;
 
     private Workmate mWorkmate;
 
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Configure the work manager for the notifications
+     *
      * @param pContext : object : context
      */
     private void configureWorkerNotification(Context pContext) {
@@ -104,8 +110,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void configureViewModel() {
-        mMainActivityViewModel = new MainActivityViewModel();
-        mMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
+
+        Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
+        mGo4LunchViewModel = new ViewModelProvider(this, lFactory).get(Go4LunchViewModel.class);
+
+//        mMainActivityViewModel = new MainActivityViewModel();
+//        mMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
+        mGo4LunchViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
         {
             if (pWorkmate != null) {
                 mWorkmate = pWorkmate;
@@ -133,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onRestart();
         configureDrawerLayoutNavigationView();
 
-        mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
+//        mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
+        mGo4LunchViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
             mWorkmate = pWorkmate;
             configureMenuYourLunch();
         });
@@ -163,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Manage the autocomplete prediction
+     *
      * @param menu : object : menu
      * @return boolean
      */
@@ -189,10 +202,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // Create a new Places client instance.
                     PlacesClient lPlacesClient = Places.createClient(getApplicationContext());
 
-                    mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString)
+//                    mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString)
+                    mGo4LunchViewModel.getAutocompleteRestaurantList(lPlacesClient, pString)
                             .observe(MainActivity.this, pRestaurantList -> sendDataToFragment(pRestaurantList));
                 } else {
-                    mMainActivityViewModel.getRestaurantList().observe(MainActivity.this,
+//                    mMainActivityViewModel.getRestaurantList().observe(MainActivity.this,
+                    mGo4LunchViewModel.getRestaurantList().observe(MainActivity.this,
                             pRestaurantList -> sendDataToFragment(pRestaurantList));
                 }
                 return true;
@@ -204,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Send the data retrieve from the autocomplete request to the active fragment for the display update
+     *
      * @param pRestaurantList : list object : restaurant list
      */
     private void sendDataToFragment(List<Restaurant> pRestaurantList) {
@@ -222,12 +238,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 lRestaurantListFragment.changeAndNotifyAdapterChange(pRestaurantList);
             }
         } else {
-            Log.e(TAG, "sendDataToFragment: navController.currentBackStackEntry NULL"  );
+            Log.e(TAG, "sendDataToFragment: navController.currentBackStackEntry NULL");
         }
     }
 
     /**
      * Retrieve the actual instance of the MapsFragment
+     *
      * @return : object : mapsfragment instance
      */
     private MapsFragment getMapsFragmentActualInstance() {
@@ -247,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Retrieve the actual instance of the RestaurantListFragment
+     *
      * @return : object : RestaurantListFragment instance
      */
     private RestaurantListFragment getRestaurantListFragmentActualInstance() {

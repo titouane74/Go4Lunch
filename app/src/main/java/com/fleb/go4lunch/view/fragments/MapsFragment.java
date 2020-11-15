@@ -26,6 +26,9 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.utils.PermissionUtils;
 import com.fleb.go4lunch.view.activities.RestaurantDetailActivity;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
+import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.viewmodel.MapViewModel;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,6 +60,8 @@ public class MapsFragment extends Fragment implements LocationListener {
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private SupportMapFragment mMapFragment;
+
+    private Go4LunchViewModel mGo4LunchViewModel;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -120,9 +125,12 @@ public class MapsFragment extends Fragment implements LocationListener {
 
     public void configureViewModel() {
 
-        MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
+        Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
+        mGo4LunchViewModel = new ViewModelProvider(requireActivity(),lFactory).get(Go4LunchViewModel.class);
 
-        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+//        MapViewModel lMapViewModel = new ViewModelProvider(mMapFragment).get(MapViewModel.class);
+//        lMapViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
+        mGo4LunchViewModel.getRestaurantList().observe(getViewLifecycleOwner(), this::setMapMarkers);
     }
 
     /**

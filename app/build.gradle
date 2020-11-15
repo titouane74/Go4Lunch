@@ -74,6 +74,7 @@ dependencies {
 
     // FirebaseUI
     implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation 'com.google.firebase:firebase-firestore:21.6.0'
 
     //Retrofit
