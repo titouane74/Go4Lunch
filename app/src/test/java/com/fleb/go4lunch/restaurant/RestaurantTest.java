@@ -6,14 +6,13 @@ import com.fleb.go4lunch.di.DI;
 
 import com.fleb.go4lunch.service.Go4LunchApi;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -29,7 +28,7 @@ public class RestaurantTest {
 
     private Context mContextMocked;
 
-    @BeforeEach
+    @Before
     public void setup() {
         mContextMocked = mock(Context.class);
 
@@ -39,14 +38,11 @@ public class RestaurantTest {
 
     }
 
-    @AfterEach
+    @After
     public void tearDown() { mApi = DI.getNewInstanceApiService(); }
 
     @Test
     public void getRestaurant(){
-
-        assertNull(contextMock);
-        assertNull(mContextMocked);
 
     }
 

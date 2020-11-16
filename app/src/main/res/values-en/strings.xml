@@ -59,8 +59,7 @@
     <string name="text_website">WEBSITE</string>
     <string name="text_no_web_site">No web site</string>
     <string name="text_no_phone_number">No phone number</string>
-    <string name="text_resto_added_to_favorite">Restaurant added to your favorites</string>
-    <string name="text_resto_removed_from_favorite">Restaurant removed from your favorites</string>
+    <string name="error_saved_failed">An error occurred during the backup</string>
 
     <!-- RESTAURANT LIST -->
     <string name="text_resto_list_name">Le Zinc</string>

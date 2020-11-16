@@ -16,10 +16,13 @@ import java.util.List;
  */
 public class MainActivityViewModel extends ViewModel {
 
-    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
-    private final RestaurantRepository mRestaurantRepo = new RestaurantRepository();
+    private final WorkmateRepository mWorkmateRepo ;
+    private final RestaurantRepository mRestaurantRepo ;
 
-    public MainActivityViewModel() {}
+    public MainActivityViewModel(RestaurantRepository pRestaurantRepository, WorkmateRepository pWorkmateRepository) {
+        mRestaurantRepo = pRestaurantRepository;
+        mWorkmateRepo = pWorkmateRepository;
+    }
 
     /**
      * Retrieve workmate information from Firestore

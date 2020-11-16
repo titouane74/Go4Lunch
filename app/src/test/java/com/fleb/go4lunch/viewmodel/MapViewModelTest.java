@@ -1,12 +1,14 @@
-package com.fleb.go4lunch.viewmodels;
+package com.fleb.go4lunch.viewmodel;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
+import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
+import com.fleb.go4lunch.viewmodel.MapViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,13 +25,13 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- * Created by Florence LE BOURNOT on 15/11/2020
+ * Created by Florence LE BOURNOT on 16/11/2020
  */
-public class Go4LunchViewModelTest {
+public class MapViewModelTest {
 
     @Rule
     public InstantTaskExecutorRule mInstantTaskExecutorRule = new InstantTaskExecutorRule();
-    private Go4LunchViewModel mGo4LunchListViewModel;
+    private MapViewModel mMapViewModel;
 
     @Mock
     public RestaurantRepository mRestaurantRepository;
@@ -45,24 +47,31 @@ public class Go4LunchViewModelTest {
     @Before
     public void setup() {
         initMocks(this);
-        mGo4LunchListViewModel = new Go4LunchViewModel(mRestaurantRepository, mWorkmateRepository);
+        mMapViewModel = new MapViewModel(mRestaurantRepository);
 
-        mRestaurantList .add(new Restaurant("tataid", "tata"));
+        mRestaurantList .add(new Restaurant("tataeugenieid", "tata eugnénie"));
         mRestaurantList .add(new Restaurant("julesid", "jules"));
+        mRestaurantList .add(new Restaurant("tatafaridaid", "tata farida"));
+
     }
 
     @Test
     public void getRestaurantListWithSuccess() {
+
+        mNewLDRestaurantList.postValue(mRestaurantList);
+
         when(mRestaurantRepository.getLDRestaurantList()).thenReturn(mNewLDRestaurantList);
-        assertNotNull(mGo4LunchListViewModel.getRestaurantList());
+        assertNotNull(mMapViewModel.getRestaurantList());
         Mockito.verify(mRestaurantRepository).getLDRestaurantList();
 
+        mNewLDRestaurantList.postValue(mRestaurantList);
+
+        System.out.println("hors obeserve " + mRestaurantList.size());
         mRestaurantRepository.getLDRestaurantList().observeForever(pRestaurantList ->
         {
-            System.out.println(pRestaurantList.size());
-            assertEquals(pRestaurantList,mNewLDRestaurantList);
+            System.out.println("dans observe " + pRestaurantList.size());
             assertEquals(pRestaurantList,mRestaurantList);
         });
+        mNewLDRestaurantList.postValue(mRestaurantList);
     }
-
 }

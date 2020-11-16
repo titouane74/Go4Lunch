@@ -11,9 +11,11 @@ import java.util.List;
 
 public class WorkmateListViewModel extends ViewModel {
 
-    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
+    private final WorkmateRepository mWorkmateRepo;
 
-    public WorkmateListViewModel() {    }
+    public WorkmateListViewModel(WorkmateRepository pWorkmateRepository) {
+        mWorkmateRepo = pWorkmateRepository;
+    }
 
     /**
      * Get workmate list

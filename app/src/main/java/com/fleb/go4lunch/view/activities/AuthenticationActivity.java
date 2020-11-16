@@ -23,9 +23,8 @@ import com.fleb.go4lunch.R;
 
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.AuthenticationViewModel;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
-import com.fleb.go4lunch.viewmodel.Injection;
+import com.fleb.go4lunch.viewmodel.factory.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.injection.Injection;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -282,11 +281,9 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
      */
     public void saveWorkmateIfNotExist(FirebaseUser pCurrentWorkmate) {
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
-        Go4LunchViewModel lGo4LunchViewModel = new ViewModelProvider(this,lFactory).get(Go4LunchViewModel.class);
 
-//        AuthenticationViewModel lAuthViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
-//        lAuthViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
-            lGo4LunchViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
+        AuthenticationViewModel lAuthViewModel = new ViewModelProvider(this, lFactory).get(AuthenticationViewModel.class);
+        lAuthViewModel.saveWorkmateFirebaseProfile(pCurrentWorkmate).observe(this, pWorkmateSaved -> {
             if (pWorkmateSaved.equals(ActionStatus.SAVED)) {
                 Toast.makeText(AuthenticationActivity.this, R.string.auth_account_created, Toast.LENGTH_SHORT).show();
                 this.finish();

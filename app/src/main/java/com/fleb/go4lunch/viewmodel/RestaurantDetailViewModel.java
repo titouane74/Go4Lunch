@@ -1,5 +1,7 @@
 package com.fleb.go4lunch.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -8,6 +10,7 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
 import com.fleb.go4lunch.utils.ActionStatus;
+import com.google.api.LogDescriptor;
 
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
@@ -17,15 +20,15 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
  */
 public class RestaurantDetailViewModel extends ViewModel {
 
-    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
-    private final RestaurantRepository mRestaurantRepo = new RestaurantRepository();
-    private final Workmate mWorkmate;
+    private final WorkmateRepository mWorkmateRepo ;
+    private final RestaurantRepository mRestaurantRepo ;
+    //private final Workmate mWorkmate;
 
-    public RestaurantDetailViewModel() {
-        mWorkmate = sApi.getWorkmate();
+    public RestaurantDetailViewModel(RestaurantRepository pRestaurantRepository, WorkmateRepository pWorkmateRepository) {
+        mRestaurantRepo = pRestaurantRepository;
+        mWorkmateRepo = pWorkmateRepository;
+//        mWorkmate = sApi.getWorkmate();
     }
-
-//     Access to WorkmateRepository
 
     /**
      * Get or save the workmate restaurant choice
@@ -45,19 +48,16 @@ public class RestaurantDetailViewModel extends ViewModel {
      */
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(mWorkmate,pRestaurant, pActionStatus);
+        return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(pRestaurant, pActionStatus);
     }
 
     /**
      * Get  workmate information
      * @return : object : workmate
      */
-    public MutableLiveData<Workmate> getWorkmateData() {
-        return mWorkmateRepo.getWorkmateData(mWorkmate.getWorkmateId());
+    public MutableLiveData<Workmate> getWorkmateData(String pWorkmateId) {
+        return mWorkmateRepo.getWorkmateData(pWorkmateId);
     }
-
-
-//     Access to RestaurantRepository
 
     /**
      * Get detail restaurant

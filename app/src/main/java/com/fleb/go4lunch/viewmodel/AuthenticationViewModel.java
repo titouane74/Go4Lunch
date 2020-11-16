@@ -12,9 +12,11 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class AuthenticationViewModel extends ViewModel {
 
-    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
+    private final WorkmateRepository mWorkmateRepo;
 
-    public AuthenticationViewModel() { }
+    public AuthenticationViewModel(WorkmateRepository pWorkmateRepository) {
+        mWorkmateRepo = pWorkmateRepository;
+    }
 
     /**
      * Save the firebase user and workmate in Firestore

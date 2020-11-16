@@ -8,10 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.view.adapters.WorkmateAdapter;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
-import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.viewmodel.WorkmateListViewModel;
+import com.fleb.go4lunch.viewmodel.factory.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.injection.Injection;
 
 /**
  * Created by Florence LE BOURNOT on 07/07/2020
@@ -22,8 +21,6 @@ public class WorkmateListFragment extends BaseFragment  {
 
     private WorkmateAdapter mWorkmateAdapter;
     private RecyclerView mRecyclerView;
-
-    private Go4LunchViewModel mGo4LunchViewModel;
 
     public WorkmateListFragment() {}
 
@@ -50,13 +47,10 @@ public class WorkmateListFragment extends BaseFragment  {
 
     private void configureViewModel() {
 
-
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
-        mGo4LunchViewModel = new ViewModelProvider(requireActivity(),lFactory).get(Go4LunchViewModel.class);
+        WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity(),lFactory).get(WorkmateListViewModel.class);
 
-//        WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity()).get(WorkmateListViewModel.class);
-//        lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
-            mGo4LunchViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
+        lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
             mWorkmateAdapter.setWorkmateList(pWorkmateList);
             mWorkmateAdapter.notifyDataSetChanged();
         });

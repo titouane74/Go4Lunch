@@ -17,12 +17,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
+import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
-import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
+import com.fleb.go4lunch.viewmodel.factory.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.injection.Injection;
 import com.fleb.go4lunch.view.adapters.RestaurantDetailWorkmateAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -46,8 +46,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private FloatingActionButton mRestoBtnFloatChecked;
     private RecyclerView mRecyclerView;
 
-//    private RestaurantDetailViewModel mRestaurantDetailViewModel;
-    private Go4LunchViewModel mGo4LunchViewModel;
+    private RestaurantDetailViewModel mRestaurantDetailViewModel;
 
     private RestaurantDetailWorkmateAdapter mWorkmateAdapter;
 
@@ -91,15 +90,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViewModel() {
-
+        Workmate lWorkmate = sApi.getWorkmate();
 
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
-        mGo4LunchViewModel = new ViewModelProvider(this,lFactory).get(Go4LunchViewModel.class);
+        mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
 
-//        mRestaurantDetailViewModel = new ViewModelProvider(this).get(RestaurantDetailViewModel.class);
         if (mRestaurantId == null) {
-//            mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
-            mGo4LunchViewModel.getWorkmateData().observe(this, pWorkmate -> {
+            mRestaurantDetailViewModel.getWorkmateData(lWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
                 mRestaurantId = pWorkmate.getWorkmateRestoChosen().getRestoId();
                 getRestaurantDetail();
             });
@@ -113,8 +110,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      */
     private void getRestaurantDetail() {
 
-//        mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
-            mGo4LunchViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
+        mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
             mWorkmateAdapter.setWorkmateList(pRestaurant.getRestoWkList());
             mWorkmateAdapter.notifyDataSetChanged();
             mRestaurant = pRestaurant;
@@ -156,8 +152,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Save the workmate restaurant choice
      */
     private void saveChoiceRestaurant() {
-//        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
-        mGo4LunchViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
                 .observe(this, pActionStatus -> {
                     switch (pActionStatus) {
                         case ADDED:
@@ -171,6 +166,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                         case ERROR:
                             Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
                             break;
+                        case SAVED_FAILED:
+                            Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_saved_failed), Toast.LENGTH_SHORT).show();
+                            break;
                         default:
                     }
                 });
@@ -180,12 +178,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Display the status of the workmate choice
      */
     private void displayChoiceStatus() {
-//        if (mRestaurantDetailViewModel == null) {
-        if (mGo4LunchViewModel == null) {
+        if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-//        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
-        mGo4LunchViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeChoiceStatus(true);
@@ -198,6 +194,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     /**
      * Chane the status of the workmate choice
+     *
      * @param pIsChosen : boolean : the restaurant is chosen or not
      */
     private void changeChoiceStatus(boolean pIsChosen) {
@@ -214,12 +211,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Display if the restaurant is liked by the workmate
      */
     private void displayLikeStatus() {
-//        if (mRestaurantDetailViewModel == null) {
-            if (mGo4LunchViewModel == null) {
+        if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-//        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
-        mGo4LunchViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeLikeStatus(true);
@@ -233,23 +228,32 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Save the workmate choice if he likes or not the restaurant
      */
     private void saveLikeRestaurant() {
-//        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
-        mGo4LunchViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
                 .observe(this, pActionStatus -> {
-                    if (pActionStatus.equals(ActionStatus.ADDED)) {
-                        changeLikeStatus(true);
-                        Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_resto_added_to_favorite), Toast.LENGTH_SHORT).show();
-                    } else if (pActionStatus.equals(ActionStatus.REMOVED)) {
-                        changeLikeStatus(false);
-                        Toast.makeText(RestaurantDetailActivity.this, getString(R.string.text_resto_removed_from_favorite), Toast.LENGTH_SHORT).show();
-                    } else if (pActionStatus.equals(ActionStatus.ERROR)) {
-                        Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
+
+                    switch (pActionStatus) {
+                        case ADDED:
+                            changeLikeStatus(true);
+                            break;
+                        case REMOVED:
+                            changeLikeStatus(false);
+                            break;
+                        case ERROR:
+                            Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_unknown_error), Toast.LENGTH_SHORT).show();
+                            break;
+                        case SAVED_FAILED:
+                            Toast.makeText(RestaurantDetailActivity.this, getString(R.string.error_saved_failed), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+
                     }
                 });
+
     }
 
     /**
      * Change the display like status
+     *
      * @param pIsChosen : boolean : is liked or not by the workmate
      */
     private void changeLikeStatus(boolean pIsChosen) {
@@ -264,6 +268,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     /**
      * Open the website
+     *
      * @param pWebSite : string : url to open
      */
     private void openWebSite(String pWebSite) {
@@ -277,6 +282,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     /**
      * Open the dialer
+     *
      * @param pPhone : string : phone number to display
      */
     private void openDialer(String pPhone) {
@@ -290,6 +296,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     /**
      * Display the rating with stars
+     *
      * @param pRating : double : rating of the restaurant
      */
     private void displayRating(double pRating) {

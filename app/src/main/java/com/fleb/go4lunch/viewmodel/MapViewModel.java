@@ -12,8 +12,9 @@ public class MapViewModel extends ViewModel {
 
     private final RestaurantRepository mRepository ;
 
-    public MapViewModel() {
-        mRepository = new RestaurantRepository();
+    public MapViewModel(RestaurantRepository pRestaurantRepository) {
+
+        mRepository = pRestaurantRepository ;
     }
 
     /**

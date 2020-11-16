@@ -1,5 +1,6 @@
 package com.fleb.go4lunch.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
 
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 
@@ -24,10 +26,9 @@ import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
 
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModel;
-import com.fleb.go4lunch.viewmodel.Go4LunchViewModelFactory;
-import com.fleb.go4lunch.viewmodel.Injection;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
+import com.fleb.go4lunch.viewmodel.factory.Go4LunchViewModelFactory;
+import com.fleb.go4lunch.viewmodel.injection.Injection;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,9 +36,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     private FirebaseUser mCurrentUser;
 
-    //private SettingsViewModel mSettingsViewModel;
-    private Go4LunchViewModel mGo4LunchViewModel;
-
+    private SettingsViewModel mSettingsViewModel;
     private Workmate mWorkmate;
 
     private ImageView mImgUser;
@@ -59,16 +58,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         TextView lNotificationStatus = findViewById(R.id.txt_setting_notif_status);
         Button lBtnChangeNotifStatus = findViewById(R.id.btn_change_notif_status);
 
-//        mSettingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
-        mGo4LunchViewModel = new ViewModelProvider(this,lFactory).get(Go4LunchViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(this,lFactory).get(SettingsViewModel.class);
 
         displayWorkmateData();
 
         lBtnUpdate.setOnClickListener(this);
 
-//        mSettingsViewModel.getNotificationStatus(this).observe(this, lNotificationStatus::setText);
-        mGo4LunchViewModel.getNotificationStatus(this).observe(this, lNotificationStatus::setText);
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            lNotificationStatus.setText(getString(R.string.text_setting_notif_deactivated));
+        } else {
+            lNotificationStatus.setText(getString(R.string.text_setting_notif_activated));
+        }
 
         lBtnChangeNotifStatus.setOnClickListener(v -> openNotificationSettingsForApp());
     }
@@ -85,8 +86,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
      */
     public void displayWorkmateData() {
 
-//        mSettingsViewModel.getWorkmateData(mCurrentUser.getUid()).observe(this, pWorkmate -> {
-        mGo4LunchViewModel.getWorkmateData(mCurrentUser.getUid()).observe(this, pWorkmate -> {
+        mSettingsViewModel.getWorkmateData(mCurrentUser.getUid()).observe(this, pWorkmate -> {
             mWorkmate = pWorkmate;
             if (pWorkmate.getWorkmatePhotoUrl() != null) {
                 Glide.with(SettingsActivity.this)
@@ -107,8 +107,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         String lWorkmateName = mTxtName.getText().toString();
 
-//        mSettingsViewModel.updateWorkmateUserName(mWorkmate, lWorkmateName) .observe(this, pActionStatus -> {
-        mGo4LunchViewModel.updateWorkmateUserName(mWorkmate, lWorkmateName) .observe(this, pActionStatus -> {
+        mSettingsViewModel.updateWorkmateUserName(mWorkmate, lWorkmateName) .observe(this, pActionStatus -> {
             if (pActionStatus.equals(ActionStatus.SAVED)) {
                 Toast.makeText(this, R.string.user_account_updated, Toast.LENGTH_SHORT).show();
                 finish();

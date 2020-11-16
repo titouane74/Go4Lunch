@@ -1,7 +1,8 @@
-package com.fleb.go4lunch.viewmodel;
+package com.fleb.go4lunch.viewmodel.injection;
 
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
+import com.fleb.go4lunch.viewmodel.factory.Go4LunchViewModelFactory;
 
 /**
  * Created by Florence LE BOURNOT on 15/11/2020

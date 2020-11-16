@@ -1,13 +1,8 @@
 package com.fleb.go4lunch.viewmodel;
 
-import android.content.Context;
-
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.WorkmateRepository;
 import com.fleb.go4lunch.utils.ActionStatus;
@@ -17,30 +12,10 @@ import com.fleb.go4lunch.utils.ActionStatus;
  */
 public class SettingsViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mNotificationStatus;
+    private final WorkmateRepository mWorkmateRepo ;
 
-    private final WorkmateRepository mWorkmateRepo = new WorkmateRepository();
-
-    public SettingsViewModel() {
-        mNotificationStatus = new MutableLiveData<>();
-    }
-
-    /**
-     * Display the right text for the notification activated or not
-     * @param pContext : object : context
-     * @return : string : text to display
-     */
-    public LiveData<String> getNotificationStatus(Context pContext) {
-        NotificationManagerCompat lNotificationManager = NotificationManagerCompat.from(pContext);
-
-        boolean lIsNotificationEnable = lNotificationManager.areNotificationsEnabled();
-
-        if (!lIsNotificationEnable) {
-            mNotificationStatus.setValue(pContext.getString(R.string.text_setting_notif_deactivated));
-        } else {
-            mNotificationStatus.setValue(pContext.getString(R.string.text_setting_notif_activated));
-        }
-    return mNotificationStatus;
+    public SettingsViewModel(WorkmateRepository pWorkmateRepository) {
+        mWorkmateRepo = pWorkmateRepository;
     }
 
     /**

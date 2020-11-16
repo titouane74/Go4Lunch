@@ -146,16 +146,17 @@ public class WorkmateRepository {
 
     /**
      * Manage if the demand is to be get or save
-     * @param pWorkmate : object : workmate who likes
      * @param pRestaurant : object : restaurant which is liked
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      * @return : mutable live data enum actionstatus : result of the action
      */
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
+        public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant, ActionStatus pActionStatus) {
+        Workmate lWorkmate = sApi.getWorkmate();
+
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
-            getWorkmateLikeForRestaurant(pWorkmate, pRestaurant, pActionStatus);
+            getWorkmateLikeForRestaurant(lWorkmate, pRestaurant, pActionStatus);
         } else {
-            saveLikeRestaurant(pWorkmate, pRestaurant, pActionStatus);
+            saveLikeRestaurant(lWorkmate, pRestaurant, pActionStatus);
         }
         return mLDLikeStatus;
     }

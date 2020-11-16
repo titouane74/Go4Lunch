@@ -12,8 +12,8 @@ public class RestaurantListViewModel extends ViewModel {
 
     private final RestaurantRepository mRepository;
 
-    public RestaurantListViewModel() {
-        mRepository = new RestaurantRepository();
+    public RestaurantListViewModel(RestaurantRepository pRestaurantRepository) {
+        mRepository = pRestaurantRepository;
     }
 
     /**
