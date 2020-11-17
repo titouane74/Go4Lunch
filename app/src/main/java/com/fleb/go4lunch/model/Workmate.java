@@ -85,19 +85,6 @@ public class Workmate {
 
     public void setWorkmateLikes(List<Likes> pWorkmateLikes) { workmateLikes = pWorkmateLikes; }
 
-    @Override
-    public boolean equals(Object pObj) {
-        if (this == pObj) return true;
-        if (pObj == null || getClass() != pObj.getClass()) return false;
-        return Objects.equals(this.workmateEmail, ((Workmate) pObj).getWorkmateEmail());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getWorkmateEmail());
-    }
-
-
     public static class Likes {
         public String restoId;
         public String restoName;

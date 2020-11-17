@@ -24,7 +24,6 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -51,6 +50,9 @@ import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_RADIUS;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_TYPE_GOOGLE_SEARCH;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 import static com.fleb.go4lunch.network.JsonRetrofitApi.BASE_URL_GOOGLE;
+import static com.fleb.go4lunch.network.JsonRetrofitApi.TXT_KEY_GOOGLE;
+import static com.fleb.go4lunch.network.JsonRetrofitApi.TXT_MAX_WIDTH_GOOGLE;
+import static com.fleb.go4lunch.network.JsonRetrofitApi.TXT_PHOTO_REF_GOOGLE;
 import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LATITUDE;
 import static com.fleb.go4lunch.service.Go4LunchApiService.PREF_KEY_LONGITUDE;
 import static com.fleb.go4lunch.utils.PreferencesHelper.mPreferences;
@@ -244,7 +246,7 @@ public class RestaurantRepository {
                     String lName = lRestoDetResponse.getName();
 
                     if (lRestoDetResponse.getPhotos() != null && lRestoDetResponse.getPhotos().size() > 0) {
-                        lPhoto = Go4LunchHelper.getPhoto(lRestoDetResponse.getPhotos().get(0).getPhotoReference(), 400, mKey);
+                        lPhoto = getPhoto(lRestoDetResponse.getPhotos().get(0).getPhotoReference(), 400, mKey);
                     }
                     if (lRestoDetResponse.getGeometry().getLocation() != null) {
                         lLocation = lRestoDetResponse.getGeometry().getLocation();
@@ -517,5 +519,17 @@ public class RestaurantRepository {
                         pAutocompleteRestaurantList.size());
             }
         }
+    }
+
+    /**
+     * Get the photo from Google
+     * @param pPhotoReference : string : photo reference of the restaurant
+     * @param pMaxWidth : int : max width of the photo
+     * @param pKey : string : google key
+     * @return : string : the link to the photo
+     */
+    public static String getPhoto(String pPhotoReference, int pMaxWidth, String pKey) {
+        return BASE_URL_GOOGLE + TXT_PHOTO_REF_GOOGLE + pPhotoReference
+                + TXT_MAX_WIDTH_GOOGLE + pMaxWidth + TXT_KEY_GOOGLE + pKey;
     }
 }

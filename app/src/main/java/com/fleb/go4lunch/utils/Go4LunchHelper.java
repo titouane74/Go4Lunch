@@ -189,16 +189,4 @@ public class Go4LunchHelper {
         return new LatLngBounds(southwestCorner, northeastCorner);
     }
 
-    /**
-     * Get the photo from Google
-     * @param pPhotoReference : string : photo reference of the restaurant
-     * @param pMaxWidth : int : max width of the photo
-     * @param pKey : string : google key
-     * @return : string : the link to the photo
-     */
-    public static String getPhoto(String pPhotoReference, int pMaxWidth, String pKey) {
-        return BASE_URL_GOOGLE + TXT_PHOTO_REF_GOOGLE + pPhotoReference
-                + TXT_MAX_WIDTH_GOOGLE + pMaxWidth + TXT_KEY_GOOGLE + pKey;
-    }
-
 }

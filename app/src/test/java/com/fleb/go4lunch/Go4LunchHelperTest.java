@@ -1,25 +1,26 @@
 package com.fleb.go4lunch;
 
 import com.fleb.go4lunch.utils.Go4LunchHelper;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
-
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by Florence LE BOURNOT on 14/11/2020
  */
 public class Go4LunchHelperTest {
 
-    @BeforeEach
+    @Before
     public void setup() {
-
-        initMocks(this);
-
     }
 
     //--------------------------------RATING---------------------------------------//
@@ -72,29 +73,69 @@ public class Go4LunchHelperTest {
         assertEquals(3,lNbStarToDisplay);
     }
 
+    //------------------------------DISTANCE----------------------------------//
+
+    @Test
+    public void givenDistance_whenUnder1000Meters_thenDisplayInMeterUnit() {
+        assertEquals("100m",Go4LunchHelper.convertDistance(100));
+    }
+
     //------------------------------DATE AND TIME----------------------------------//
 
     @Test
-    public void getTheCurrentDayOfWeekWithSuccess() { }
+    public void getTheCurrentDayOfWeekWithSuccess() {
+        Calendar c = Calendar.getInstance();
+        Date date = new Date();
+        c.setTime(date);
+        int lExpectedDayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+        assertEquals(lExpectedDayOfWeek,Go4LunchHelper.getCurrentDayInt());
+    }
 
     @Test
-    public void getTheShortWeekDayWithSuccess() { }
+    public void getTheShortWeekDayWithSuccess() {
+        assertEquals("lun.",Go4LunchHelper.getDayString(1));
+    }
 
     @Test
-    public void getTheCurrentTimeFormattedHHmmWithSuccess() { }
+    public void getTheCurrentTimeFormattedHHmmWithSuccess() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+        int lExpectedTime = Integer.parseInt(sdf.format(new Date()));
+        assertEquals(lExpectedTime, Go4LunchHelper.getCurrentTime());
+    }
 
     @Test
-    public void getTheCurrentTimeFormattedInStringWithSuccess() { }
+    public void getTheCurrentTimeFormattedInStringWithSuccess() {
+        int lTime = 1500;
+        String lExpectedTime = String.format("%02d:%02d", lTime / 100, lTime % 100);
+        assertEquals(lExpectedTime, Go4LunchHelper.getCurrentTimeFormatted(lTime));
+    }
 
     @Test
-    public void convertTimeIntoMinutesWithSuccess() { }
+    public void givenTime_whenTimeWithoutMinutes_thenSucceed() {
+        int lExpectedMinutes = 900;
+        int lTime = 1500;
+        assertEquals(lExpectedMinutes, Go4LunchHelper.convertTimeInMinutes(lTime));
+    }
 
+    @Test
+    public void givenTime_whenTimeWithMinutes_thenSucceed() {
+        int lExpectedMinutes = 930;
+        int lTime = 1530;
+        assertEquals(lExpectedMinutes, Go4LunchHelper.convertTimeInMinutes(lTime));
+    }
     //---------------------------RESTAURANT DETAIL---------------------------------//
 
     @Test
-    public void formatVicinityAddressWithSuccess() { }
+    public void formatVicinityAddressWithSuccess() {
+        assertEquals("10 rue des bois",Go4LunchHelper.formatAddress("10 rue des bois, Paris"));
+    }
 
     @Test
-    public void getPhotoFromGoogle() { }
+    public void toBoundsPerimeterWithSuccess() {
+        LatLngBounds lLatLngBoundsExpected = new LatLngBounds(new LatLng(48.813784989961,2.3977874699409685),new LatLng(48.83177139630744,2.425106232110535));
 
+        LatLngBounds lLatLngBoundsRetrieved = Go4LunchHelper.toBounds(new LatLng(48.822779,2.411444399999999), 1000);
+        assertEquals(lLatLngBoundsExpected, lLatLngBoundsRetrieved);
+    }
 }

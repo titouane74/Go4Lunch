@@ -1053,6 +1053,12 @@ public class RestaurantDetailPojo implements Serializable {
         private String time;
 
         public Close() {}
+
+        public Close(Integer pDay, String pTime) {
+            day = pDay;
+            time = pTime;
+        }
+
         public Integer getDay() {
             return day;
         }
@@ -1081,6 +1087,12 @@ public class RestaurantDetailPojo implements Serializable {
         private String time;
 
         public Open() {}
+
+        public Open(Integer pDay, String pTime) {
+            day = pDay;
+            time = pTime;
+        }
+
         public Integer getDay() {
             return day;
         }
@@ -1113,6 +1125,12 @@ public class RestaurantDetailPojo implements Serializable {
         private List<String> weekdayText = null;
 
         public OpeningHours() {}
+
+        public OpeningHours(Boolean pOpenNow, List<Period> pPeriods, List<String> pWeekdayText) {
+            openNow = pOpenNow;
+            periods = pPeriods;
+            weekdayText = pWeekdayText;
+        }
 
         public Boolean getOpenNow() {
             return openNow;
@@ -1151,6 +1169,8 @@ public class RestaurantDetailPojo implements Serializable {
         private Open open;
 
         public Period() {}
+
+        public Period(Close pClose, Open pOpen) {}
 
         public Close getClose() {
             return close;

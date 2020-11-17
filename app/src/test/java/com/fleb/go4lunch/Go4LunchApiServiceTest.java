@@ -4,8 +4,6 @@ import com.fleb.go4lunch.di.DI;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.service.Go4LunchApi;
-import com.fleb.go4lunch.utilstest.RestaurantUtils;
-import com.fleb.go4lunch.utilstest.WorkmateUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -54,7 +52,7 @@ public class Go4LunchApiServiceTest {
     public void setAndGetWorkmateWithSuccess() {
         assertNull(mApi.getWorkmate());
 
-        Workmate lWorkmateGenerated = WorkmateUtils.generateWorkmateNameEmailPhoto("AlbertId", "Albert");
+        Workmate lWorkmateGenerated = new Workmate("AlbertId", "Albert");
         mApi.setWorkmate(lWorkmateGenerated);
 
         Workmate lWorkmateRetrieved = mApi.getWorkmate();
@@ -65,7 +63,7 @@ public class Go4LunchApiServiceTest {
     public void setAndGetRestaurantWithSuccess() {
         assertNull(mApi.getRestaurant());
 
-        Restaurant lRestaurantGenerated = RestaurantUtils.generateRestaurantName("EnLaiId", "EnLai");
+        Restaurant lRestaurantGenerated = new Restaurant("EnLaiId", "EnLai");
         mApi.setRestaurant(lRestaurantGenerated);
 
         Restaurant lRestaurantRetrieved = mApi.getRestaurant();
@@ -78,12 +76,9 @@ public class Go4LunchApiServiceTest {
         assertNull(mApi.getRestaurantList());
 
         List<Restaurant> lRestaurantListGenerated = new ArrayList<>();
-        lRestaurantListGenerated.add(RestaurantUtils.generateRestaurantAllFields(
-                "EnLaiId", "EnLai",108,4.4,48.822779,2.411444399999999));
-        lRestaurantListGenerated.add(RestaurantUtils.generateRestaurantAllFields(
-                "Family26Id", "Le Family 26",89,4.4,48.8239094,2.4096468));
-        lRestaurantListGenerated.add(RestaurantUtils.generateRestaurantAllFields(
-                "TataEugenieId", "Tante Eugénie",174,4.3,48.8244689,2.4087766));
+        lRestaurantListGenerated.add(new Restaurant("EnLaiId", "EnLai"));
+        lRestaurantListGenerated.add(new Restaurant("Family26Id", "Le Family 26"));
+        lRestaurantListGenerated.add(new Restaurant("TataEugenieId", "Tante Eugénie"));
 
         mApi.setRestaurantList(lRestaurantListGenerated);
 

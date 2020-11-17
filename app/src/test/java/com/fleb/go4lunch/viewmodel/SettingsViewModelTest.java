@@ -1,7 +1,5 @@
 package com.fleb.go4lunch.viewmodel;
 
-import android.content.Context;
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
@@ -36,9 +34,6 @@ public class SettingsViewModelTest {
 
     @Mock
     private MutableLiveData<ActionStatus> mNewLDActionStatus = new MutableLiveData<>();
-
-    @Mock
-    private Context mContextMocked;
 
     private Workmate mWorkmate;
 

@@ -12,7 +12,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by Florence LE BOURNOT on 13/11/2020
@@ -20,29 +19,47 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class WorkmateTest {
 
     private Workmate mWorkmate;
-    private String mNoId;
-    private String mNoName;
-    private String mNoEmail;
-    private String mNoPhotoUrl;
+    private String mWkmId = "wkm_id";
+    private String mWkmName = "wkm_name";
+    private String mWkmEmail = "wkm_email";
+    private String mWkmPhotoUrl = "wkm_photo_url";
     private Workmate.WorkmateRestoChoice mWorkmateRestoChosen;
     private List<Workmate.Likes> mWorkmateLikesList = new ArrayList<>();
     private Workmate.Likes mWorkmateLikes;
+    private Timestamp mTimestamp = Timestamp.now();
 
     @Before
-    public void setup() {
-        initMocks(this);
-        Workmate.Likes lLikes;
+    public void setup() { }
 
-        mNoId = "no_id";
-        mNoName = "no_name";
-        mNoEmail = "no_email";
-        mNoPhotoUrl = "no_photo_url";
+    @Test
+    public void setEmptyConstructorWithSuccess() {
+        mWorkmate = new Workmate();
+        assertNotNull(mWorkmate);
+        assertNull(mWorkmate.getWorkmateId());
+    }
+
+    @Test
+    public void setCompleteConstructoWithSuccess() {
+
+        mWorkmateRestoChosen = new Workmate.WorkmateRestoChoice("tataid","tataeugenie",mTimestamp);
+        assertNotNull(mWorkmateRestoChosen);
+        assertEquals("tataid",mWorkmateRestoChosen.getRestoId());
+
+        Workmate.Likes lSetLike = new Workmate.Likes("tataid","tataeugenie");
+        mWorkmateLikesList.add(lSetLike);
+
+        mWorkmate = new Workmate(mWkmId, mWkmName, mWkmEmail, mWkmPhotoUrl,mWorkmateRestoChosen,mWorkmateLikesList);
+        assertNotNull(mWorkmate);
+        assertEquals(1,mWorkmate.getWorkmateLikes().size());
+        assertEquals("tataid",mWorkmate.getWorkmateRestoChosen().getRestoId());
+        assertEquals(mWkmName, mWorkmate.getWorkmateName());
     }
 
     @Test
     public void setAndGetWorkmateIdWithSuccess() {
-        mWorkmate = new Workmate(mNoId,mNoName);
-        assertEquals(mNoId,mWorkmate.getWorkmateId());
+
+        mWorkmate = new Workmate(mWkmId, mWkmName);
+        assertEquals(mWkmId,mWorkmate.getWorkmateId());
 
         String lSetData = "albert_id";
         mWorkmate.setWorkmateId(lSetData);
@@ -54,8 +71,8 @@ public class WorkmateTest {
 
     @Test
     public void setAndGetWorkmateNameWithSuccess() {
-        mWorkmate = new Workmate(mNoId,mNoName);
-        assertEquals(mNoName, mWorkmate.getWorkmateName());
+        mWorkmate = new Workmate(mWkmId, mWkmName);
+        assertEquals(mWkmName, mWorkmate.getWorkmateName());
 
         String lSetData = "albert";
         mWorkmate.setWorkmateName(lSetData);
@@ -68,8 +85,8 @@ public class WorkmateTest {
 
     @Test
     public void setAndGetWorkmateEmailWithSuccess() {
-        mWorkmate = new Workmate(mNoId,mNoName, mNoEmail, mNoPhotoUrl);
-        assertEquals(mNoEmail, mWorkmate.getWorkmateEmail());
+        mWorkmate = new Workmate(mWkmId, mWkmName, mWkmEmail, mWkmPhotoUrl);
+        assertEquals(mWkmEmail, mWorkmate.getWorkmateEmail());
 
         String lSetData = "albert@email.com";
         mWorkmate.setWorkmateEmail(lSetData);
@@ -81,8 +98,8 @@ public class WorkmateTest {
 
     @Test
     public void setAndGetWorkmatePhotoUrlWithSuccess() {
-        mWorkmate = new Workmate(mNoId,mNoName, mNoEmail, mNoPhotoUrl);
-        assertEquals(mNoPhotoUrl, mWorkmate.getWorkmatePhotoUrl());
+        mWorkmate = new Workmate(mWkmId, mWkmName, mWkmEmail, mWkmPhotoUrl);
+        assertEquals(mWkmPhotoUrl, mWorkmate.getWorkmatePhotoUrl());
 
         String lSetData = "photo url";
         mWorkmate.setWorkmatePhotoUrl(lSetData);
@@ -97,7 +114,7 @@ public class WorkmateTest {
         int lInitialNbLikes = mWorkmateLikesList.size();
         assertEquals(0, mWorkmateLikesList.size());
 
-        mWorkmate = new Workmate(mNoId, mWorkmateLikesList);
+        mWorkmate = new Workmate(mWkmId, mWorkmateLikesList);
         assertNotNull(mWorkmate);
         assertEquals(0,mWorkmate.getWorkmateLikes().size());
 
@@ -118,7 +135,7 @@ public class WorkmateTest {
 
     @Test
     public void setAndGetWorkmateRestoChosenWithSuccess() {
-        Timestamp lTimestamp = Timestamp.now();
+
 
         mWorkmateRestoChosen = new Workmate.WorkmateRestoChoice();
         assertNotNull(mWorkmateRestoChosen);
@@ -126,9 +143,9 @@ public class WorkmateTest {
         assertNull(mWorkmateRestoChosen.getRestoName());
         assertNull(mWorkmateRestoChosen.getRestoDateChoice());
 
-        mWorkmate = new Workmate(mNoId,mNoName, mNoEmail, mNoPhotoUrl,mWorkmateRestoChosen);
+        mWorkmate = new Workmate(mWkmId, mWkmName, mWkmEmail, mWkmPhotoUrl,mWorkmateRestoChosen);
 
-        Workmate.WorkmateRestoChoice lSetData = new Workmate.WorkmateRestoChoice("tataid", "tata eugenie", lTimestamp);
+        Workmate.WorkmateRestoChoice lSetData = new Workmate.WorkmateRestoChoice("tataid", "tata eugenie", mTimestamp);
         mWorkmate.setWorkmateRestoChosen(lSetData);
 
         Workmate.WorkmateRestoChoice lGetData = mWorkmate.getWorkmateRestoChosen();
