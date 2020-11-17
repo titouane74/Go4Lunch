@@ -40,7 +40,7 @@
     <string name="menu_workmate_list">Workmates</string>
 
     <!--AUTHENTICATION ACTIVITY-->
-    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="auth_sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_twitter">Sign in with Twitter</string>
     <string name="sign_in_with_email">Sign in with email</string>

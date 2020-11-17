@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.fleb.go4lunch.AppGo4Lunch"
+        android:name=".AppGo4Lunch"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -57,7 +57,10 @@
             android:parentActivityName=".view.activities.MainActivity"
             android:theme="@style/SettingsTheme" />
         <activity android:name=".view.activities.RestaurantDetailActivity" />
-
+        <activity
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            tools:replace="android:launchMode"
+            android:launchMode="standard" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"

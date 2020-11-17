@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/color_btn_bckgrd_tint_facebook"
-                android:text="@string/sign_in_with_facebook"
+                android:text="@string/auth_sign_in_with_facebook"
                 android:textColor="@color/colorTextPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="RtlSymmetry" />

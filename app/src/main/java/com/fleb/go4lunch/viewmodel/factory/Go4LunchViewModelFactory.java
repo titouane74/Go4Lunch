@@ -14,6 +14,8 @@ import com.fleb.go4lunch.viewmodel.RestaurantListViewModel;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
 import com.fleb.go4lunch.viewmodel.WorkmateListViewModel;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Created by Florence LE BOURNOT on 15/11/2020
  */
@@ -28,7 +30,7 @@ public class Go4LunchViewModelFactory implements ViewModelProvider.Factory {
         this.mWorkmateRepository = pWorkmateRepository;
     }
 
-
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {

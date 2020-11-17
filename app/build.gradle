@@ -83,7 +83,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Facebook
-    implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
+//    implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
 
     //Twitter
     implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
