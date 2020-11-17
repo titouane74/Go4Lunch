@@ -14,7 +14,7 @@
     <dimen name="nav_header_horizontal_margin">16dp</dimen>
     <dimen name="nav_header_vertical_margin_large">32dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
-    <dimen name="nav_header_height">220dp</dimen>
+    <dimen name="nav_header_height">240dp</dimen>
     <dimen name="nav_header_logo_size_add_photo">72dp</dimen>
     <dimen name="main_logo_size_height">104dp</dimen>
 
@@ -29,9 +29,9 @@
     <dimen name="auth_btn_text_size">12sp</dimen>
 
     <!-- Settings -->
-    <dimen name="settings_btn_text_size">18sp</dimen>
+    <dimen name="settings_text_size">16sp</dimen>
     <dimen name="settings_btn_margin_horizontal">@dimen/default_margin</dimen>
-    <dimen name="settings_img_size">100dp</dimen>
+    <dimen name="settings_img_size">120dp</dimen>
     <dimen name="settings_margin_extra_large">40dp</dimen>
     <dimen name="settings_layout_weight_user_info">1.8</dimen>
     <dimen name="settings_layout_weight_btn">1.5</dimen>

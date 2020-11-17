@@ -45,7 +45,7 @@
     </style>
 
     <style name="SettingsTheme.Button" parent="SettingsTheme">
-        <item name="android:textSize">@dimen/settings_btn_text_size</item>
+        <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:background">@drawable/btn_radius_primary_color</item>
         <item name="android:layout_margin">@dimen/default_margin_mini</item>

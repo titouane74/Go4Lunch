@@ -29,7 +29,7 @@
     <dimen name="auth_btn_text_size">16sp</dimen>
 
     <!-- Settings -->
-    <dimen name="settings_btn_text_size">20sp</dimen>
+    <dimen name="settings_text_size">20sp</dimen>
     <dimen name="settings_btn_margin_horizontal">@dimen/default_margin</dimen>
     <dimen name="settings_img_size">140dp</dimen>
     <dimen name="settings_margin_extra_large">60dp</dimen>

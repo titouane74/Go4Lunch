@@ -45,6 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.fleb.go4lunch.AppGo4Lunch.ERROR_ON_FAILURE_LISTENER;
+import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_BOUND_RADIUS;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_PLACE_DETAIL_FIELDS;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_RADIUS;
 import static com.fleb.go4lunch.AppGo4Lunch.PREF_KEY_TYPE_GOOGLE_SEARCH;
@@ -123,6 +124,7 @@ public class RestaurantRepository {
      * @return : mutable live data list object : list of the restaurants
      */
     public MutableLiveData<List<Restaurant>> getLDRestaurantList() {
+        mIsFromAutoComplete = false;
         mLatitude = sApi.getLocationFromSharedPreferences(PREF_KEY_LATITUDE);
         mLongitude = sApi.getLocationFromSharedPreferences(PREF_KEY_LONGITUDE);
         mFusedLocationProvider = Go4LunchHelper.setCurrentLocation(mLatitude, mLongitude);
@@ -430,10 +432,11 @@ public class RestaurantRepository {
         // and once again when the user makes a selection (for example when calling fetchPlace()).
         AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
 
+        int lBoundRadius = mPreferences.getInt(PREF_KEY_BOUND_RADIUS, 1000);
         // Create a RectangularBounds object.
         RectangularBounds bounds = RectangularBounds.newInstance(
-                Go4LunchHelper.toBounds(lLatLng, 1000).southwest,
-                Go4LunchHelper.toBounds(lLatLng, 1000).northeast);
+                Go4LunchHelper.toBounds(lLatLng, lBoundRadius).southwest,
+                Go4LunchHelper.toBounds(lLatLng, lBoundRadius).northeast);
 
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()

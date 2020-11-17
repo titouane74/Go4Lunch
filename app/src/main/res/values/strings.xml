@@ -94,6 +94,7 @@
     <!-- MAPS -->
     <string name="tag_map">tag_map</string>
     <string name="proximity_radius">300</string>
+    <string name="bound_radius">2000</string>
     <string name="type_search">restaurant</string>
     <string name="map_zoom">16</string>
     <string name="default_latitude_position">48.8236549</string>

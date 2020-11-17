@@ -23,14 +23,12 @@ public class AppGo4Lunch extends MultiDexApplication {
     /**
      * Notifications
      */
-    public static final String CHANNEL_1_ID = "channel1";
-    public static final String CHANNEL_2_ID = "channel2";
-    public static final String CHANNEL_3_ID = "channel3";
     public static final String CHANNEL_4_ID = "channel4";
     /**
      * Shared Preferences
      */
     public static final String PREF_KEY_RADIUS = "PREF_KEY_RADIUS";
+    public static final String PREF_KEY_BOUND_RADIUS = "PREF_KEY_BOUND_RADIUS";
     public static final String PREF_KEY_TYPE_GOOGLE_SEARCH = "PREF_KEY_TYPE_GOOGLE_SEARCH";
     public static final String PREF_KEY_PLACE_DETAIL_FIELDS = "PREF_KEY_PLACE_DETAIL_FIELDS";
 
@@ -81,6 +79,9 @@ public class AppGo4Lunch extends MultiDexApplication {
             lValueInt = Integer.parseInt(getString(R.string.proximity_radius));
             PreferencesHelper.saveIntPreferences(PREF_KEY_RADIUS, lValueInt);
 
+            lValueInt = Integer.parseInt(getString(R.string.bound_radius));
+            PreferencesHelper.saveIntPreferences(PREF_KEY_BOUND_RADIUS, lValueInt);
+
             double lLat = Double.parseDouble(getString(R.string.default_latitude_position));
             double lLng = Double.parseDouble(getString(R.string.default_longitude_position));
             Location lLocation = Go4LunchHelper.setCurrentLocation(lLat, lLng);
@@ -96,22 +97,6 @@ public class AppGo4Lunch extends MultiDexApplication {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationManager lManager = getSystemService(NotificationManager.class);
-
-            NotificationChannel lChannel1 = new NotificationChannel(
-            CHANNEL_1_ID, getString(R.string.notif_not),
-                    NotificationManager.IMPORTANCE_NONE);
-            lChannel1.setDescription(getString(R.string.notif_not_important));
-
-            NotificationChannel lChannel2 = new NotificationChannel(
-                    CHANNEL_2_ID, getString(R.string.notif_lower),
-                    NotificationManager.IMPORTANCE_LOW);
-            lChannel2.setDescription(getString(R.string.notif_lower_importance));
-
-            NotificationChannel lChannel3 = new NotificationChannel(
-                    CHANNEL_3_ID, getString(R.string.notif_normal),
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            lChannel3.setDescription(getString(R.string.notif_normal_importance));
-
             NotificationChannel lChannel4 = new NotificationChannel(
                     CHANNEL_4_ID, getString(R.string.notif_high),
                     NotificationManager.IMPORTANCE_HIGH);
@@ -119,11 +104,9 @@ public class AppGo4Lunch extends MultiDexApplication {
 
 
             if (lManager != null) {
-                lManager.createNotificationChannel(lChannel1);
-                lManager.createNotificationChannel(lChannel2);
-                lManager.createNotificationChannel(lChannel3);
                 lManager.createNotificationChannel(lChannel4);
             }
+
         }
 
     }
