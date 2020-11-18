@@ -8,7 +8,6 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -65,13 +64,13 @@ public class RestaurantDetailViewModelTest {
     public void getWorkmateDataWithSuccess() {
         mNewLDWorkmate.setValue(mWorkmate);
 
-        when(mWorkmateRepository.getWorkmateData(mWorkmate.getWorkmateId())).thenReturn(mNewLDWorkmate);
+        when(mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())).thenReturn(mNewLDWorkmate);
         assertNotNull(mRestaurantDetailViewModel.getWorkmateData(mWorkmate.getWorkmateId()));
-        Mockito.verify(mWorkmateRepository).getWorkmateData(mWorkmate.getWorkmateId());
+        Mockito.verify(mWorkmateRepository).getLDWorkmateData(mWorkmate.getWorkmateId());
 
         System.out.println("hors observe " + mWorkmate.getWorkmateId());
 
-        mWorkmateRepository.getWorkmateData(mWorkmate.getWorkmateId()).observeForever(pWorkmate -> {
+        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId()).observeForever(pWorkmate -> {
             System.out.println("dans observe " + pWorkmate.getWorkmateId());
             assertEquals(pWorkmate, mWorkmate);
         });
@@ -101,13 +100,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSearch));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -119,13 +118,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSearch));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -137,13 +136,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSearch));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -155,13 +154,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -174,13 +173,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -193,13 +192,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -212,13 +211,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -231,13 +230,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateRestaurantChoice(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -251,13 +250,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant(mRestaurant,mActionStatusSearch)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant(mRestaurant,mActionStatusSearch)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant,mActionStatusSearch));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -271,13 +270,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -290,14 +289,14 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant(mRestaurant, mActionStatusSearch);
 
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSearch).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -309,13 +308,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -328,13 +327,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -347,13 +346,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });
@@ -366,13 +365,13 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant( mRestaurant, mActionStatusSave);
 
         System.out.println("hors observe " );
 
-        mWorkmateRepository.getOrSaveWorkmateLikeForRestaurant(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
+        mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant(mRestaurant, mActionStatusSave).observeForever(pActionStatus -> {
             System.out.println("dans observe " );
             assertEquals(pActionStatus, lActionStatusWaited);
         });

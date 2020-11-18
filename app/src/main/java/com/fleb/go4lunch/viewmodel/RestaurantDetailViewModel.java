@@ -1,7 +1,5 @@
 package com.fleb.go4lunch.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -10,9 +8,6 @@ import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
 import com.fleb.go4lunch.utils.ActionStatus;
-import com.google.api.LogDescriptor;
-
-import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 
 
 /**
@@ -22,12 +17,10 @@ public class RestaurantDetailViewModel extends ViewModel {
 
     private final WorkmateRepository mWorkmateRepo ;
     private final RestaurantRepository mRestaurantRepo ;
-    //private final Workmate mWorkmate;
 
     public RestaurantDetailViewModel(RestaurantRepository pRestaurantRepository, WorkmateRepository pWorkmateRepository) {
         mRestaurantRepo = pRestaurantRepository;
         mWorkmateRepo = pWorkmateRepository;
-//        mWorkmate = sApi.getWorkmate();
     }
 
     /**
@@ -37,7 +30,7 @@ public class RestaurantDetailViewModel extends ViewModel {
      * @return : enum : result of the action
      */
     public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveWorkmateRestaurantChoice(pRestaurant, pActionStatus);
+        return mWorkmateRepo.getOrSaveLDWorkmateRestaurantChoice(pRestaurant, pActionStatus);
     }
 
     /**
@@ -48,7 +41,7 @@ public class RestaurantDetailViewModel extends ViewModel {
      */
 
     public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveWorkmateLikeForRestaurant(pRestaurant, pActionStatus);
+        return mWorkmateRepo.getOrSaveLDWorkmateLikeForRestaurant(pRestaurant, pActionStatus);
     }
 
     /**
@@ -56,7 +49,7 @@ public class RestaurantDetailViewModel extends ViewModel {
      * @return : object : workmate
      */
     public MutableLiveData<Workmate> getWorkmateData(String pWorkmateId) {
-        return mWorkmateRepo.getWorkmateData(pWorkmateId);
+        return mWorkmateRepo.getLDWorkmateData(pWorkmateId);
     }
 
     /**

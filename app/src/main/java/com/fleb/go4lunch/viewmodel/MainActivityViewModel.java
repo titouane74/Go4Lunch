@@ -30,7 +30,7 @@ public class MainActivityViewModel extends ViewModel {
      * @return : object : workmate
      */
     public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
-        return mWorkmateRepo.getWorkmateData(pWorkmateId);
+        return mWorkmateRepo.getLDWorkmateData(pWorkmateId);
     }
 
     /**

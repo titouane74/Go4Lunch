@@ -193,8 +193,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (!Places.isInitialized()) {
                         Places.initialize(getApplicationContext(), mKey);
                     }
-
-                    // Create a new Places client instance.
                     PlacesClient lPlacesClient = Places.createClient(getApplicationContext());
 
                     mMainActivityViewModel.getAutocompleteRestaurantList(lPlacesClient, pString)

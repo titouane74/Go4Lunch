@@ -122,7 +122,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
     //EMAIL FIREBASE
     private void signInWithEmailFirebase() {
-
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -131,7 +130,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
-
     }
 
     //GOOGLE

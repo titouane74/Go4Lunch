@@ -25,7 +25,7 @@ public class AuthenticationViewModel extends ViewModel {
      */
     public LiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pUser) {
 
-        return mWorkmateRepo.saveWorkmateFirebaseProfile(pUser);
+        return mWorkmateRepo.saveLDWorkmateFirebaseProfile(pUser);
     }
 
 }

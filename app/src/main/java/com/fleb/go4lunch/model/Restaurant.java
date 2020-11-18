@@ -10,7 +10,6 @@ import java.util.List;
  *
  */
 public class Restaurant implements Serializable, Comparable<Restaurant> {
-
     private String restoPlaceId;
     private String restoName;
     private String restoAddress;

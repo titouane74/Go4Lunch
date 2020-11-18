@@ -12,11 +12,9 @@ public class Injection {
     private static RestaurantRepository createRestaurantRepository() {
         return new RestaurantRepository();
     }
-
     private static WorkmateRepository createWorkmateRepository() {
         return new WorkmateRepository();
     }
-
     public static Go4LunchViewModelFactory go4LunchViewModelFactory() {
         return new Go4LunchViewModelFactory(createRestaurantRepository(), createWorkmateRepository());
     }

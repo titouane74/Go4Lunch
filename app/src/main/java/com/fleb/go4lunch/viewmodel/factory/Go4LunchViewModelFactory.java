@@ -14,8 +14,6 @@ import com.fleb.go4lunch.viewmodel.RestaurantListViewModel;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
 import com.fleb.go4lunch.viewmodel.WorkmateListViewModel;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * Created by Florence LE BOURNOT on 15/11/2020
  */
@@ -49,11 +47,11 @@ public class Go4LunchViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(RestaurantListViewModel.class)) {
             return (T) new RestaurantListViewModel(this.mRestaurantRepository);
         }
-        if (modelClass.isAssignableFrom(SettingsViewModel.class)) {
-            return (T) new SettingsViewModel(this.mWorkmateRepository);
-        }
         if (modelClass.isAssignableFrom(WorkmateListViewModel.class)) {
             return (T) new WorkmateListViewModel(this.mWorkmateRepository);
+        }
+        if (modelClass.isAssignableFrom(SettingsViewModel.class)) {
+            return (T) new SettingsViewModel(this.mWorkmateRepository);
         }
         throw new IllegalArgumentException("Problem with ViewModelFactory");
     }

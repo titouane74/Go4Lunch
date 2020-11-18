@@ -24,7 +24,7 @@ public class SettingsViewModel extends ViewModel {
      * @return : object : workmate
      */
     public LiveData<Workmate> getWorkmateData(String pWorkmateId) {
-        return mWorkmateRepo.getWorkmateData(pWorkmateId);
+        return mWorkmateRepo.getLDWorkmateData(pWorkmateId);
     }
 
     /**
@@ -35,7 +35,7 @@ public class SettingsViewModel extends ViewModel {
      */
     public LiveData<ActionStatus> updateWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
 
-        return mWorkmateRepo.updateWorkmateUserName(pWorkmate, pNewUserName);
+        return mWorkmateRepo.updateLDWorkmateUserName(pWorkmate, pNewUserName);
     }
 
 }

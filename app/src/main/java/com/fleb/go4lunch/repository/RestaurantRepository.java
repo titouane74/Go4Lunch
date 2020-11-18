@@ -209,7 +209,7 @@ public class RestaurantRepository {
                     List<RestaurantPojo.Result> lRestoResponse = Objects.requireNonNull(response.body()).getResults();
 
                     for (RestaurantPojo.Result restaurantPojo : lRestoResponse) {
-                        manageRestaurantInformationAndGetGoogleDetailRestaurant(restaurantPojo.getPlaceId(), lRestoResponse.size());
+                        getGoogleDetailRestaurant(restaurantPojo.getPlaceId(), lRestoResponse.size());
                     }
                 }
             }
@@ -222,11 +222,11 @@ public class RestaurantRepository {
     }
 
     /**
-     * Get and manage the restaurant detail information from Google
+     * Get the restaurant detail information from Google
      * @param pRestaurantListId : string : id of the restaurant
      * @param pResponseSize : int : size of the restaurant list
      */
-    public void manageRestaurantInformationAndGetGoogleDetailRestaurant(String pRestaurantListId, int pResponseSize) {
+    public void getGoogleDetailRestaurant(String pRestaurantListId, int pResponseSize) {
         String lFields = mPreferences.getString(PREF_KEY_PLACE_DETAIL_FIELDS, null);
 
         mJsonRetrofitApi = ApiClient.getClient(BASE_URL_GOOGLE).create(JsonRetrofitApi.class);
@@ -291,7 +291,7 @@ public class RestaurantRepository {
             for (Restaurant lRestaurant : mRestoListDetail) {
                 saveRestaurantInFirestore(lRestaurant);
             }
-            updateDateOfRestaurantLastUpdateInFirestore();
+            updateLastUpdateDateInFirestore();
 
             prepareAndSendRestoListForDisplay(mRestoListDetail);
         }
@@ -321,7 +321,7 @@ public class RestaurantRepository {
      */
     private void prepareAndSendRestoListForDisplay(List<Restaurant> pRestaurantList) {
 
-        mRestaurantList = updateDistanceInLiveDataRestaurantList(pRestaurantList);
+        mRestaurantList = updateDistanceInRestaurantList(pRestaurantList);
         Collections.sort(mRestaurantList);
         Collections.reverse(mRestaurantList);
         if (!mIsFromAutoComplete) {
@@ -361,7 +361,7 @@ public class RestaurantRepository {
      * @param pRestaurantList : list object: restaurant list
      * @return : list object : restaurant list
      */
-    private List<Restaurant> updateDistanceInLiveDataRestaurantList(List<Restaurant> pRestaurantList) {
+    private List<Restaurant> updateDistanceInRestaurantList(List<Restaurant> pRestaurantList) {
         for (Restaurant lRestaurant : pRestaurantList) {
             int lDistance = Go4LunchHelper.getRestaurantDistanceToCurrentLocation(
                     mFusedLocationProvider, lRestaurant.getRestoLocation());
@@ -375,7 +375,7 @@ public class RestaurantRepository {
     /**
      * Update the last update date of and in Firestore
      */
-    private void updateDateOfRestaurantLastUpdateInFirestore() {
+    private void updateLastUpdateDateInFirestore() {
 
         Date lDate = new Date();
         Map<String, Object> lLastUpdate = new HashMap<>();
@@ -518,7 +518,7 @@ public class RestaurantRepository {
 
         if (pAutocompleteRestaurantList.size() > 0) {
             for (Restaurant lAutoRestaurant : pAutocompleteRestaurantList) {
-                manageRestaurantInformationAndGetGoogleDetailRestaurant(lAutoRestaurant.getRestoPlaceId(),
+                getGoogleDetailRestaurant(lAutoRestaurant.getRestoPlaceId(),
                         pAutocompleteRestaurantList.size());
             }
         }

@@ -46,9 +46,9 @@ public class WorkmateListFragment extends BaseFragment  {
     }
 
     private void configureViewModel() {
-
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
-        WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity(),lFactory).get(WorkmateListViewModel.class);
+        WorkmateListViewModel lWorkmateListViewModel = new ViewModelProvider(requireActivity(),lFactory)
+                .get(WorkmateListViewModel.class);
 
         lWorkmateListViewModel.getWorkmateList().observe(getViewLifecycleOwner(), pWorkmateList -> {
             mWorkmateAdapter.setWorkmateList(pWorkmateList);

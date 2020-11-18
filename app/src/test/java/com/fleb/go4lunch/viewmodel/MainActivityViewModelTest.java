@@ -7,7 +7,6 @@ import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.repository.RestaurantRepository;
 import com.fleb.go4lunch.repository.WorkmateRepository;
-import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -85,15 +84,15 @@ public class MainActivityViewModelTest {
     public void getWorkmateInfosWithSuccess() {
         mNewLDWorkmate.setValue(mWorkmate);
 
-        when(mWorkmateRepository.getWorkmateData(mWorkmate.getWorkmateId())).thenReturn(mNewLDWorkmate);
+        when(mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())).thenReturn(mNewLDWorkmate);
         assertNotNull(mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()));
-        Mockito.verify(mWorkmateRepository).getWorkmateData(mWorkmate.getWorkmateId());
+        Mockito.verify(mWorkmateRepository).getLDWorkmateData(mWorkmate.getWorkmateId());
 
         mNewLDWorkmate.setValue(mWorkmate);
 
         System.out.println("hors observe " + mWorkmate.getWorkmateId());
 
-        mWorkmateRepository.getWorkmateData(mWorkmate.getWorkmateId()).observeForever(pWorkmate -> {
+        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId()).observeForever(pWorkmate -> {
             System.out.println("dans observe " + pWorkmate.getWorkmateId());
             assertEquals(pWorkmate, mWorkmate);
         });

@@ -59,7 +59,7 @@ public class WorkmateRepository {
                         mWorkmateList = Objects.requireNonNull(pTask.getResult()).toObjects(Workmate.class);
                         mLDWorkmateList.setValue(mWorkmateList);
                     } else {
-                        Log.e(TAG, "getWorkmateData: " + pTask.getException());
+                        Log.e(TAG, "getLDWorkmateData: " + pTask.getException());
                     }
                 });
         return mLDWorkmateList;
@@ -71,7 +71,7 @@ public class WorkmateRepository {
      * @return : mutable live data Enum ActionStatus : information if the backup is done
      * it can be SAVED , EXIST, SAVE_FAILED
      */
-    public MutableLiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
+    public MutableLiveData<ActionStatus> saveLDWorkmateFirebaseProfile(FirebaseUser pWorkmate) {
 
         String lUrl = null;
         if (pWorkmate.getPhotoUrl() != null) {
@@ -108,7 +108,7 @@ public class WorkmateRepository {
      * @param pWorkmateId : string : workmate id
      * @return : mutable live data object : workmate
      */
-    public MutableLiveData<Workmate> getWorkmateData(String pWorkmateId) {
+    public MutableLiveData<Workmate> getLDWorkmateData(String pWorkmateId) {
         mWorkmateRef.document(pWorkmateId)
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -117,7 +117,7 @@ public class WorkmateRepository {
                         sApi.setWorkmate(lWorkmate);
                         mLDWorkmate.setValue(lWorkmate);
                     } else {
-                        Log.e(TAG, "getWorkmateData: " + pTask.getException());
+                        Log.e(TAG, "getLDWorkmateData: " + pTask.getException());
                     }
                 });
         return mLDWorkmate;
@@ -129,7 +129,7 @@ public class WorkmateRepository {
      * @param pNewUserName : string : new user name
      * @return : object ActionStatus : result of the update
      */
-    public MutableLiveData<ActionStatus> updateWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
+    public MutableLiveData<ActionStatus> updateLDWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
 
         mWorkmateRef.document(pWorkmate.getWorkmateId())
                 .update(String.valueOf(Workmate.Fields.workmateName),pNewUserName)
@@ -150,7 +150,7 @@ public class WorkmateRepository {
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      * @return : mutable live data enum actionstatus : result of the action
      */
-        public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant, ActionStatus pActionStatus) {
+        public MutableLiveData<ActionStatus> getOrSaveLDWorkmateLikeForRestaurant(Restaurant pRestaurant, ActionStatus pActionStatus) {
         Workmate lWorkmate = sApi.getWorkmate();
 
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
@@ -282,7 +282,7 @@ public class WorkmateRepository {
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      * @return : mutable live data enum actionstatus : result of the action
      */
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateRestaurantChoice(Restaurant pRestaurant, ActionStatus pActionStatus) {
+    public MutableLiveData<ActionStatus> getOrSaveLDWorkmateRestaurantChoice(Restaurant pRestaurant, ActionStatus pActionStatus) {
 
         Workmate lWorkmate = sApi.getWorkmate();
         mWorkmateDocRef = mWorkmateRef.document(lWorkmate.getWorkmateId());
