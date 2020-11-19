@@ -37,7 +37,6 @@ public class MainActivityViewModelTest {
     @Mock
     public WorkmateRepository mWorkmateRepository;
 
-    @Mock
     private MutableLiveData<List<Restaurant>> mNewLDRestaurantList = new MutableLiveData<>();
 
     @Mock
@@ -57,27 +56,19 @@ public class MainActivityViewModelTest {
         mRestaurantList .add(new Restaurant("tatafaridaid", "tata farida"));
 
         mWorkmate = new Workmate("albertid", "Albert");
-
     }
 
     @Test
     public void getRestaurantListWithSuccess() {
 
-        mNewLDRestaurantList.postValue(mRestaurantList);
+        mNewLDRestaurantList.setValue(mRestaurantList);
 
         when(mRestaurantRepository.getLDRestaurantList()).thenReturn(mNewLDRestaurantList);
         assertNotNull(mMainActivityViewModel.getRestaurantList());
         Mockito.verify(mRestaurantRepository).getLDRestaurantList();
 
-        mNewLDRestaurantList.postValue(mRestaurantList);
-
-        System.out.println("hors obeserve " + mRestaurantList.size());
-        mRestaurantRepository.getLDRestaurantList().observeForever(pRestaurantList ->
-        {
-            System.out.println("dans observe " + pRestaurantList.size());
-            assertEquals(pRestaurantList,mRestaurantList);
-        });
-        mNewLDRestaurantList.postValue(mRestaurantList);
+        mRestaurantRepository.getLDRestaurantList().observeForever(
+                pRestaurantList -> assertEquals(pRestaurantList, mRestaurantList));
     }
 
     @Test
@@ -88,15 +79,8 @@ public class MainActivityViewModelTest {
         assertNotNull(mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()));
         Mockito.verify(mWorkmateRepository).getLDWorkmateData(mWorkmate.getWorkmateId());
 
-        mNewLDWorkmate.setValue(mWorkmate);
-
-        System.out.println("hors observe " + mWorkmate.getWorkmateId());
-
-        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId()).observeForever(pWorkmate -> {
-            System.out.println("dans observe " + pWorkmate.getWorkmateId());
-            assertEquals(pWorkmate, mWorkmate);
-        });
-        mNewLDWorkmate.setValue(mWorkmate);
+        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())
+                .observeForever(pWorkmate -> assertEquals(pWorkmate, mWorkmate));
     }
 
 }

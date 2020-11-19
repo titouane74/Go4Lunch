@@ -29,12 +29,8 @@ public class SettingsViewModelTest {
     @Mock
     public WorkmateRepository mWorkmateRepository;
 
-    @Mock
     private MutableLiveData<Workmate> mNewLDWorkmate = new MutableLiveData<>();
-
-    @Mock
     private MutableLiveData<ActionStatus> mNewLDActionStatus = new MutableLiveData<>();
-
     private Workmate mWorkmate;
 
     @Before
@@ -43,7 +39,6 @@ public class SettingsViewModelTest {
         mSettingsViewModel = new SettingsViewModel(mWorkmateRepository);
 
         mWorkmate = new Workmate("albertid", "Albert");
-
     }
 
     @Test
@@ -54,12 +49,8 @@ public class SettingsViewModelTest {
         assertNotNull(mSettingsViewModel.getWorkmateData(mWorkmate.getWorkmateId()));
         Mockito.verify(mWorkmateRepository).getLDWorkmateData(mWorkmate.getWorkmateId());
 
-        System.out.println("hors observe " + mWorkmate.getWorkmateId());
-
-        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId()).observeForever(pWorkmate -> {
-            System.out.println("dans observe " + pWorkmate.getWorkmateId());
-            assertEquals(pWorkmate, mWorkmate);
-        });
+        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())
+                .observeForever(pWorkmate -> assertEquals(pWorkmate, mWorkmate));
     }
 
     @Test
@@ -73,12 +64,8 @@ public class SettingsViewModelTest {
         assertNotNull(mSettingsViewModel.updateWorkmateUserName(mWorkmate,lNewName));
         Mockito.verify(mWorkmateRepository).updateLDWorkmateUserName(mWorkmate,lNewName);
 
-        System.out.println("hors observe " );
-
-        mWorkmateRepository.updateLDWorkmateUserName(mWorkmate,lNewName).observeForever(pActionStatus -> {
-            System.out.println("dans observe " );
-            assertEquals(pActionStatus, lActionStatusWaited);
-        });
+        mWorkmateRepository.updateLDWorkmateUserName(mWorkmate,lNewName)
+                .observeForever(pActionStatus -> assertEquals(pActionStatus, lActionStatusWaited));
     }
 
     @Test
@@ -92,12 +79,7 @@ public class SettingsViewModelTest {
         assertNotNull(mSettingsViewModel.updateWorkmateUserName(mWorkmate,lNewName));
         Mockito.verify(mWorkmateRepository).updateLDWorkmateUserName(mWorkmate,lNewName);
 
-        System.out.println("hors observe " );
-
-        mWorkmateRepository.updateLDWorkmateUserName(mWorkmate,lNewName).observeForever(pActionStatus -> {
-            System.out.println("dans observe " );
-            assertEquals(pActionStatus, lActionStatusWaited);
-        });
+        mWorkmateRepository.updateLDWorkmateUserName(mWorkmate,lNewName)
+                .observeForever(pActionStatus ->  assertEquals(pActionStatus, lActionStatusWaited));
     }
-
 }

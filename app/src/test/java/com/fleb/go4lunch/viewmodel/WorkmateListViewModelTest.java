@@ -31,7 +31,6 @@ public class WorkmateListViewModelTest {
     @Mock
     public WorkmateRepository mWorkmateRepository;
 
-    @Mock
     private MutableLiveData<List<Workmate>> mNewLDWorkmateList = new MutableLiveData<>();
 
     private List<Workmate> mWorkmateList = new ArrayList<>();
@@ -46,16 +45,14 @@ public class WorkmateListViewModelTest {
 
     @Test
     public void getWorkmateListWithSuccess() {
-        mNewLDWorkmateList.postValue(mWorkmateList);
+        mNewLDWorkmateList.setValue(mWorkmateList);
 
         when(mWorkmateRepository.getLDWorkmateListData()).thenReturn(mNewLDWorkmateList);
         assertNotNull(mWorkmateListViewModel.getWorkmateList());
         Mockito.verify(mWorkmateRepository).getLDWorkmateListData();
 
-        System.out.println("hors observe " + mWorkmateList.size());
         mWorkmateRepository.getLDWorkmateListData().observeForever(pWorkmateList ->
         {
-            System.out.println("dans observe " + pWorkmateList.size());
             assertEquals(pWorkmateList,mWorkmateList);
         });
 

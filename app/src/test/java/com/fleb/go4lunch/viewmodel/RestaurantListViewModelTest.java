@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.repository.RestaurantRepository;
-import com.fleb.go4lunch.viewmodel.RestaurantListViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,7 +32,6 @@ public class RestaurantListViewModelTest {
     @Mock
     public RestaurantRepository mRestaurantRepository;
 
-    @Mock
     private MutableLiveData<List<Restaurant>> mNewLDRestaurantList = new MutableLiveData<>();
 
     private List<Restaurant> mRestaurantList = new ArrayList<>();
@@ -49,22 +47,13 @@ public class RestaurantListViewModelTest {
     @Test
     public void getRestaurantListWithSuccess() {
 
-        mNewLDRestaurantList.postValue(mRestaurantList);
+        mNewLDRestaurantList.setValue(mRestaurantList);
 
         when(mRestaurantRepository.getLDRestaurantList()).thenReturn(mNewLDRestaurantList);
         assertNotNull(mRestaurantListViewModel.getRestaurantList());
         Mockito.verify(mRestaurantRepository).getLDRestaurantList();
 
-//        mNewLDRestaurantList.postValue(mRestaurantList);
-
-        System.out.println("hors observe " + mRestaurantList.size());
-        mRestaurantRepository.getLDRestaurantList().observeForever(pRestaurantList ->
-        {
-            System.out.println("dans observe " + pRestaurantList.size());
-            assertEquals(pRestaurantList,mRestaurantList);
-        });
-
-//        mNewLDRestaurantList.postValue(mRestaurantList);
+        mRestaurantRepository.getLDRestaurantList()
+                .observeForever(pRestaurantList -> assertEquals(pRestaurantList,mRestaurantList));
     }
-
 }

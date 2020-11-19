@@ -4,11 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.MutableLiveData;
 
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.model.Workmate;
+
 import com.fleb.go4lunch.repository.RestaurantRepository;
-import com.fleb.go4lunch.repository.WorkmateRepository;
-import com.fleb.go4lunch.viewmodel.MainActivityViewModel;
-import com.fleb.go4lunch.viewmodel.MapViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,10 +33,7 @@ public class MapViewModelTest {
     @Mock
     public RestaurantRepository mRestaurantRepository;
 
-    @Mock
-    public WorkmateRepository mWorkmateRepository;
 
-    @Mock
     private MutableLiveData<List<Restaurant>> mNewLDRestaurantList = new MutableLiveData<>();
 
     private List<Restaurant> mRestaurantList = new ArrayList<>();
@@ -49,29 +43,21 @@ public class MapViewModelTest {
         initMocks(this);
         mMapViewModel = new MapViewModel(mRestaurantRepository);
 
-        mRestaurantList .add(new Restaurant("tataeugenieid", "tata eugnénie"));
-        mRestaurantList .add(new Restaurant("julesid", "jules"));
-        mRestaurantList .add(new Restaurant("tatafaridaid", "tata farida"));
-
+        mRestaurantList.add(new Restaurant("tataeugenieid", "tata eugnénie"));
+        mRestaurantList.add(new Restaurant("julesid", "jules"));
+        mRestaurantList.add(new Restaurant("tatafaridaid", "tata farida"));
     }
 
     @Test
     public void getRestaurantListWithSuccess() {
 
-        mNewLDRestaurantList.postValue(mRestaurantList);
+        mNewLDRestaurantList.setValue(mRestaurantList);
 
         when(mRestaurantRepository.getLDRestaurantList()).thenReturn(mNewLDRestaurantList);
         assertNotNull(mMapViewModel.getRestaurantList());
         Mockito.verify(mRestaurantRepository).getLDRestaurantList();
 
-        mNewLDRestaurantList.postValue(mRestaurantList);
-
-        System.out.println("hors obeserve " + mRestaurantList.size());
-        mRestaurantRepository.getLDRestaurantList().observeForever(pRestaurantList ->
-        {
-            System.out.println("dans observe " + pRestaurantList.size());
-            assertEquals(pRestaurantList,mRestaurantList);
-        });
-        mNewLDRestaurantList.postValue(mRestaurantList);
+        mRestaurantRepository.getLDRestaurantList()
+                .observeForever(pRestaurantList -> assertEquals(pRestaurantList,mRestaurantList));
     }
 }
