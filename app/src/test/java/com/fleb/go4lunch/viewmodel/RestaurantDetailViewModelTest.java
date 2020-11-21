@@ -286,9 +286,9 @@ public class RestaurantDetailViewModelTest {
 
         mNewLDActionStatus.setValue(lActionStatusWaited);
 
-        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant( mActionStatusSave)).thenReturn(mNewLDActionStatus);
+        when(mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant(mActionStatusSave)).thenReturn(mNewLDActionStatus);
         assertNotNull(mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mActionStatusSave));
-        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant( mActionStatusSave);
+        Mockito.verify(mWorkmateRepository).getOrSaveLDWorkmateLikeForRestaurant(mActionStatusSave);
 
         mWorkmateRepository.getOrSaveLDWorkmateLikeForRestaurant(mActionStatusSave).observeForever(
                 pActionStatus -> assertEquals(pActionStatus, lActionStatusWaited));
