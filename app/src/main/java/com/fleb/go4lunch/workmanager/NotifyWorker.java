@@ -13,10 +13,12 @@ import androidx.work.WorkerParameters;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
 import com.fleb.go4lunch.model.Workmate;
-import com.fleb.go4lunch.repository.RestaurantRepository;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.fleb.go4lunch.AppGo4Lunch.CHANNEL_4_ID;
 import static com.fleb.go4lunch.AppGo4Lunch.sApi;
@@ -26,15 +28,18 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
  */
 public class NotifyWorker extends Worker {
 
+    /**
+     * Firebase declarations
+     */
+    private final FirebaseFirestore mDb = FirebaseFirestore.getInstance();
+    private final CollectionReference mRestoRef = mDb.collection(String.valueOf(Restaurant.Fields.Restaurant));
+
     private final Context mContext;
-    private final RestaurantRepository mRestaurantRepo;
     private Workmate mCurrentWorkmate;
 
     public NotifyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         mContext = context;
-        mRestaurantRepo = new RestaurantRepository();
-
     }
 
     @NonNull
@@ -44,36 +49,48 @@ public class NotifyWorker extends Worker {
         mCurrentWorkmate = sApi.getWorkmate();
 
         if ((mCurrentWorkmate != null) && (mCurrentWorkmate.getWorkmateRestoChosen() != null)) {
-            mRestaurantRepo.getRestaurantNotif(mCurrentWorkmate.getWorkmateRestoChosen().getRestoId());
-            prepareNotification();
+            getRestaurantNotif(mCurrentWorkmate.getWorkmateRestoChosen().getRestoId());
         }
         return Result.success();
     }
 
     /**
+     * Get the restaurant for the generation of  the notification
+     *
+     * @param pRestaurantId : string : restaurant id
+     */
+    public void getRestaurantNotif(String pRestaurantId) {
+        mRestoRef.document(pRestaurantId)
+                .get()
+                .addOnCompleteListener(pTask -> {
+                    if (pTask.isSuccessful()) {
+                        Restaurant lRestaurant = (Objects.requireNonNull(pTask.getResult()).toObject(Restaurant.class));
+                        if (lRestaurant != null) {
+                            prepareNotification(lRestaurant);
+                        }
+                    }
+                });
+    }
+
+    /**
      * Prepare the notification for the current user if he choose a restaurant
      */
-    public void prepareNotification() {
-        List<Restaurant> lRestaurantList = sApi.getRestaurantList();
-        for (Restaurant lRestaurant : lRestaurantList) {
-            if ((lRestaurant.getRestoWkList() != null)
-                    && (lRestaurant.getRestoPlaceId().equals(mCurrentWorkmate.getWorkmateRestoChosen().getRestoId()))) {
-                List<Restaurant.WorkmatesList> lWorkmateList = lRestaurant.getRestoWkList();
-                List<Workmate> lListWorkmatesComing = new ArrayList<>();
-                for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
-                    if (!mCurrentWorkmate.getWorkmateName().equals(lWorkmateComing.getWkName())) {
-                        lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
-                    }
-                }
-                createNotification(lListWorkmatesComing, lRestaurant);
+    public void prepareNotification(Restaurant pRestaurant) {
+        List<Restaurant.WorkmatesList> lWorkmateList = pRestaurant.getRestoWkList();
+        List<Workmate> lListWorkmatesComing = new ArrayList<>();
+        for (Restaurant.WorkmatesList lWorkmateComing : lWorkmateList) {
+            if (!mCurrentWorkmate.getWorkmateName().equals(lWorkmateComing.getWkName())) {
+                lListWorkmatesComing.add(new Workmate(lWorkmateComing.getWkId(), lWorkmateComing.getWkName()));
             }
         }
+        createNotification(lListWorkmatesComing, pRestaurant);
     }
 
     /**
      * Create the notification
+     *
      * @param pWorkmateComing : list object : workmate list coming to the same restaurant
-     * @param pRestaurant : object : restaurant chosen by the workmate
+     * @param pRestaurant     : object : restaurant chosen by the workmate
      */
     private void createNotification(List<Workmate> pWorkmateComing, Restaurant pRestaurant) {
 

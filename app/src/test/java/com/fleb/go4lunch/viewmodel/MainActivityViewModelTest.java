@@ -75,12 +75,12 @@ public class MainActivityViewModelTest {
     public void getWorkmateInfosWithSuccess() {
         mNewLDWorkmate.setValue(mWorkmate);
 
-        when(mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())).thenReturn(mNewLDWorkmate);
-        assertNotNull(mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()));
-        Mockito.verify(mWorkmateRepository).getLDWorkmateData(mWorkmate.getWorkmateId());
+        when(mWorkmateRepository.getLDWorkmateData()).thenReturn(mNewLDWorkmate);
+        assertNotNull(mMainActivityViewModel.getWorkmateInfos());
+        Mockito.verify(mWorkmateRepository).getLDWorkmateData();
 
-        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())
+        mWorkmateRepository.getLDWorkmateData()
                 .observeForever(pWorkmate -> assertEquals(pWorkmate, mWorkmate));
-    }
 
+    }
 }

@@ -60,8 +60,6 @@ public class WorkerRestaurantChoiceController {
                 .build();
 
         long lStartTime = lCalendar.getTimeInMillis() - lSysTime;
-        //TODO to reinitialize
-        lStartTime = 20000;
 
         // PeriodicWorkRequest
         return new PeriodicWorkRequest.Builder(RestaurantChoiceWorker.class,

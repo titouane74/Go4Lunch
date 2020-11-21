@@ -1,6 +1,5 @@
 package com.fleb.go4lunch.view.activities;
 
-import android.content.Context;
 import android.content.Intent;
 
 import android.net.Uri;
@@ -29,12 +28,8 @@ import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.SettingsViewModel;
 import com.fleb.go4lunch.viewmodel.factory.Go4LunchViewModelFactory;
 import com.fleb.go4lunch.viewmodel.injection.Injection;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
-
-    private FirebaseUser mCurrentUser;
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SettingsViewModel mSettingsViewModel;
     private Workmate mWorkmate;
@@ -48,9 +43,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        FirebaseAuth lAuth = FirebaseAuth.getInstance();
-        mCurrentUser = lAuth.getCurrentUser();
-
         mImgUser = findViewById(R.id.user_img_user);
         mTxtEmail = findViewById(R.id.user_txt_email);
         mTxtName = findViewById(R.id.user_edit_text_username);
@@ -59,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         Button lBtnChangeNotifStatus = findViewById(R.id.btn_change_notif_status);
 
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
-        mSettingsViewModel = new ViewModelProvider(this,lFactory).get(SettingsViewModel.class);
+        mSettingsViewModel = new ViewModelProvider(this, lFactory).get(SettingsViewModel.class);
 
         displayWorkmateData();
 
@@ -86,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
      */
     public void displayWorkmateData() {
 
-        mSettingsViewModel.getWorkmateData(mCurrentUser.getUid()).observe(this, pWorkmate -> {
+        mSettingsViewModel.getWorkmateData().observe(this, pWorkmate -> {
             mWorkmate = pWorkmate;
             if (pWorkmate.getWorkmatePhotoUrl() != null) {
                 Glide.with(SettingsActivity.this)
@@ -107,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         String lWorkmateName = mTxtName.getText().toString();
 
-        mSettingsViewModel.updateWorkmateUserName(mWorkmate, lWorkmateName) .observe(this, pActionStatus -> {
+        mSettingsViewModel.updateWorkmateUserName(lWorkmateName).observe(this, pActionStatus -> {
             if (pActionStatus.equals(ActionStatus.SAVED)) {
                 Toast.makeText(this, R.string.user_account_updated, Toast.LENGTH_SHORT).show();
                 finish();
@@ -126,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, this.getPackageName());
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
             intent.putExtra("app_package", this.getPackageName());
             intent.putExtra("app_uid", this.getApplicationInfo().uid);

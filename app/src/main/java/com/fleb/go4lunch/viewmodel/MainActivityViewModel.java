@@ -26,11 +26,10 @@ public class MainActivityViewModel extends ViewModel {
 
     /**
      * Retrieve workmate information from Firestore
-     * @param pWorkmateId : string : workmate id
      * @return : object : workmate
      */
-    public LiveData<Workmate> getWorkmateInfos(String pWorkmateId) {
-        return mWorkmateRepo.getLDWorkmateData(pWorkmateId);
+    public LiveData<Workmate> getWorkmateInfos() {
+        return mWorkmateRepo.getLDWorkmateData();
     }
 
     /**

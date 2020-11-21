@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fleb.go4lunch.R;
 import com.fleb.go4lunch.model.Restaurant;
-import com.fleb.go4lunch.model.Workmate;
 import com.fleb.go4lunch.utils.Go4LunchHelper;
 import com.fleb.go4lunch.utils.ActionStatus;
 import com.fleb.go4lunch.viewmodel.RestaurantDetailViewModel;
@@ -75,6 +74,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private void getIncomingIntent() {
         if (getIntent().hasExtra(RESTO_PLACE_ID)) {
             mRestaurantId = getIntent().getStringExtra(RESTO_PLACE_ID);
+            sApi.setRestaurantId(mRestaurantId);
         }
     }
 
@@ -90,13 +90,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     private void initializeViewModel() {
-        Workmate lWorkmate = sApi.getWorkmate();
 
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
         mRestaurantDetailViewModel = new ViewModelProvider(this, lFactory).get(RestaurantDetailViewModel.class);
 
         if (mRestaurantId == null) {
-            mRestaurantDetailViewModel.getWorkmateData(lWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
+            mRestaurantDetailViewModel.getWorkmateData().observe(this, pWorkmate -> {
                 mRestaurantId = pWorkmate.getWorkmateRestoChosen().getRestoId();
                 getRestaurantDetail();
             });
@@ -110,11 +109,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      */
     private void getRestaurantDetail() {
 
-        mRestaurantDetailViewModel.getRestaurantDetail(mRestaurantId).observe(this, pRestaurant -> {
+        mRestaurantDetailViewModel.getRestaurantDetail().observe(this, pRestaurant -> {
             mWorkmateAdapter.setWorkmateList(pRestaurant.getRestoWkList());
             mWorkmateAdapter.notifyDataSetChanged();
             mRestaurant = pRestaurant;
-            sApi.setRestaurant(mRestaurant);
             setInfoRestaurant();
             displayChoiceStatus();
             displayLikeStatus();
@@ -152,7 +150,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Save the workmate restaurant choice
      */
     private void saveChoiceRestaurant() {
-        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.SAVED)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(ActionStatus.SAVED)
                 .observe(this, pActionStatus -> {
                     switch (pActionStatus) {
                         case ADDED:
@@ -181,7 +179,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+        mRestaurantDetailViewModel.getOrSaveWorkmateChoiceForRestaurant(ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeChoiceStatus(true);
@@ -214,7 +212,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (mRestaurantDetailViewModel == null) {
             initializeViewModel();
         }
-        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SEARCH)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(ActionStatus.TO_SEARCH)
                 .observe(this, pActionStation -> {
                     if (pActionStation.equals(ActionStatus.IS_CHOSEN)) {
                         changeLikeStatus(true);
@@ -228,7 +226,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
      * Save the workmate choice if he likes or not the restaurant
      */
     private void saveLikeRestaurant() {
-        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(mRestaurant, ActionStatus.TO_SAVE)
+        mRestaurantDetailViewModel.getOrSaveWorkmateLikeForRestaurant(ActionStatus.TO_SAVE)
                 .observe(this, pActionStatus -> {
 
                     switch (pActionStatus) {

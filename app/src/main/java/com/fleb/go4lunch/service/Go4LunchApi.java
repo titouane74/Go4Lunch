@@ -23,6 +23,10 @@ public interface Go4LunchApi {
 
     Workmate getWorkmate() ;
 
+    void setRestaurantId(String pRestaurantId);
+
+    String getRestaurantId();
+
     void setRestaurant(Restaurant pRestaurant);
 
     Restaurant getRestaurant();

@@ -25,39 +25,36 @@ public class RestaurantDetailViewModel extends ViewModel {
 
     /**
      * Get or save the workmate restaurant choice
-     * @param pRestaurant: object : restaurant
      * @param pActionStatus : enum : action to do
      * @return : enum : result of the action
      */
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveLDWorkmateRestaurantChoice(pRestaurant, pActionStatus);
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateChoiceForRestaurant(ActionStatus pActionStatus) {
+        return mWorkmateRepo.getOrSaveLDWorkmateRestaurantChoice(pActionStatus);
     }
 
     /**
      * Get or save the workmate restaurant like
-     * @param pRestaurant: object : restaurant
      * @param pActionStatus : enum : action to do
      * @return : enum : result of the action
      */
-
-    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(Restaurant pRestaurant,ActionStatus pActionStatus) {
-        return mWorkmateRepo.getOrSaveLDWorkmateLikeForRestaurant(pRestaurant, pActionStatus);
+    public MutableLiveData<ActionStatus> getOrSaveWorkmateLikeForRestaurant(ActionStatus pActionStatus) {
+        return mWorkmateRepo.getOrSaveLDWorkmateLikeForRestaurant(pActionStatus);
     }
 
     /**
      * Get  workmate information
      * @return : object : workmate
      */
-    public MutableLiveData<Workmate> getWorkmateData(String pWorkmateId) {
-        return mWorkmateRepo.getLDWorkmateData(pWorkmateId);
+    public MutableLiveData<Workmate> getWorkmateData() {
+        return mWorkmateRepo.getLDWorkmateData();
     }
 
     /**
      * Get detail restaurant
      * @return : object : restaurant
      */
-    public MutableLiveData<Restaurant> getRestaurantDetail(String pRestaurantId) {
-        return mRestaurantRepo.getLDRestaurantDetail(pRestaurantId);
+    public MutableLiveData<Restaurant> getRestaurantDetail() {
+        return mRestaurantRepo.getLDRestaurantDetail();
     }
 
 }

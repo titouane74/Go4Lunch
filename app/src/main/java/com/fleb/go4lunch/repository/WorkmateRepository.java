@@ -49,6 +49,7 @@ public class WorkmateRepository {
 
     /**
      * Get the workmate list
+     *
      * @return : mutable live data list object : workmate list
      */
     public MutableLiveData<List<Workmate>> getLDWorkmateListData() {
@@ -67,6 +68,7 @@ public class WorkmateRepository {
 
     /**
      * On his first connection, save the user profile in Firestore
+     *
      * @param pWorkmate : object: workmate / user
      * @return : mutable live data Enum ActionStatus : information if the backup is done
      * it can be SAVED , EXIST, SAVE_FAILED
@@ -93,6 +95,7 @@ public class WorkmateRepository {
                                 })
                                 .addOnFailureListener(pE -> mLDWorkmateSaved.setValue(ActionStatus.SAVED_FAILED));
                     } else {
+                        sApi.setWorkmate(pVoid.toObject(Workmate.class));
                         mLDWorkmateSaved.setValue(ActionStatus.EXIST);
                     }
                 })
@@ -105,11 +108,15 @@ public class WorkmateRepository {
 
     /**
      * Get the workmate informations
-     * @param pWorkmateId : string : workmate id
+     * // * @param pWorkmateId : string : workmate id
+     *
      * @return : mutable live data object : workmate
      */
-    public MutableLiveData<Workmate> getLDWorkmateData(String pWorkmateId) {
-        mWorkmateRef.document(pWorkmateId)
+//    public MutableLiveData<Workmate> getLDWorkmateData(String pWorkmateId) {
+    public MutableLiveData<Workmate> getLDWorkmateData() {
+        String lWorkmateId = sApi.getWorkmateId();
+//        mWorkmateRef.document(pWorkmateId)
+        mWorkmateRef.document(lWorkmateId)
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
@@ -125,18 +132,20 @@ public class WorkmateRepository {
 
     /**
      * Update Firestore with the new username
-     * @param pWorkmate : object : workmate
+     * //     * @param pWorkmate : object : workmate
+     *
      * @param pNewUserName : string : new user name
      * @return : object ActionStatus : result of the update
      */
-    public MutableLiveData<ActionStatus> updateLDWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
-
-        mWorkmateRef.document(pWorkmate.getWorkmateId())
-                .update(String.valueOf(Workmate.Fields.workmateName),pNewUserName)
+//    public MutableLiveData<ActionStatus> updateLDWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
+    public MutableLiveData<ActionStatus> updateLDWorkmateUserName(String pNewUserName) {
+        Workmate lWorkmate = sApi.getWorkmate();
+        mWorkmateRef.document(lWorkmate.getWorkmateId())
+                .update(String.valueOf(Workmate.Fields.workmateName), pNewUserName)
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        pWorkmate.setWorkmateName(pNewUserName);
-                        sApi.setWorkmate(pWorkmate);
+                        lWorkmate.setWorkmateName(pNewUserName);
+                        sApi.setWorkmate(lWorkmate);
                         mLDWorkmateSaved.setValue(ActionStatus.SAVED);
                     }
                 })
@@ -146,25 +155,26 @@ public class WorkmateRepository {
 
     /**
      * Manage if the demand is to be get or save
-     * @param pRestaurant : object : restaurant which is liked
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      * @return : mutable live data enum actionstatus : result of the action
      */
-        public MutableLiveData<ActionStatus> getOrSaveLDWorkmateLikeForRestaurant(Restaurant pRestaurant, ActionStatus pActionStatus) {
+    public MutableLiveData<ActionStatus> getOrSaveLDWorkmateLikeForRestaurant(ActionStatus pActionStatus) {
         Workmate lWorkmate = sApi.getWorkmate();
+        Restaurant lRestaurant = sApi.getRestaurant();
 
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
-            getWorkmateLikeForRestaurant(lWorkmate, pRestaurant, pActionStatus);
+            getWorkmateLikeForRestaurant(lWorkmate, lRestaurant, pActionStatus);
         } else {
-            saveLikeRestaurant(lWorkmate, pRestaurant, pActionStatus);
+            saveLikeRestaurant(lWorkmate, lRestaurant, pActionStatus);
         }
         return mLDLikeStatus;
     }
 
     /**
      * For the search case, get workmate likes if the restaurant is in
-     * @param pWorkmate : object : workmate who likes
-     * @param pRestaurant : object : restaurant which is liked
+     *
+     * @param pWorkmate     : object : workmate who likes
+     * @param pRestaurant   : object : restaurant which is liked
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      */
     public void getWorkmateLikeForRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
@@ -189,8 +199,9 @@ public class WorkmateRepository {
 
     /**
      * Save the workmate like
-     * @param pWorkmate : object : workmate who likes
-     * @param pRestaurant : object : restaurant which is liked
+     *
+     * @param pWorkmate     : object : workmate who likes
+     * @param pRestaurant   : object : restaurant which is liked
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      */
     public void saveLikeRestaurant(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
@@ -215,8 +226,9 @@ public class WorkmateRepository {
      * Find in the workmate likes if the restaurant is already in
      * If it's for the search case, mutable live data return IS_CHOSEN or NOT_CHOSEN
      * if it's for the save case, the restaurant is added to the list or removed
-     * @param pWorkmate : object : workmate who likes
-     * @param pRestaurant : object : restaurant which is liked
+     *
+     * @param pWorkmate     : object : workmate who likes
+     * @param pRestaurant   : object : restaurant which is liked
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      */
     private void findRestaurantInLikes(Workmate pWorkmate, Restaurant pRestaurant, ActionStatus pActionStatus) {
@@ -255,6 +267,7 @@ public class WorkmateRepository {
     /**
      * Add the restaurant in the like list
      * set the mutable live data to ADDED
+     *
      * @param pRestaurant : object : restaurant to add
      */
     private void addRestaurantToLikes(Workmate.Likes pRestaurant) {
@@ -267,6 +280,7 @@ public class WorkmateRepository {
     /**
      * Remove the restaurant from the like list
      * set the mutable live data to REMOVED
+     *
      * @param pRestaurant : object : Workmate.Likes : restaurant informations
      */
     private void removeRestaurantFromLikes(Workmate.Likes pRestaurant) {
@@ -278,32 +292,34 @@ public class WorkmateRepository {
 
     /**
      * Manage if the demand is to be get or save
-     * @param pRestaurant : object : restaurant which is liked
      * @param pActionStatus : enum : status of the action SEARCH or SAVE
      * @return : mutable live data enum actionstatus : result of the action
      */
-    public MutableLiveData<ActionStatus> getOrSaveLDWorkmateRestaurantChoice(Restaurant pRestaurant, ActionStatus pActionStatus) {
+    public MutableLiveData<ActionStatus> getOrSaveLDWorkmateRestaurantChoice(ActionStatus pActionStatus) {
 
         Workmate lWorkmate = sApi.getWorkmate();
+        Restaurant lRestaurant = sApi.getRestaurant();
+
         mWorkmateDocRef = mWorkmateRef.document(lWorkmate.getWorkmateId());
 
         if (pActionStatus.equals(ActionStatus.TO_SEARCH)) {
-            getWorkmateChoice(lWorkmate, pRestaurant);
+            getWorkmateChoice(lWorkmate, lRestaurant);
         } else {
-            saveWorkmateChoice(lWorkmate, pRestaurant);
+            saveWorkmateChoice(lWorkmate, lRestaurant);
         }
         return mLDWorkmateChoiceStatus;
     }
 
     /**
      * Save workmate choice
-     * @param pWorkmate : object : workmate
+     *
+     * @param pWorkmate   : object : workmate
      * @param pRestaurant : object : restaurant
      */
     private void saveWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant) {
         if (pWorkmate.getWorkmateRestoChosen() == null) {
             addChoice(pWorkmate, pRestaurant);
-        } else if (pWorkmate.getWorkmateRestoChosen().getRestoId().equals(pRestaurant.getRestoPlaceId())){
+        } else if (pWorkmate.getWorkmateRestoChosen().getRestoId().equals(pRestaurant.getRestoPlaceId())) {
             removeChoice(pWorkmate, pRestaurant);
         } else {
             removeWorkmateFromPreviousRestaurant(pWorkmate, pRestaurant);
@@ -312,7 +328,8 @@ public class WorkmateRepository {
 
     /**
      * Add workmate choice to his informations
-     * @param pWorkmate : object : workmate
+     *
+     * @param pWorkmate   : object : workmate
      * @param pRestaurant : object : restaurant chosen
      */
     private void addChoice(Workmate pWorkmate, Restaurant pRestaurant) {
@@ -331,7 +348,8 @@ public class WorkmateRepository {
 
     /**
      * add the workmate in the restaurant list of workmates who comes to eat
-     * @param pWorkmate : object : workmate
+     *
+     * @param pWorkmate   : object : workmate
      * @param pRestaurant : object : restaurant
      */
     private void addWorkmateToRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
@@ -347,7 +365,8 @@ public class WorkmateRepository {
 
     /**
      * Remove the workmate choice
-     * @param pWorkmate : object : workmate
+     *
+     * @param pWorkmate   : object : workmate
      * @param pRestaurant : object : restaurant
      */
     private void removeChoice(Workmate pWorkmate, Restaurant pRestaurant) {
@@ -362,7 +381,8 @@ public class WorkmateRepository {
 
     /**
      * Remove the workmate from the restaurant list of workmates who comes to eat
-     * @param pWorkmate : object: workmate
+     *
+     * @param pWorkmate   : object: workmate
      * @param pRestaurant : object : restaurant
      */
     private void removeWorkmateFromRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
@@ -379,7 +399,8 @@ public class WorkmateRepository {
     /**
      * If the workmate has already made a choice which is not this restaurant
      * The workmate is removed from his previous restaurant workmates list
-     * @param pWorkmate : object : workmate
+     *
+     * @param pWorkmate   : object : workmate
      * @param pRestaurant :object : restaurant
      */
     private void removeWorkmateFromPreviousRestaurant(Workmate pWorkmate, Restaurant pRestaurant) {
@@ -395,7 +416,8 @@ public class WorkmateRepository {
 
     /**
      * Get the workmate choice
-     * @param pWorkmate : object : workmate
+     *
+     * @param pWorkmate   : object : workmate
      * @param pRestaurant : object : restaurant
      */
     private void getWorkmateChoice(Workmate pWorkmate, Restaurant pRestaurant) {
@@ -406,9 +428,9 @@ public class WorkmateRepository {
                         Workmate lWorkmate = pTask.getResult().toObject(Workmate.class);
                         sApi.setWorkmate(lWorkmate);
                         if ((lWorkmate != null) && (lWorkmate.getWorkmateRestoChosen() != null)
-                                && (lWorkmate.getWorkmateRestoChosen().getRestoId().equals(pRestaurant.getRestoPlaceId()))){
+                                && (lWorkmate.getWorkmateRestoChosen().getRestoId().equals(pRestaurant.getRestoPlaceId()))) {
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.IS_CHOSEN);
-                        } else{
+                        } else {
                             mLDWorkmateChoiceStatus.setValue(ActionStatus.NOT_CHOSEN);
                         }
                     } else {

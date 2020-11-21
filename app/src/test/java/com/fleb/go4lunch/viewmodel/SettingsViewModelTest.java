@@ -45,11 +45,11 @@ public class SettingsViewModelTest {
     public void getWorkmateData() {
         mNewLDWorkmate.setValue(mWorkmate);
 
-        when(mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())).thenReturn(mNewLDWorkmate);
-        assertNotNull(mSettingsViewModel.getWorkmateData(mWorkmate.getWorkmateId()));
-        Mockito.verify(mWorkmateRepository).getLDWorkmateData(mWorkmate.getWorkmateId());
+        when(mWorkmateRepository.getLDWorkmateData()).thenReturn(mNewLDWorkmate);
+        assertNotNull(mSettingsViewModel.getWorkmateData());
+        Mockito.verify(mWorkmateRepository).getLDWorkmateData();
 
-        mWorkmateRepository.getLDWorkmateData(mWorkmate.getWorkmateId())
+        mWorkmateRepository.getLDWorkmateData()
                 .observeForever(pWorkmate -> assertEquals(pWorkmate, mWorkmate));
     }
 
@@ -60,11 +60,11 @@ public class SettingsViewModelTest {
 
         mNewLDActionStatus.setValue(ActionStatus.SAVED);
 
-        when(mWorkmateRepository.updateLDWorkmateUserName(mWorkmate, lNewName)).thenReturn(mNewLDActionStatus);
-        assertNotNull(mSettingsViewModel.updateWorkmateUserName(mWorkmate,lNewName));
-        Mockito.verify(mWorkmateRepository).updateLDWorkmateUserName(mWorkmate,lNewName);
+        when(mWorkmateRepository.updateLDWorkmateUserName(lNewName)).thenReturn(mNewLDActionStatus);
+        assertNotNull(mSettingsViewModel.updateWorkmateUserName(lNewName));
+        Mockito.verify(mWorkmateRepository).updateLDWorkmateUserName(lNewName);
 
-        mWorkmateRepository.updateLDWorkmateUserName(mWorkmate,lNewName)
+        mWorkmateRepository.updateLDWorkmateUserName(lNewName)
                 .observeForever(pActionStatus -> assertEquals(pActionStatus, lActionStatusWaited));
     }
 
@@ -75,11 +75,11 @@ public class SettingsViewModelTest {
 
         mNewLDActionStatus.setValue(ActionStatus.SAVED_FAILED);
 
-        when(mWorkmateRepository.updateLDWorkmateUserName(mWorkmate, lNewName)).thenReturn(mNewLDActionStatus);
-        assertNotNull(mSettingsViewModel.updateWorkmateUserName(mWorkmate,lNewName));
-        Mockito.verify(mWorkmateRepository).updateLDWorkmateUserName(mWorkmate,lNewName);
+        when(mWorkmateRepository.updateLDWorkmateUserName(lNewName)).thenReturn(mNewLDActionStatus);
+        assertNotNull(mSettingsViewModel.updateWorkmateUserName(lNewName));
+        Mockito.verify(mWorkmateRepository).updateLDWorkmateUserName(lNewName);
 
-        mWorkmateRepository.updateLDWorkmateUserName(mWorkmate,lNewName)
+        mWorkmateRepository.updateLDWorkmateUserName(lNewName)
                 .observeForever(pActionStatus ->  assertEquals(pActionStatus, lActionStatusWaited));
     }
 }

@@ -100,15 +100,17 @@ public class RestaurantRepository {
 
     /**
      * Get from Firestore the restaurant detail
-     * @param pRestaurantId : string : restaurant id to get
      * @return : mutable live data object : restaurant information
      */
-    public MutableLiveData<Restaurant> getLDRestaurantDetail(String pRestaurantId) {
-        mRestoRef.document(pRestaurantId)
+        public MutableLiveData<Restaurant> getLDRestaurantDetail() {
+        String lRestaurantId = sApi.getRestaurantId();
+        mRestoRef.document(lRestaurantId)
                 .get()
                 .addOnCompleteListener(pTask -> {
                     if (pTask.isSuccessful()) {
-                        mLDResto.setValue(pTask.getResult().toObject(Restaurant.class));
+                        Restaurant lRestaurant = pTask.getResult().toObject(Restaurant.class);
+                        sApi.setRestaurant(lRestaurant);
+                        mLDResto.setValue(lRestaurant);
                     }
                 })
                 .addOnFailureListener(pE -> Log.e(TAG, ERROR_ON_FAILURE_LISTENER + pE));
@@ -386,20 +388,6 @@ public class RestaurantRepository {
                         Log.d(TAG, "onSuccess : date updated "))
                 .addOnFailureListener(pE ->
                         Log.e(TAG, ERROR_ON_FAILURE_LISTENER + pE));
-    }
-
-    /**
-     * Get the restaurant for the generation of  the notification
-     * @param pRestaurantId : string : restaurant id
-     */
-    public void getRestaurantNotif(String pRestaurantId) {
-        mRestoRef.document(pRestaurantId)
-                .get()
-                .addOnCompleteListener(pTask -> {
-                    if (pTask.isSuccessful()) {
-                        sApi.setRestaurant(Objects.requireNonNull(pTask.getResult()).toObject(Restaurant.class));
-                    }
-                });
     }
 
     /**

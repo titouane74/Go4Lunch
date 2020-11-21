@@ -25,6 +25,7 @@ public class Go4LunchApiService implements Go4LunchApi {
     private Workmate mWorkmate;
     private String mWorkmateId;
     private Restaurant mRestaurant;
+    private String mRestaurantId;
     private List<Restaurant> mRestaurantList;
     private Location mLocation;
 
@@ -47,6 +48,12 @@ public class Go4LunchApiService implements Go4LunchApi {
     public Workmate getWorkmate() {
         return mWorkmate;
     }
+
+    @Override
+    public void setRestaurantId(String pRestaurantId) { mRestaurantId = pRestaurantId; }
+
+    @Override
+    public String getRestaurantId() { return mRestaurantId; };
 
     @Override
     public void setRestaurant(Restaurant pRestaurant) {

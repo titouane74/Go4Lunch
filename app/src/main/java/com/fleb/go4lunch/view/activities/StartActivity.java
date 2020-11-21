@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.fleb.go4lunch.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.fleb.go4lunch.AppGo4Lunch.sApi;
+
 public class StartActivity extends AppCompatActivity {
 
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -23,6 +25,7 @@ public class StartActivity extends AppCompatActivity {
 
     protected void openActivity() {
         if (mAuth.getCurrentUser() != null) {
+            sApi.setWorkmateId(mAuth.getUid());
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         } else {

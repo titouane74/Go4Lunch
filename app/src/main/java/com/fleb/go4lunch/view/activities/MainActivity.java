@@ -55,11 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String RESTO_LIST_FRAGMENT = "RestaurantListFragment";
 
     /**
-     * Firebase
-     */
-    private FirebaseUser mCurrentUser;
-
-    /**
      * Design
      */
     private AppBarConfiguration mAppBarConfiguration;
@@ -80,9 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         FirebaseAuth lAuth = FirebaseAuth.getInstance();
-        mCurrentUser = lAuth.getCurrentUser();
+        FirebaseUser lCurrentUser = lAuth.getCurrentUser();
 
-        Log.d(TAG, "onCreate: saveWorkmateID : " + Objects.requireNonNull(mCurrentUser).getDisplayName() + " - " + mCurrentUser.getUid());
+        Log.d(TAG, "onCreate: saveWorkmateID : " + Objects.requireNonNull(lCurrentUser).getDisplayName() + " - " + lCurrentUser.getUid());
         configureViewModel();
 
         configureToolBar();
@@ -112,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Go4LunchViewModelFactory lFactory = Injection.go4LunchViewModelFactory();
         mMainActivityViewModel = new ViewModelProvider(this, lFactory).get(MainActivityViewModel.class);
 
-        mMainActivityViewModel.getWorkmateInfos(mCurrentUser.getUid()).observe(this, pWorkmate ->
+        mMainActivityViewModel.getWorkmateInfos().observe(this, pWorkmate ->
         {
             if (pWorkmate != null) {
                 mWorkmate = pWorkmate;
@@ -140,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onRestart();
         configureDrawerLayoutNavigationView();
 
-        mMainActivityViewModel.getWorkmateInfos(mWorkmate.getWorkmateId()).observe(this, pWorkmate -> {
+        mMainActivityViewModel.getWorkmateInfos().observe(this, pWorkmate -> {
             mWorkmate = pWorkmate;
             configureMenuYourLunch();
         });
@@ -301,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 R.id.nav_restaurant_list, R.id.nav_workmate)
                 .setOpenableLayout(mDrawerLayout)
                 .build();
-
 
         NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
 

@@ -52,9 +52,6 @@ public class WorkmateListViewModelTest {
         Mockito.verify(mWorkmateRepository).getLDWorkmateListData();
 
         mWorkmateRepository.getLDWorkmateListData().observeForever(pWorkmateList ->
-        {
-            assertEquals(pWorkmateList,mWorkmateList);
-        });
-
+                assertEquals(pWorkmateList,mWorkmateList));
     }
 }

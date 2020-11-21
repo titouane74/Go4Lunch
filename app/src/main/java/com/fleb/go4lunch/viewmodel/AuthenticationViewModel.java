@@ -24,7 +24,6 @@ public class AuthenticationViewModel extends ViewModel {
      * @return : enum : result of the action
      */
     public LiveData<ActionStatus> saveWorkmateFirebaseProfile(FirebaseUser pUser) {
-
         return mWorkmateRepo.saveLDWorkmateFirebaseProfile(pUser);
     }
 

@@ -20,22 +20,19 @@ public class SettingsViewModel extends ViewModel {
 
     /**
      * Retrieve workmate information from Firestore
-     * @param pWorkmateId : string : workmate id
      * @return : object : workmate
      */
-    public LiveData<Workmate> getWorkmateData(String pWorkmateId) {
-        return mWorkmateRepo.getLDWorkmateData(pWorkmateId);
+    public LiveData<Workmate> getWorkmateData() {
+        return mWorkmateRepo.getLDWorkmateData();
     }
 
-    /**
+     /**
      * Update the workmate user name in Firestore
-     * @param pWorkmate : object : workmate
      * @param pNewUserName : string : new user name
      * @return : enum : result of the action
      */
-    public LiveData<ActionStatus> updateWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
-
-        return mWorkmateRepo.updateLDWorkmateUserName(pWorkmate, pNewUserName);
+    public LiveData<ActionStatus> updateWorkmateUserName(String pNewUserName) {
+        return mWorkmateRepo.updateLDWorkmateUserName(pNewUserName);
     }
 
 }
