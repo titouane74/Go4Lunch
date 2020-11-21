@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@drawable/ic_nav_map"
+        android:title="@string/menu_map" />
+    <item
+        android:id="@+id/nav_restaurant_list"
+        android:icon="@drawable/ic_nav_view_list"
+        android:title="@string/menu_restaurant_list" />
+    <item
+        android:id="@+id/nav_workmate"
+        android:icon="@drawable/ic_nav_workmate"
+        android:title="@string/menu_workmate_list" />
+</menu>

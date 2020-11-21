@@ -1,0 +1,121 @@
+<resources >
+    <string name="app_name">Go4Lunch</string>
+
+    <!-- DEVELOPMENT STATUS -->
+    <string name="to_do">In development</string>
+
+    <!-- MAIN ACTIVITY -->
+    <string name="error_not_connected">You must log in !</string>
+    <string name="error_authentication_canceled">Authentication canceled&#8230;</string>
+    <string name="error_no_internet">No internet connection !</string>
+    <string name="error_unknown_error">An unknown error has occurred&#8230;</string>
+    <string name="connection_succeed">Successful authentication !</string>
+    <string name="user_connected">User connected</string>
+    <string name="error_msg_email_user_exists">An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.</string>
+    <string name="img_desc_logo">Logo</string>
+
+    <!-- USER ACTIVITY -->
+    <string name="text_input_username">Username</string>
+    <string name="text_view_email">Email address</string>
+    <string name="btn_update_account">Update username</string>
+    <string name="info_no_email_found">No email address</string>
+    <string name="info_no_username_found">No username</string>
+    <string name="img_user">User image</string>
+    <string name="user_account_updated">Account updated</string>
+
+    <!--DRAWER-->
+    <string name="menu_hungry">I\'M HUNGRY!</string>
+    <string name="menu_lunch">YOUR LUNCH</string>
+    <string name="menu_logout">LOGOUT</string>
+    <string name="menu_settings">SETTINGS</string>
+    <string name="menu_available_workmates">Available workmates</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_search">Search</string>
+
+    <!--BOTTOM MENU-->
+    <string name="menu_map">Map View</string>
+    <string name="menu_restaurant_list">List View</string>
+    <string name="menu_workmate_list">Workmates</string>
+
+    <!--AUTHENTICATION ACTIVITY-->
+    <string name="auth_sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="sign_in_with_email">Sign in with email</string>
+    <string name="desc_logo_facebook">Facebook</string>
+    <string name="desc_logo_google">Google</string>
+    <string name="desc_logo_email">Email</string>
+    <string name="desc_logo_twitter">Twitter</string>
+    <string name="auth_account_created">Account created</string>
+    <string name="auth_account_not_created">Failed to create account</string>
+    <string name="auth_msg_sign_in_to_continue">Please sign in to continue.</string>
+
+    <!-- RESTAURANT DETAIL -->
+    <string name="btn_check">CHECK</string>
+    <string name="text_call">CALL</string>
+    <string name="text_like">LIKE</string>
+    <string name="text_website">WEBSITE</string>
+    <string name="text_no_web_site">No web site</string>
+    <string name="text_no_phone_number">No phone number</string>
+    <string name="error_saved_failed">An error occurred during the backup</string>
+
+    <!-- RESTAURANT LIST -->
+    <string name="text_resto_list_name">Le Zinc</string>
+    <string name="text_resto_list_address">French - 12 rue du Faubourg Poissonnière</string>
+    <string name="text_resto_list_distance">12 m</string>
+    <string name="text_resto_list_nb_workmate">2</string>
+    <string name="max_level_one_star">1.67</string>
+    <string name="max_level_two_star">3.34</string>
+    <string name="max_level_three_star">5</string>
+    <string name="nb_star">3</string>
+    <string name="text_resto_closed_today">Closed today. Open at</string>
+    <string name="text_resto_closed_open_at">Closed. Open at</string>
+    <string name="text_resto_closed_open_at_on">on</string>
+    <string name="text_resto_closing_soon">Closing soon</string>
+    <string name="text_resto_open_until">Open until</string>
+    <string name="text_resto_open_247">Open 24/7</string>
+    <string name="text_resto_on">on</string>
+
+    <!-- WORKMATE LIST -->
+    <string name="text_workmate_not_decided">hasn\'t decided yet</string>
+    <string name="text_workmate_eating">is eating</string>
+    <string name="text_workmate_joining">is joining!</string>
+
+    <!-- MAPS -->
+    <string name="tag_map">tag_map</string>
+    <string name="proximity_radius">300</string>
+    <string name="bound_radius">2000</string>
+    <string name="type_search">restaurant</string>
+    <string name="map_zoom">16</string>
+    <string name="default_latitude_position">48.8236549</string>
+    <string name="default_longitude_position">2.4102578</string>
+    <string name="place_detail_fields">name,address_components,formatted_phone_number,geometry,icon,id,international_phone_number,rating,website,utc_offset,opening_hours,photo,vicinity,place_id</string>
+
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">Access to the location service is required to enable the location.</string>
+    <string name="location_permission_denied">This application requires location permission to enable the location. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
+    <string name="permission_required_toast">Location permission is required.</string>
+
+    <!-- SETTINGS -->
+    <string name="btn_text_change_notif_status">Activate / Deactivate</string>
+    <string name="text_setting_notif_activated">Notifications are : activated</string>
+    <string name="text_setting_notif_deactivated">Notifications are : deactivated</string>
+
+    <!-- NOTIFICATION -->
+    <string name="notif_high_importance">Notification with high importance</string>
+    <string name="notif_high">High</string>
+    <string name="notif_normal_importance">Notification with a normal importance</string>
+    <string name="notif_normal">Normal</string>
+    <string name="notif_lower_importance">Notification with a lower importance</string>
+    <string name="notif_lower">Lower</string>
+    <string name="notif_not_important">Notification not important</string>
+    <string name="notif_not">Not important</string>
+
+    <!-- GENERAL -->
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="text_hint_search">Search restaurants</string>
+    <string name="error_on_save">Error during the backup</string>
+</resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="@drawable/lunch_blurred"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/nav_header_horizontal_margin"
+    android:paddingTop="@dimen/default_vertical_margin"
+    android:paddingRight="@dimen/nav_header_horizontal_margin"
+    android:paddingBottom="@dimen/default_vertical_margin"
+    android:theme="@style/Go4LunchTheme">
+
+    <TextView
+        android:id="@+id/nav_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_vertical_margin"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="@dimen/default_text_size_large"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nav_title">
+
+        <ImageView
+            android:id="@+id/nav_img_user"
+            android:layout_width="@dimen/nav_header_logo_size_add_photo"
+            android:layout_height="@dimen/nav_header_logo_size_add_photo"
+            android:contentDescription="@string/nav_header_desc"
+            android:layout_marginTop="@dimen/nav_header_vertical_margin_large"
+            app:srcCompat="@drawable/ic_profile_user_png"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onClick"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/nav_header_vertical_margin_large"
+            android:layout_marginStart="@dimen/nav_header_horizontal_margin"
+            android:gravity="center_vertical"
+            >
+            <TextView
+                android:id="@+id/nav_txt_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_header_title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/colorTextPrimary"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/nav_txt_user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nav_header_subtitle"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/default_text_size_mini"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

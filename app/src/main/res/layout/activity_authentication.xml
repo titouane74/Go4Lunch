@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authentication"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AuthenticationTheme"
+    tools:context=".view.activities.AuthenticationActivity">
+
+    <ImageView
+        android:id="@+id/auth_img_logo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_zero_dp"
+        android:layout_margin="@dimen/default_margin"
+        android:contentDescription="@string/img_desc_logo"
+        app:layout_constraintHeight_percent="@dimen/auth_img_logo_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_go4lunch_logo_text" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/auth_img_logo">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/auth_btn_height"
+            android:layout_marginStart="@dimen/auth_horizontal_margin_large"
+            android:layout_marginTop="@dimen/auth_btn_vertical_margin"
+            android:layout_marginEnd="@dimen/auth_horizontal_margin_large">
+
+            <Button
+                android:id="@+id/btn_start_login_email"
+                style="@style/AuthenticationTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_btn_bckgrd_tint_email"
+                android:text="@string/sign_in_with_email"
+                android:textColor="@color/colorTextPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry"
+                tools:layout_editor_absoluteX="@dimen/zero_dp" />
+
+            <ImageView
+                android:id="@+id/btn_start_login_email_logo"
+                android:layout_width="@dimen/auth_btn_logo_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:contentDescription="@string/desc_logo_email"
+                android:elevation="@dimen/auth_elevation"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_email" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_google"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/auth_btn_height"
+            android:layout_marginStart="@dimen/auth_horizontal_margin_large"
+            android:layout_marginTop="@dimen/auth_btn_vertical_margin"
+            android:layout_marginEnd="@dimen/auth_horizontal_margin_large">
+
+            <Button
+                android:id="@+id/btn_start_login_google"
+                style="@style/AuthenticationTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_btn_bckgrd_tint_google"
+                android:text="@string/sign_in_with_google"
+                android:textColor="@color/colorTextBlack"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/btn_start_login_google_logo"
+                android:layout_width="@dimen/auth_btn_logo_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:contentDescription="@string/desc_logo_google"
+                android:elevation="@dimen/auth_elevation"
+                android:src="@drawable/googleg_standard_color_18"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/auth_btn_height"
+            android:layout_marginStart="@dimen/auth_horizontal_margin_large"
+            android:layout_marginTop="@dimen/auth_btn_vertical_margin"
+            android:layout_marginEnd="@dimen/auth_horizontal_margin_large">
+
+            <Button
+                android:id="@+id/btn_start_login_facebook"
+                style="@style/AuthenticationTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_btn_bckgrd_tint_facebook"
+                android:text="@string/auth_sign_in_with_facebook"
+                android:textColor="@color/colorTextPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/btn_start_login_facebook_logo"
+                android:layout_width="@dimen/auth_btn_logo_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:contentDescription="@string/desc_logo_facebook"
+                android:elevation="@dimen/auth_elevation"
+                android:src="@drawable/com_facebook_button_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_twitter"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/auth_btn_height"
+            android:layout_marginStart="@dimen/auth_horizontal_margin_large"
+            android:layout_marginTop="@dimen/auth_btn_vertical_margin"
+            android:layout_marginEnd="@dimen/auth_horizontal_margin_large"
+            android:layout_marginBottom="@dimen/auth_btn_vertical_margin">
+
+            <Button
+                android:id="@+id/btn_start_login_twitter"
+                style="@style/AuthenticationTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_btn_bckgrd_tint_twitter"
+                android:text="@string/sign_in_with_twitter"
+                android:textColor="@color/colorTextPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/btn_start_login_twitter_logo"
+                android:layout_width="@dimen/auth_btn_logo_width"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/default_margin"
+                android:contentDescription="@string/desc_logo_twitter"
+                android:elevation="@dimen/auth_elevation"
+                android:src="@drawable/tw__ic_logo_default"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="PrivateResource" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
+
     <!-- DEVELOPMENT STATUS -->
     <string name="to_do">En cours de développement</string>
-
 
     <!-- FACEBOOK PROPOSE -->
     <string name="facebook_application_id" translatable="false">1448626875331443</string>
@@ -18,19 +18,113 @@
     <string name="error_no_internet">Aucune connexion internet !</string>
     <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
     <string name="connection_succeed">Authentification réussie !</string>
-    <string name="button_login_text_logged">Afficher le profil</string>
-    <string name="button_login_text_not_logged">Connexion</string>
     <string name="user_connected">Utilisateur connecté</string>
-    <string name="button_signout">Déconnexion</string>
+    <string name="error_msg_email_user_exists">Un compte existe déjà avec la même adresse e-mail mais des informations de connexion différentes. Connectez-vous à l\'aide d\'un fournisseur associé à cette adresse e-mail.</string>
+    <string name="img_desc_logo">Logo</string>
 
-    <!-- PROFILE ACTIVITY -->
+    <!-- USER ACTIVITY -->
     <string name="text_input_username">Nom d\'utilisateur</string>
-    <string name="text_view_email">Adresse email :</string>
-    <string name="button_update_account">Mettre à jour le nom d\'utilisateur</string>
-    <string name="button_delete_account">Supprimer mon compte</string>
-    <string name="button_sign_out_account">Déconnexion</string>
-    <string name="info_no_email_found">Auncune adresse email</string>
+    <string name="text_view_email">Adresse mail</string>
+    <string name="btn_update_account">Mettre à jour le nom d\'utilisateur</string>
+    <string name="info_no_email_found">Auncune adresse mail</string>
     <string name="info_no_username_found">Aucun nom d\'utilisateur</string>
-    <string name="image_user">Image utilisateur</string>
+    <string name="img_user">Image utilisateur</string>
+    <string name="user_account_updated">Compte mis à jour</string>
+
+    <!--DRAWER-->
+    <string name="menu_hungry">J\'AI FAIM!</string>
+    <string name="menu_lunch">VOTRE DEJEUNER</string>
+    <string name="menu_logout">DECONNEXION</string>
+    <string name="menu_settings">PARAMETRES</string>
+    <string name="menu_available_workmates">Collègues disponibles</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_search">Recherche</string>
+
+    <!--BOTTOM MENU-->
+    <string name="menu_map">Carte</string>
+    <string name="menu_restaurant_list">Liste</string>
+    <string name="menu_workmate_list">Collègues</string>
+
+    <!--AUTHENTIFICATION ACTIVITY-->
+    <string name="auth_sign_in_with_facebook">Se connecter avec Facebook</string>
+    <string name="sign_in_with_google">Se connecter avec Google</string>
+    <string name="sign_in_with_twitter">Se connecter avec Twitter</string>
+    <string name="sign_in_with_email">Se connecter avec une adresse e-mail</string>
+    <string name="desc_logo_facebook">Facebook</string>
+    <string name="desc_logo_google">Google</string>
+    <string name="desc_logo_email">Email</string>
+    <string name="desc_logo_twitter">Twitter</string>
+    <string name="auth_account_created">Compte créé</string>
+    <string name="auth_account_not_created">Echec lors de la création du compte</string>
+    <string name="auth_msg_sign_in_to_continue">Authentifiez-vous pour continuer.</string>
+
+    <!-- RESTAURANT DETAIL -->
+    <string name="btn_check">CHECK</string>
+    <string name="text_call">APPELER</string>
+    <string name="text_like">LIKE</string>
+    <string name="text_website">SITE WEB</string>
+    <string name="text_no_web_site">Pas de site web</string>
+    <string name="text_no_phone_number">Pas de numéro de téléphone</string>
+    <string name="error_saved_failed">Une erreur inconnue lors de la sauvegarde</string>
+
+    <!-- RESTAURANT LIST -->
+    <string name="text_resto_list_name">Le Zinc</string>
+    <string name="text_resto_list_address">12 rue du Poissonnier</string>
+    <string name="text_resto_list_distance">120m</string>
+    <string name="text_resto_list_nb_workmate">2</string>
+    <string name="max_level_one_star">1.67</string>
+    <string name="max_level_two_star">3.34</string>
+    <string name="max_level_three_star">5</string>
+    <string name="nb_star">3</string>
+    <string name="text_resto_closed_open_at_on">le</string>
+    <string name="text_resto_closed_today">Fermé aujourd\'hui. Ouvre à</string>
+    <string name="text_resto_closed_open_at">Fermé. Ouvre à</string>
+    <string name="text_resto_closing_soon">Ferme bientôt</string>
+    <string name="text_resto_open_until">Ouvert jusqu\'à</string>
+    <string name="text_resto_open_247">Ouvert 24/7</string>
+    <string name="text_resto_on">le</string>
+
+    <!-- WORKMATE LIST -->
+    <string name="text_workmate_not_decided">n\'a pas encore décidé</string>
+    <string name="text_workmate_eating">mange</string>
+    <string name="text_workmate_joining">vient!</string>
+
+    <!-- MAPS -->
+    <string name="tag_map">tag_map</string>
+    <string name="proximity_radius">300</string>
+    <string name="bound_radius">2000</string>
+    <string name="type_search">restaurant</string>
+    <string name="map_zoom">16</string>
+    <string name="default_latitude_position">48.8236549</string>
+    <string name="default_longitude_position">2.4102578</string>
+    <string name="place_detail_fields">name,address_components,adr_address,formatted_address,formatted_phone_number,geometry,icon,id,international_phone_number,rating,website,utc_offset,opening_hours,photo,vicinity,place_id</string>
+
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">L\'accès au service de localisation est nécessaire pour permettre la localisation.</string>
+    <string name="location_permission_denied">L\'application nécessite une autorisation de localisation pour permettre la locatlisation . Veuillez réessayer et accorder l\'accès pour utiliser l\'emplacement. \nSi l\'autorisation a été définitivement refusée, elle peut être activée à partir des paramètres système &gt; Applications &gt; \'Go4Lunch \'.</string>
+    <string name="permission_required_toast">Une autorisation de localisation est requise.</string>
+
+    <!-- SETTINGS -->
+    <string name="btn_text_change_notif_status">Activer / Désactiver</string>
+    <string name="text_setting_notif_activated">Les notifications sont : activées</string>
+    <string name="text_setting_notif_deactivated">Les notifications sont : désactivées</string>
+
+    <!-- NOTIFICATION -->
+    <string name="notif_high_importance">Notification de haute importance</string>
+    <string name="notif_high">Haute</string>
+    <string name="notif_normal_importance">Notification d\'importance normal</string>
+    <string name="notif_normal">Normal</string>
+    <string name="notif_lower_importance">Notification de faible importance</string>
+    <string name="notif_lower">Faible</string>
+    <string name="notif_not_important">Notification pas importante</string>
+    <string name="notif_not">Pas importante</string>
+
+    <!-- GENERAL -->
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Annuler</string>
+    <string name="text_hint_search">Rechercher des restaurants</string>
+    <string name="error_on_save">Erreur lors de la sauvegarde</string>
 
 </resources>

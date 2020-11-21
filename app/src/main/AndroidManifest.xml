@@ -3,10 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.fleb.go4lunch">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the "MyLocation" functionality.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".AppGo4Lunch"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,23 +23,48 @@
         android:supportsRtl="true"
         android:theme="@style/Go4LunchTheme">
 
-        <activity android:name=".main.MainActivity">
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/maps_api_key" />
+
+        <activity
+            android:name=".view.activities.StartActivity"
+            android:theme="@style/StartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activities.AuthenticationActivity"
+            android:theme="@style/AuthenticationTheme">
 
-        <!-- PROFILE ACTIVITY -->
-        <activity android:name=".authentification.ProfileActivity"
-            android:parentActivityName=".main.MainActivity"/>
-
+        </activity>
+        <activity android:name=".view.activities.MainActivity" />
+        <activity
+            android:name=".view.activities.SettingsActivity"
+            android:label="@string/menu_settings"
+            android:parentActivityName=".view.activities.MainActivity"
+            android:theme="@style/SettingsTheme" />
+        <activity android:name=".view.activities.RestaurantDetailActivity" />
+        <activity
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            tools:replace="android:launchMode"
+            android:launchMode="standard" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id"
-            tools:replace="android:value"/>
-
+            tools:replace="android:value" />
     </application>
 
 </manifest>

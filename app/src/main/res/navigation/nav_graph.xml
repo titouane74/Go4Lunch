@@ -1,7 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_map">
+
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.fleb.go4lunch.view.activities.SettingsActivity"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/activity_settings" />
+    <activity
+        android:id="@+id/restaurantDetailActivity"
+        android:name="com.fleb.go4lunch.view.activities.RestaurantDetailActivity"
+        android:label="@string/menu_lunch"
+        tools:layout="@layout/activity_restaurant_detail" />
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.fleb.go4lunch.view.fragments.LogoutFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_nav_logout_to_nav_map"
+            app:destination="@id/nav_map" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="com.fleb.go4lunch.view.fragments.MapsFragment"
+        android:label="@string/menu_hungry"
+        tools:layout="@layout/fragment_maps">
+        <action
+            android:id="@+id/action_nav_map_to_nav_restaurant_list"
+            app:destination="@id/nav_restaurant_list" />
+        <action
+            android:id="@+id/action_nav_map_to_nav_workmate"
+            app:destination="@id/nav_workmate" />
+        <action
+            android:id="@+id/action_nav_map_to_nav_logout"
+            app:destination="@id/nav_logout" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_restaurant_list"
+        android:name="com.fleb.go4lunch.view.fragments.RestaurantListFragment"
+        android:label="@string/menu_hungry"
+    tools:layout="@layout/fragment_restaurant_list">
+        <action
+            android:id="@+id/action_nav_restaurant_list_to_nav_workmate"
+            app:destination="@id/nav_workmate" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_workmate"
+        android:name="com.fleb.go4lunch.view.fragments.WorkmateListFragment"
+        android:label="@string/menu_available_workmates"
+        tools:layout="@layout/fragment_workmate_list">
+        <action
+            android:id="@+id/action_nav_workmate_to_nav_restaurant_list"
+            app:destination="@id/nav_restaurant_list" />
+        <action
+            android:id="@+id/action_nav_workmate_to_nav_map"
+            app:destination="@id/nav_map" />
+    </fragment>
+
 
 </navigation>
