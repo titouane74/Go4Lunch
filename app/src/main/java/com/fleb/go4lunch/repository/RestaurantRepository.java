@@ -140,10 +140,8 @@ public class RestaurantRepository {
                             lTimestamp = (Timestamp) lResult.getData().get(String.valueOf(FirestoreUpdateFields.restoLastUpdateList));
                             if (lTimestamp != null) {
                                 Date lDate = new Date();
-                                //TODO just for the test at day + 1
                                 Calendar lCal = Calendar.getInstance();
                                 lCal.setTime(lDate);
-                                //lCal.add(Calendar.DATE, 1);
                                 lDate = lCal.getTime();
 
                                 mFirestoreLastUpdate = lTimestamp.toDate();
@@ -155,18 +153,13 @@ public class RestaurantRepository {
                                 // The dates are different and we are on a monday we retrieve information from Google
                                 if ((!sdf.format(mFirestoreLastUpdate).equals(sdf.format(lDate))) && (Go4LunchHelper.getCurrentDayInt() == 2)) {
                                     // 2 = Monday
-                                    //TODO for the moment deactivate the google call
-                                    //getGoogleRestaurantList();
-                                    getFirestoreRestaurantList();
-
+                                    getGoogleRestaurantList();
                                 } else {
                                     getFirestoreRestaurantList();
                                 }
                             }
                         } else {
-                            //TODO for the moment deactivate the google call
-                            //getGoogleRestaurantList();
-                            getFirestoreRestaurantList();
+                            getGoogleRestaurantList();
                         }
                     } else {
                         mFirestoreLastUpdate = null;
