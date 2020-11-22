@@ -20,7 +20,7 @@ import static com.fleb.go4lunch.AppGo4Lunch.sApi;
 /**
  * Created by Florence LE BOURNOT on 25/10/2020
  *
- * Repository which manage the cleaning choices each day at the same time 14:00
+ * Repository which manage the cleaning choices
  *
  */
 
@@ -43,13 +43,18 @@ public class ChoiceRepository {
      * Select all the workmates who have a choice to remove
      */
     public void removePreviousChoice() {
-        Calendar lCalendar = Calendar.getInstance();
-        lCalendar.setTime(mDate);
+        Calendar lCalNow = Calendar.getInstance();
+        lCalNow.setTime(mDate);
 
-        lCalendar.add(Calendar.DAY_OF_MONTH,-1);
-        lCalendar.set(Calendar.HOUR_OF_DAY, REFRESH_HOUR);
-        lCalendar.set(Calendar.MINUTE, 0);
-        lCalendar.set(Calendar.SECOND, 0);
+        Calendar lCalToday = Calendar.getInstance();;
+        lCalToday.setTime(lCalNow.getTime());
+        lCalToday.set(Calendar.HOUR_OF_DAY, REFRESH_HOUR);
+        lCalToday.set(Calendar.MINUTE, 0);
+        lCalToday.set(Calendar.SECOND, 0);
+
+        Calendar lCalYesterday = Calendar.getInstance();
+        lCalYesterday.setTime(lCalToday.getTime());
+        lCalYesterday.add(Calendar.DAY_OF_MONTH,-1);
 
         mWorkmateRef.get()
                 .addOnCompleteListener(pTask -> {
@@ -58,7 +63,9 @@ public class ChoiceRepository {
                         for(Workmate lWorkmate : lWorkmateList) {
                             if(lWorkmate.getWorkmateRestoChosen()!=null) {
                                 Date lWorkmateDateChoice = lWorkmate.getWorkmateRestoChosen().getRestoDateChoice().toDate();
-                                if (lWorkmateDateChoice.compareTo(lCalendar.getTime())<0) {
+                                if (lWorkmateDateChoice.before(lCalYesterday.getTime())) {
+                                    removeWorkmateChoice(lWorkmate, lWorkmate.getWorkmateRestoChosen().getRestoId());
+                                } else if (lWorkmateDateChoice.before(lCalToday.getTime()) && lCalNow.after(lCalToday)) {
                                     removeWorkmateChoice(lWorkmate, lWorkmate.getWorkmateRestoChosen().getRestoId());
                                 }
                             }
