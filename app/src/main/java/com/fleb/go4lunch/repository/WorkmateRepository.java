@@ -108,14 +108,10 @@ public class WorkmateRepository {
 
     /**
      * Get the workmate informations
-     * // * @param pWorkmateId : string : workmate id
-     *
      * @return : mutable live data object : workmate
      */
-//    public MutableLiveData<Workmate> getLDWorkmateData(String pWorkmateId) {
     public MutableLiveData<Workmate> getLDWorkmateData() {
         String lWorkmateId = sApi.getWorkmateId();
-//        mWorkmateRef.document(pWorkmateId)
         mWorkmateRef.document(lWorkmateId)
                 .get()
                 .addOnCompleteListener(pTask -> {
@@ -132,12 +128,9 @@ public class WorkmateRepository {
 
     /**
      * Update Firestore with the new username
-     * //     * @param pWorkmate : object : workmate
-     *
      * @param pNewUserName : string : new user name
      * @return : object ActionStatus : result of the update
      */
-//    public MutableLiveData<ActionStatus> updateLDWorkmateUserName(Workmate pWorkmate, String pNewUserName) {
     public MutableLiveData<ActionStatus> updateLDWorkmateUserName(String pNewUserName) {
         Workmate lWorkmate = sApi.getWorkmate();
         mWorkmateRef.document(lWorkmate.getWorkmateId())
